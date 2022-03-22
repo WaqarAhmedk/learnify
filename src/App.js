@@ -1,14 +1,21 @@
 
 import './App.css';
+import Landingpage from './pages/home';
 import Instructordashboard from './pages/Instructor/instructordashboard';
 
 import Studentdashboard from './pages/Sudent/studnetdashboard';
 
 function App() {
-  var role="instructor";
+  var role = "instructor";
   return (
     <div className="">
-   <Instructordashboard role={role}/>
+
+      <Landingpage />
+
+
+
+
+      {/* <Instructordashboard role={role}/> */}
     </div>
   );
 }
