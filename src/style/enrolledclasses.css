@@ -62,7 +62,7 @@ color: #FFFFFF;
 
 }
 .card:hover{
-    box-shadow: 5px 10px 8px blue;
+    box-shadow: 5px 10px 8px #4C7DFE;
     
 }
 .card-img{
