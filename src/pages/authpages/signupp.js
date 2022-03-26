@@ -175,18 +175,18 @@ function Signup() {
                                 <input className="btn btn-primary " value="SIGN UP" type="submit" onClick={(e) => {
                                     e.preventDefault();
 
-                                    if(fname==="" || lname==="" || email==="" || password ==="" ){
+                                    if (fname === "" || lname === "" || email === "" || password === "") {
                                         setformerror("Form must be filled completly");
                                     }
-                                    else if(fnameerror!="" || lnameerror!="" || emailerror!="" || passworderror !=""){
+                                    else if (fnameerror != "" || lnameerror != "" || emailerror != "" || passworderror != "") {
                                         setformerror("Remove all the errors from the form");
 
                                     }
-                                    else{
+                                    else {
                                         navigate("/signin");
                                     }
 
-                                  
+
 
                                 }} />
                                 <a className="g-logo-link" href="/">
