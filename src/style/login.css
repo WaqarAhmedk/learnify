@@ -48,7 +48,11 @@
 }
 
 
-
+.error{
+    color: red;
+    font-size: small;
+    text-align: justify;
+}
 
 
 .signup-form {
@@ -118,11 +122,17 @@
     margin-top: 10px;
 }
 
+.in-file{
+    border: none;
+}
+
 .form-btn-group>input {
 
     width: 100%;
     margin-bottom: 15px;
 }
+
+
 
 .g-logo-link {
     text-decoration: none;

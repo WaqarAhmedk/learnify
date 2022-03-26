@@ -9,10 +9,20 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 function Signup() {
 
-    const [fname, setfname] = useState("");
-    const [lname, setlname] = useState("");
-    const [email, setemail] = useState("");
-    const [password, setpassword] = useState("");
+    let [fname, setfname] = useState("");
+    let [fnameerror, setfnameerror] = useState("");
+
+
+    let [lname, setlname] = useState("");
+    let [lnameerror, setlnameerror] = useState("");
+
+    let [email, setemail] = useState("");
+    let [emailerror, setemailerror] = useState("");
+
+    let [password, setpassword] = useState("");
+    let [passworderror, setpassworderror] = useState("");
+
+    let [formerror, setformerror] = useState("");
 
 
 
@@ -31,11 +41,6 @@ function Signup() {
 
 
 
-    function SignupClick() {
-
-        navigate("/signin");
-    }
-
     return <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
 
 
@@ -49,6 +54,7 @@ function Signup() {
                 <span> as a {role}</span>
             </div>
             <div className="col-6 signup-form">
+                <span className="col ms-3 error">{formerror}</span>
                 <form>
                     <div className="row form ">
                         <div className="form-label-1">
@@ -56,19 +62,78 @@ function Signup() {
                             <label className="col">Last Name</label>
                         </div>
                         <div className="form-input-1">
-                            <input className="col" type="text" value={fname} placeholder="WAQAR" onChange={(e)=>{
-                                
-                              
-                            
+                            <input className="col" type="text" value={fname} placeholder="WAQAR" onChange={(e) => {
+
+                                fname = e.target.value;
+                                setfname(fname);
+                                if (fname.length >= 3) {
+
+                                    setfnameerror("");
+                                    setfname(fname);
+                                }
+                                else {
+                                    if (fname === "") {
+                                        fnameerror = "* You must provide First Name";
+                                        setfnameerror(fnameerror);
+                                    }
+                                    else {
+                                        fnameerror = "* First name must be greater then 3";
+                                        setfnameerror(fnameerror);
+                                    }
+                                }
+
 
                             }} />
 
-                            <input className="col" type="text" placeholder="Ahmed" />
+
+                            <input className="col" type="text" value={lname} placeholder="Ahmed" onChange={(e) => {
+
+                                lname = e.target.value;
+                                setlname(lname);
+                                if (lname.length >= 3) {
+
+                                    setlnameerror("");
+                                    setlname(lname);
+                                }
+                                else {
+                                    if (lname === "") {
+                                        lnameerror = "* You must provide Last Name";
+                                        setlnameerror(lnameerror);
+                                    }
+                                    else {
+                                        lnameerror = " * Last name must be greater then 3"
+                                        setlnameerror(lnameerror);
+                                    }
+                                }
+
+                            }
+                            } />
                         </div>
                     </div>
+                    {/*  Form first name and last name error message  of validation */}
+                    <div className="row">
+                        <span className="col ms-3 error">{fnameerror}</span>
+                        <span className="col error">{lnameerror}</span>
+                    </div>
                     <div className="row email-div">
+
                         <label className="">Email</label>
-                        <input className="" type="email" />
+                        <input className="" type="email" value={email} onChange={(e) => {
+
+                            // Regex regular expressions which are used to match the required string format.
+
+                            let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                            email = e.target.value;
+                            setemail(email);
+                            if (re.test(email)) {
+                                setemailerror("");
+                            }
+                            else {
+                                setemailerror("* Enter a valid email");
+                            }
+                        }
+                        } />
+                        <span className="col error">{emailerror}</span>
 
                     </div>
                     <div className="row form ">
@@ -77,16 +142,53 @@ function Signup() {
                             <label className="col">Upload Pictures</label>
                         </div>
                         <div className="form-input-1">
-                            <input className="col" type="text" placeholder="WAQAR " />
+                            <input className="col" type="password" placeholder="*****" onChange={(e) => {
 
-                            <input className="col" type="text" placeholder="Ahmed" />
+                                password = e.target.value;
+                                setpassword(password);
+                                if (password.length >= 8) {
+
+                                    setpassworderror("");
+
+                                }
+                                else {
+
+                                    setpassworderror("* Password must be greater then 8 words");
+                                }
+
+                            }
+                            } />
+
+                            <input className="col in-file" type="file" placeholder="Ahmed" />
+                        </div>
+
+                        {/* password and pic error */}
+                        <div className="row">
+                            <span className="col ms-3 error">{passworderror}</span>
+                            <span className="col error"></span>
                         </div>
                     </div>
                     <div className="signup-btn">
                         <div className="row">
 
                             <div className="form-btn-group">
-                                <input className="btn btn-primary " value="SIGN UP" type="submit" />
+                                <input className="btn btn-primary " value="SIGN UP" type="submit" onClick={(e) => {
+                                    e.preventDefault();
+
+                                    if(fname==="" || lname==="" || email==="" || password ==="" ){
+                                        setformerror("Form must be filled completly");
+                                    }
+                                    else if(fnameerror!="" || lnameerror!="" || emailerror!="" || passworderror !=""){
+                                        setformerror("Remove all the errors from the form");
+
+                                    }
+                                    else{
+                                        navigate("/signin");
+                                    }
+
+                                  
+
+                                }} />
                                 <a className="g-logo-link" href="/">
                                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" />
                                     Signup Using Google
@@ -110,3 +212,10 @@ function Signup() {
 }
 
 export default Signup;
+
+
+
+
+
+
+
