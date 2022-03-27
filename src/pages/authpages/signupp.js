@@ -1,4 +1,4 @@
-import Formcolumn from "../../components/inputfieldcomp";
+
 import { useState } from "react";
 
 import "../../style/login.css";
@@ -58,7 +58,7 @@ function Signup() {
                 <form>
                     <div className="row form ">
                         <div className="form-label-1">
-                            <label className="col">First Name  {fname}</label>
+                            <label className="col">First Name</label>
                             <label className="col">Last Name</label>
                         </div>
                         <div className="form-input-1">
@@ -185,8 +185,6 @@ function Signup() {
                                     else {
                                         navigate("/signin");
                                     }
-
-
 
                                 }} />
                                 <a className="g-logo-link" href="/">

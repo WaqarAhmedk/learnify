@@ -1,41 +1,48 @@
 
 import { Navbar } from 'react-bootstrap';
-import { BrowserRouter, Route, Routes ,Switch} from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Dashboard from './components/dashboard';
+import Header from './components/header';
 import Login from './pages/authpages/loginp';
 import Signup from './pages/authpages/signupp';
 import Landingpage from './pages/home';
-import Instructordashboard from './pages/Instructor/instructordashboard';
+import InstClassDetails from './pages/instructor/inst_classdetails';
 import Navbarmain from './pages/mainnavbar';
 import OurMoto from './pages/moto';
 
 
 function App() {
   var role = "instructor";
+
+  let loggedin = true;
   return (
+
+
     <div className="">
 
-      <BrowserRouter>
-        <Navbarmain />
+      <InstClassDetails />
+
+
+       {/* <BrowserRouter>
+
+        {
+
+          loggedin ? <Header /> : <Navbarmain />
+        }
+
+
         <Routes>
-         
+
           <Route exact path='/' element={<Landingpage />} />
           <Route exact path='/signup' element={<Signup />} />
-          <Route exact path='/moto' element={<OurMoto />}/>
+          <Route exact path='/moto' element={<OurMoto />} />
           <Route exact path='/signin' element={<Login />} />
 
+          <Route path="/dashboard" element={<Dashboard />} />
 
-
-          
-          <Route exact path='/instructordashboard' element={<Instructordashboard />} />
         </Routes>
-      </BrowserRouter>
-
-      
-      {/* <Landingpage />
-   <Signup />
-   <Login />
-   <Instructordashboard /> */}
+      </BrowserRouter>  */}
 
 
     </div>

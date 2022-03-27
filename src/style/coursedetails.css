@@ -1,0 +1,121 @@
+#class-details-container {
+    background-color: white;
+    height: auto;
+    margin-left: 3%;
+    margin-right: 15%;
+
+    margin-top: 40px;
+    box-shadow: 2px 5px 5px #888888;
+
+
+}
+
+.class-details-hd {
+
+    background-color: #4C7DFE;
+    align-items: center;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    height: 30%;
+}
+
+.class-details-hd>h1 {
+
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 45px;
+    display: flex;
+    padding-left: 25px;
+    color: white;
+}
+
+#search-form {
+    padding-left: 22%;
+
+}
+
+.class-details-searchdiv {
+    margin-left: 5%;
+    width: 20%;
+
+
+}
+
+
+
+.in-field {
+    width: 90%;
+    border-radius: 20px;
+    height: 30%;
+}
+
+.inst-class-details-options {
+    display: flex;
+}
+
+.inst-class-details-options>div {
+    font-size: 18px;
+    color: white;
+    margin-left: 20px;
+}
+
+.class-det-topic-heading{
+font-weight: bold;
+margin-bottom: 10px;
+}
+.topic-heading-edit{
+    color: #4C7DFE;
+    margin-left: 10px;
+}
+.classdetails-content {
+    margin-left: 20px;
+    background-color: white;
+    margin-left: 3%;
+    margin-right: 15%;
+    height: auto;
+    padding: 25px;
+   
+}
+
+.class-det-topic-content {
+    border: 1px solid #4C7DFE;
+    padding-top: 10px;
+    margin-bottom: 0px;
+}
+
+.main-content-1 {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.inner-content-left {
+    color: #4C7DFE;
+   
+
+}
+
+.inner-content-left>span{
+    color: black;
+    margin-left: 15px;
+}
+.inner-content-right {
+    color: #4C7DFE;
+   
+}
+.time{
+    margin-right: 10px;
+}
+.cross-icon{
+    color: red;
+    margin-left: 10px;
+}
+.hr{
+    margin-left: 20px;
+    margin-right: 20px;
+}
