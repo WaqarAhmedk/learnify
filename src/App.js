@@ -15,16 +15,15 @@ import OurMoto from './pages/moto';
 function App() {
   var role = "instructor";
 
-  let loggedin = true;
+  let loggedin = false;
   return (
 
 
     <div className="">
 
-      <InstClassDetails />
 
 
-       {/* <BrowserRouter>
+      <BrowserRouter>
 
         {
 
@@ -40,9 +39,10 @@ function App() {
           <Route exact path='/signin' element={<Login />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route  exact path='/dashboard/classdetails' element={<InstClassDetails />}  />
 
         </Routes>
-      </BrowserRouter>  */}
+      </BrowserRouter>
 
 
     </div>

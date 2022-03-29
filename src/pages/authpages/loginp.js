@@ -1,9 +1,33 @@
 
 import "../../style/login.css"
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 
 function Login() {
+
+    let [error, seterror] = useState("");
+    let [useremail, setuseremail] = useState("");
+    let [userpassword, setuserpassword] = useState("");
+
+
+    let users = [
+
+        {
+            uid: 1,
+            name: "Waqar Ahmed",
+            email: "wlwaqarah0@gmail.com",
+            role: "instructor",
+            password: "1234567",
+        },
+        {
+            uid: 1,
+            name: "Muhammad Ali",
+            email: "ali@gmail.com",
+            role: "student",
+            password: "1234567",
+        }
+    ]
 
     const navigate = useNavigate();
     return <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
@@ -21,13 +45,17 @@ function Login() {
                 <form className="login-form">
                     <div className="row email-div">
                         <label className="">Email</label>
-                        <input className="" type="email" />
+                        <input className="" type="email" onChange={(e) => {
+                            setuseremail(e.target.value);
+                        }} />
 
                     </div>
                     <div className="row email-div">
                         <label className="">Password</label>
-                        <input className="" type="password" placeholder="********" />
-
+                        <input className="" type="password" placeholder="********" onChange={(e) => {
+                            setuserpassword(e.target.value);
+                        }} />
+                        <span>{error}</span>
                     </div>
 
                     <div className="signup-btn">
@@ -37,9 +65,16 @@ function Login() {
                                 <input className="btn btn-primary " type="submit" value="SIGN IN" onClick={(e) => {
                                     e.preventDefault();
 
+                                    users.map((user) => {
+                                        if (user.email === useremail && user.password === userpassword) {
+                                            //pasing the role to check the logged in person is instructor or student
+                                            navigate("/dashboard", { state: { role: user.role } });
+                                        }
+                                        else {
+                                            seterror("User Email or Password is Wrong");
+                                        }
+                                    })
 
-                                    //pasing the role to check the logged in person is instructor or student
-                                    navigate("/dashboard", { state: { role: "instructor" } });
 
                                 }} />
                                 <a className="g-logo-link" href="/">

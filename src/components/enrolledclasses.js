@@ -5,9 +5,9 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from 'react-router-dom';
 function EnrolledClasses(props) {
 
-   let role=props.role;
+    let role = props.role;
 
-    
+
     var enrolledclasses = [
         {
             id: 1,
@@ -101,13 +101,13 @@ function EnrolledClasses(props) {
 
                 {
                     role === "instructor" ? instclasses.map((instclass) => {
-                        return <SingleClass key={instclass.id} subjname={instclass.subjname} imgsrc={require("../assets/images/" + instclass.imgsrc)} role={role} />
+                        return <SingleClass id={instclass.id} subjname={instclass.subjname} imgsrc={require("../assets/images/" + instclass.imgsrc)} role={role} />
 
                     }) :
 
                         enrolledclasses.map((enclass) => {
 
-                            return <SingleClass key={enclass.id} subjname={enclass.subjname} imgsrc={require("../assets/images/" + enclass.imgsrc)} role={role} />
+                            return <SingleClass id={enclass.id} subjname={enclass.subjname} imgsrc={require("../assets/images/" + enclass.imgsrc)} role={role} />
 
                         })
 
