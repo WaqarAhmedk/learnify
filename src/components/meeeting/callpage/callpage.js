@@ -1,8 +1,8 @@
 import React from 'react'
-import MeetingHeader from '../meetingheader';
-import MeetingFooter from '../meetingfooter';
-import MeetingInfo from '../meetinginfo';
-import MeetingMessages from '../meetingmessages';
+import MeetingHeader from '../meetingheader/meetingheader';
+import MeetingFooter from '../meetingfooter/meetingfooter';
+import MeetingInfo from '../meetinginfo/meetinginfo';
+import MeetingMessages from '../meetingmessages/meetingmessages';
 import "./callpage.css"
 
 export default function CallPage() {

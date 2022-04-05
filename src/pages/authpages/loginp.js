@@ -2,7 +2,7 @@
 import "../../style/login.css"
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { users } from "./users";
+import { users } from "../../models/users";
 
 
 function Login() {

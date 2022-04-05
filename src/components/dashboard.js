@@ -1,4 +1,4 @@
-import EnrolledClasses from "./enrolledclasses";
+import EnrolledClasses from "./classes/enrolledclasses";
 import Header from "./header";
 import { useLocation } from 'react-router-dom';
 

@@ -121,6 +121,7 @@
     padding-left: 7px;
     font-size: 18px;
 }
+
 .create-activity-parent-content >span{
     margin-left: 5px;
 }
@@ -215,6 +216,7 @@
 
 .inner-content-right {
     color: #4C7DFE;
+    
 
 }
 
@@ -239,4 +241,18 @@
 .check-upload-done{
     color: #4C7DFE;
     margin-left: 5px;
+}
+
+
+.participation-report{
+    background-color:  #FFABAB80;
+    padding: 10px;
+    margin-right: 10px;
+    color:  rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    
+}
+
+.link{
+    text-decoration: none;
 }

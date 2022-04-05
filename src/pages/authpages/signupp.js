@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 import "../../style/login.css";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 
@@ -53,6 +53,8 @@ function Signup() {
                 <br />
                 <span> as a {role}</span>
             </div>
+
+
             <div className="col-6 signup-form">
                 <span className="col ms-3 error">{formerror}</span>
                 <form>
@@ -62,7 +64,7 @@ function Signup() {
                             <label className="col">Last Name</label>
                         </div>
                         <div className="form-input-1">
-                            <input className="col" type="text" value={fname} placeholder="WAQAR" onChange={(e) => {
+                            <input className="col" type="text" value={fname} placeholder="Enter First Name" onChange={(e) => {
 
                                 fname = e.target.value;
                                 setfname(fname);
@@ -77,7 +79,7 @@ function Signup() {
                                         setfnameerror(fnameerror);
                                     }
                                     else {
-                                        fnameerror = "* First name must be greater then 3";
+                                        fnameerror = "* First name must be greater than 3";
                                         setfnameerror(fnameerror);
                                     }
                                 }
@@ -123,11 +125,16 @@ function Signup() {
                             // Regex regular expressions which are used to match the required string format.
 
                             let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
                             email = e.target.value;
+
                             setemail(email);
+
+
                             if (re.test(email)) {
                                 setemailerror("");
                             }
+
                             else {
                                 setemailerror("* Enter a valid email");
                             }
@@ -173,6 +180,7 @@ function Signup() {
 
                             <div className="form-btn-group">
                                 <input className="btn btn-primary " value="SIGN UP" type="submit" onClick={(e) => {
+
                                     e.preventDefault();
 
                                     if (fname === "" || lname === "" || email === "" || password === "") {
@@ -187,9 +195,9 @@ function Signup() {
                                     }
 
                                 }} />
-                                <a className="g-logo-link" href="/">
+                                <a className="g-logo-link-signup" href="/">
                                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" />
-                                    Signup Using Google
+                                    SIGN UP USING GOOGLE
                                 </a>
 
                             </div>

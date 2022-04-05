@@ -7,8 +7,12 @@ import { ReactComponent as Messagesvg   } from '../assets/icons/messages blue.sv
 import { ReactComponent as Settingsvg   } from '../assets/icons/Settings Blue.svg';
 import { ReactComponent as Signoutsvg   } from '../assets/icons/Sign out blue.svg';
 import { ReactComponent as Notificationsvg } from '../assets/icons/notifications blue.svg';
+import { Link } from "react-router-dom";
+
 import { Dropdown } from "react-bootstrap";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import { faMessage, faBell } from '@fortawesome/free-solid-svg-icons'
 
 
@@ -16,9 +20,9 @@ function Header() {
 
     return <nav className="navbar navbar-expand-lg navbar-light bg-light " id="navbar">
 
-        <a className="navbar-brand ps-5" id="brand" href="/">
+        <Link className="navbar-brand ps-5" id="brand" to="/">
             <img src={require("../assets/icons/Learnify logo.png")} alt={"drop-down-sign"} />
-        </a>
+        </Link>
 
 
         <div id="profile">

@@ -10,32 +10,36 @@ import Header from './components/header';
 import Login from './pages/authpages/loginp';
 import Signup from './pages/authpages/signupp';
 import Landingpage from './pages/home';
-import InstClassDetails from './pages/inst_classdetails';
+import ClassDetails from '../src/pages/classdetails';
 import Navbarmain from './pages/mainnavbar';
 import OurMoto from './pages/moto';
 import axios from 'axios';
 import { useState } from 'react';
+import CustomPopup from './components/meeeting/scanface/joinmeeting-popup1';
 
 
 function App() {
   var role = "instructor";
 
 
-let [vara,setvar]=useState("");
-  axios
-    .get("http://localhost:8080/")
-    .then((response)=>{
-      setvar(response.data.msg);
-    } )
-    .catch(err => console.error(err));
+  let [vara, setvar] = useState("");
+  // axios
+  //   .get("http://localhost:8080/")
+  //   .then((response) => {
+  //     setvar(response.data.msg);
+  //   })
+  //   .catch(err => console.error(err));
+
+
 
   let loggedin = false;
+
   return (
 
 
     <div className="">
 
-{vara}
+    
 
       <BrowserRouter>
 
@@ -48,17 +52,27 @@ let [vara,setvar]=useState("");
         <Routes>
 
           <Route exact path='/:id' element={<CallPage />} />
-          <Route exact path='/s' element={<CallHomePage />} />
+          <Route exact path='/meetinghome' element={<CallHomePage />} />
 
-          
+
           <Route exact path='/' element={<Landingpage />} />
-          <Route exact path='/signup' element={<Signup />} />
+
           <Route exact path='/moto' element={<OurMoto />} />
+
+          <Route exact path='/signup' element={<Signup />} />
+
+       
+          
           <Route exact path='/signin' element={<Login />} />
+
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route exact path='/dashboard/classdetails' element={<InstClassDetails />} />
+
+          <Route exact path="/scanface" element={<CustomPopup />} />
+
+          <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
 
         </Routes>
+
       </BrowserRouter>
 
 
