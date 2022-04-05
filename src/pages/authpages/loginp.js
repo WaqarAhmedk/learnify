@@ -2,6 +2,7 @@
 import "../../style/login.css"
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { users } from "./users";
 
 
 function Login() {
@@ -11,23 +12,8 @@ function Login() {
     let [userpassword, setuserpassword] = useState("");
 
 
-    let users = [
 
-        {
-            uid: 1,
-            name: "Waqar Ahmed",
-            email: "wlwaqarah0@gmail.com",
-            role: "instructor",
-            password: "1234567",
-        },
-        {
-            uid: 1,
-            name: "Muhammad Ali",
-            email: "ali@gmail.com",
-            role: "student",
-            password: "1234567",
-        }
-    ]
+
 
     const navigate = useNavigate();
     return <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
@@ -55,7 +41,7 @@ function Login() {
                         <input className="" type="password" placeholder="********" onChange={(e) => {
                             setuserpassword(e.target.value);
                         }} />
-                        <span>{error}</span>
+                        <span className="error">{error}</span>
                     </div>
 
                     <div className="signup-btn">
@@ -68,7 +54,7 @@ function Login() {
                                     users.map((user) => {
                                         if (user.email === useremail && user.password === userpassword) {
                                             //pasing the role to check the logged in person is instructor or student
-                                            navigate("/dashboard", { state: { role: user.role } });
+                                            navigate("/dashboard", { state: { role: user.role, userid: user.uid } });
                                         }
                                         else {
                                             seterror("User Email or Password is Wrong");

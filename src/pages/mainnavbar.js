@@ -22,6 +22,7 @@ function Navbarmain() {
                 </ul>
             </div>
         </nav>
+        
     </>
 }
 export default Navbarmain;

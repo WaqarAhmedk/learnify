@@ -14,6 +14,7 @@ function OurMoto() {
         "Access Course content on a central storage platform",
         "Automated attendance & AI features for ease",
         "Dynamic Progress Reports",
+        
     ];
 
     function OnbuttonClick(role) {

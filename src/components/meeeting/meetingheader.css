@@ -1,0 +1,50 @@
+.meeting-header-frame {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    width: 350px;
+    top: 8;
+    right: 0%;
+    background-color: #fff;
+    border-radius: 0 0 0 10px;
+    overflow: hidden;
+}
+
+.icon-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    flex: 1;
+    position: relative;
+}
+.icon-block:hover{
+   background-color: lightgray;
+   cursor: pointer;
+}
+
+.header-icon {
+
+    color: gray;
+    font-size: 20px;
+}
+.meeting-profile{
+
+}
+.date-block {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.message-alert-icon {
+    position: absolute;
+    background-color: green;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    top: 15px;
+    right: 30px;
+}

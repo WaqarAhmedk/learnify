@@ -231,3 +231,12 @@
     margin-left: 20px;
     margin-right: 20px;
 }
+
+.check-upload{
+    color: #888888;
+    margin-left: 5px;
+}
+.check-upload-done{
+    color: #4C7DFE;
+    margin-left: 5px;
+}

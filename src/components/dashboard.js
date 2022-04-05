@@ -7,8 +7,9 @@ function Dashboard(props){
     let state=useLocation();
 
     let role=state.state.role;
+    let userid=state.state.userid;
     return <>
-    <EnrolledClasses role={role}/>
+    <EnrolledClasses role={role} />
     
     </>
 }

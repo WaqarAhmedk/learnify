@@ -10,6 +10,7 @@ function SingleClass(props) {
     return <>
         <div className="card" onClick={() => {
             //to do here we will rediect to the page where the deatils of the enrolled classes will show
+            console.log(subjid);
             Navigate("/dashboard/classdetails", { state: { role: role, subjid: subjid } });
 
         }}  >
