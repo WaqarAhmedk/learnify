@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../../style/meeting-custompopup.css"
+import Header from "../../header";
+import "./meeting-custompopup.css"
 
 
 
@@ -20,25 +21,28 @@ const CustomPopup = () => {
 
 
   return (
-    <div
-      style={{
-        visibility: show ? "visible" : "hidden",
-        opacity: show ? "1" : "0"
-      }}
-      className="overlay"
-    >
-      <div className="popup">
-        <span className="popup close" onClick={closeHandler}>
-          &times;
-        </span>
-        <h2>Face Recognition </h2>
+    <>
+   <Header />
+      <div
+        style={{
+          visibility: show ? "visible" : "hidden",
+          opacity: show ? "1" : "0"
+        }}
+        className="overlay"
+      >
+        <div className="popup">
+          <span className="popup close" onClick={closeHandler}>
+            &times;
+          </span>
+          <h2>Face Recognition </h2>
 
-        <h3>Please Open WebCam to get your face Scaned and verify your identity</h3>
-        <button className="btn btn-primary" onClick={() => {
-
-        }}>ScanNow</button>
+          <h3>Please Open WebCam to get your face Scaned and verify your identity</h3>
+          <button className="btn btn-primary" onClick={() => {
+            navigate("/showface");
+          }}>ScanNow</button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

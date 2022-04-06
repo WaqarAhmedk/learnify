@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import "../../style/login.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import Navbarmain from "../mainnavbar";
 
 
 
@@ -41,7 +42,9 @@ function Signup() {
 
 
 
-    return <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
+    return   <>
+    <Navbarmain />
+    <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
 
 
         <div className="signup-form-inner-div row">
@@ -215,6 +218,7 @@ function Signup() {
 
 
     </div>
+    </>
 }
 
 export default Signup;

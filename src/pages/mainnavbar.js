@@ -15,14 +15,14 @@ function Navbarmain() {
             <div className="home-list">
                 <ul>
                     <Link to="/signin" className='link'>Login</Link>
-                    <li className="active">Home</li>
+                    <Link className="active link" to="/" >Home</Link>
                     <li >About</li>
                     <li>Contact us</li>
 
                 </ul>
             </div>
         </nav>
-        
+
     </>
 }
 export default Navbarmain;

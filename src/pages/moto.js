@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import {  useNavigate } from 'react-router-dom'
 import Signup from './authpages/signupp';
+import Navbarmain from './mainnavbar';
 
 
 function OurMoto() {
@@ -26,6 +27,7 @@ function OurMoto() {
     }
 
     return <>
+    <Navbarmain />
 
         <div className="home-card-div">
             <div className="home-card-div-child">

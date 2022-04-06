@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { topics } from "../models/topics";
 import { useNavigate } from 'react-router-dom'
 import CustomPopup from "../components/meeeting/scanface/joinmeeting-popup1";
+import Header from "../components/header";
 
 
 
@@ -47,7 +48,7 @@ function ClassDetails() {
         });
 
     return <>
-
+<Header />
 
         <div id="class-details-container"  >
 
@@ -382,10 +383,13 @@ function ClassDetails() {
                                                     </> :
 
                                                         <div>
-                                                            <Link to={"/"} className="link">
-                                                                <span className="participation-report">Check participation report</span>
+                                                            <a className="link">
+                                                                <span className="participation-report" onClick={()=>{
+                                                                    navigate("/participationReport");
+                                                                
+                                                                }}>Check participation report</span>
 
-                                                            </Link>
+                                                            </a>
                                                             {
                                                                 topic.recordedsession.done ?
                                                                     <FontAwesomeIcon icon={faCircleCheck} className="check-upload-done" /> :

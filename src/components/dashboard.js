@@ -9,6 +9,7 @@ function Dashboard(props){
     let role=state.state.role;
     let userid=state.state.userid;
     return <>
+    <Header/>
     <EnrolledClasses role={role} />
     
     </>

@@ -16,6 +16,8 @@ import OurMoto from './pages/moto';
 import axios from 'axios';
 import { useState } from 'react';
 import CustomPopup from './components/meeeting/scanface/joinmeeting-popup1';
+import CustomPopupShowFace from './components/meeeting/scanface/facescanprogress';
+import ParticipationReport from './pages/participationreport';
 
 
 function App() {
@@ -39,18 +41,17 @@ function App() {
 
     <div className="">
 
-    
+
 
       <BrowserRouter>
 
-        {
+        {/* {
 
           loggedin ? <Header /> : <Navbarmain />
-        }
+        } */}
 
 
         <Routes>
-
           <Route exact path='/:id' element={<CallPage />} />
           <Route exact path='/meetinghome' element={<CallHomePage />} />
 
@@ -61,15 +62,19 @@ function App() {
 
           <Route exact path='/signup' element={<Signup />} />
 
-       
-          
           <Route exact path='/signin' element={<Login />} />
 
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/dashboard" element={<Dashboard />} />
+
+
+
+          <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
 
           <Route exact path="/scanface" element={<CustomPopup />} />
 
-          <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
+          <Route exact path='/participationReport' element={<ParticipationReport />} />
+
+          <Route exact path='/showface' element={<CustomPopupShowFace />} />
 
         </Routes>
 

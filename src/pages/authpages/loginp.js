@@ -3,6 +3,8 @@ import "../../style/login.css"
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { users } from "../../models/users";
+import Header from "../../components/header";
+import Navbarmain from "../mainnavbar";
 
 
 function Login() {
@@ -16,7 +18,9 @@ function Login() {
 
 
     const navigate = useNavigate();
-    return <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
+    return<>
+    <Navbarmain />
+    <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
 
 
         <div className="signup-form-inner-div row">
@@ -65,7 +69,7 @@ function Login() {
                                 }} />
                                 <a className="g-logo-link" href="/">
                                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" />
-                                    SignIn Using Google
+                                    SIGNIN USING GOOGLE
                                 </a>
 
                             </div>
@@ -83,6 +87,7 @@ function Login() {
 
 
     </div>
+    </>
 
 }
 
