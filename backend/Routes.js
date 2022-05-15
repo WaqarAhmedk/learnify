@@ -4,7 +4,7 @@ const router=express.Router();
 const signuptmp=require("../backend/Models/SignupModel");
 
 
-router.post("/signu" ,(req,res)=>{
+router.post("/signup" ,(req,res)=>{
    const signedupUser=new signuptmp({
        fname:req.body.fname,
        lname:req.body.lname,
