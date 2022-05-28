@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { users } from "../../models/users";
 import Header from "../../components/header";
 import Navbarmain from "../mainnavbar";
+import  axios from 'axios';
 
 
 function Login() {
@@ -55,15 +56,23 @@ function Login() {
                                 <input className="btn btn-primary " type="submit" value="SIGN IN" onClick={(e) => {
                                     e.preventDefault();
 
-                                    users.map((user) => {
-                                        if (user.email === useremail && user.password === userpassword) {
-                                            //pasing the role to check the logged in person is instructor or student
-                                            navigate("/dashboard", { state: { role: user.role, userid: user.uid } });
-                                        }
-                                        else {
-                                            seterror("User Email or Password is Wrong");
-                                        }
+
+                                    axios.post("http://localhost:4000/signin",{
+                                        email:useremail,
+                                        password:userpassword
                                     })
+                                    .then(console.log("data sent"))
+                                    .catch(err=>console.log(err));
+
+                                    // users.map((user) => {
+                                    //     if (user.email === useremail && user.password === userpassword) {
+                                    //         //pasing the role to check the logged in person is instructor or student
+                                    //         navigate("/dashboard", { state: { role: user.role, userid: user.uid } });
+                                    //     }
+                                    //     else {
+                                    //         seterror("User Email or Password is Wrong");
+                                    //     }
+                                    // })
 
 
                                 }} />
