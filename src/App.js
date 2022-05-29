@@ -1,40 +1,23 @@
 
 
-import { Navbar } from 'react-bootstrap';
-import { BrowserRouter, Route, Routes, Switch } from 'react-router-dom';
+
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import CallHomePage from './components/meeeting/callhomepage/callhomepage';
-import CallPage from './components/meeeting/callpage/callpage';
+import Addcourse from './components/addcourse';
 import Dashboard from './components/dashboard';
-import Header from './components/header';
+import UpdateCourse from './components/updatecourse';
+
 import Login from './pages/authpages/loginp';
 import Signup from './pages/authpages/signupp';
 import Landingpage from './pages/home';
-import ClassDetails from '../src/pages/classdetails';
-import Navbarmain from './pages/mainnavbar';
+
 import OurMoto from './pages/moto';
-import axios from 'axios';
-import { useState } from 'react';
-import CustomPopup from './components/meeeting/scanface/joinmeeting-popup1';
-import CustomPopupShowFace from './components/meeeting/scanface/facescanprogress';
-import ParticipationReport from './pages/participationreport';
+
+
 
 
 function App() {
-  var role = "instructor";
 
-
-  let [vara, setvar] = useState("");
-  // axios
-  //   .get("http://localhost:8080/")
-  //   .then((response) => {
-  //     setvar(response.data.msg);
-  //   })
-  //   .catch(err => console.error(err));
-
-
-
-  let loggedin = false;
 
   return (
 
@@ -45,18 +28,14 @@ function App() {
 
       <BrowserRouter>
 
-        {/* {
-
-          loggedin ? <Header /> : <Navbarmain />
-        } */}
-
 
         <Routes>
-          <Route exact path='/:id' element={<CallPage />} />
-          <Route exact path='/meetinghome' element={<CallHomePage />} />
-
 
           <Route exact path='/' element={<Landingpage />} />
+
+          <Route exact path='/addcourse' element={<Addcourse />} />
+          <Route exact path='/updatecourse' element={<UpdateCourse />} />
+
 
           <Route exact path='/moto' element={<OurMoto />} />
 
@@ -65,16 +44,6 @@ function App() {
           <Route exact path='/signin' element={<Login />} />
 
           <Route exact path="/dashboard" element={<Dashboard />} />
-
-
-
-          <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
-
-          <Route exact path="/scanface" element={<CustomPopup />} />
-
-          <Route exact path='/participationReport' element={<ParticipationReport />} />
-
-          <Route exact path='/showface' element={<CustomPopupShowFace />} />
 
         </Routes>
 

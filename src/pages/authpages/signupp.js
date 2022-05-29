@@ -202,11 +202,17 @@ function Signup() {
                                                 password: password,
                                                 role: role,
                                             })
-                                            .then(console.log("DAta sent"))
+                                            .then((response)=>{
+                                                console.log(response);
+
+                                                if(response.status==200){
+                                                    navigate("/signin");
+                                                }
+                                            })
                                             .catch(err=>console.log(err))
 
 
-                                            navigate("/signin");
+                                           
                                         }
 
                                     }} />
