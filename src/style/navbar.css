@@ -1,0 +1,130 @@
+
+
+/* Navbar   */
+
+#navbar{
+border-bottom:1px solid grey;
+}
+
+/* Learnify logo */
+#brand{
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 700;
+font-size: 200%;
+color: #4C7DFE;
+}
+
+
+
+/* Profile  */
+
+#profile{
+  margin-left: 60%;
+  display: flex;
+  align-items: center;
+  
+}
+.nav-icons{
+font-size: 20px;
+color: #4C7DFE;
+margin-left: 10px;
+margin-right: 10px;
+
+}
+
+.nav-icons :hover{
+  color:cyan;
+}
+#profile-img{
+margin-left: 20px;
+margin-right: 5px;
+  height: 60px;
+  width: 50px;
+
+  
+}
+.icon{
+  color:rebeccapurple;
+}
+
+
+
+/* Dropdown  */
+
+.dropdown{
+  background-color:transparent;
+
+}
+.dropdown:hover{
+  background-color: transparent;
+}
+.drop-down-main:hover{
+  background-color: transparent;
+ color: #4C7DFE;
+}
+#drop-down-profile{
+  display: block;
+  width: 100%;
+  margin-bottom:  30px ;
+ 
+}
+
+#drop-down-profile >img{
+margin-bottom: 10px;
+margin-top: 5px;
+margin-left: 0%;
+align-items: center;
+}
+
+.drop-down-main{
+background-color:transparent;
+color:#4C7DFE;
+font-size: 20px;
+border: none;
+}
+.dropdown-menu{
+width: 300px;
+text-align: center;
+}
+
+
+.drop-down-ul{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0%;
+  margin: 0%;
+ text-align: center;
+ align-items: center;
+ 
+
+}
+.drop-down-menu-item{
+ width: 40%;
+ margin-bottom: 30px;
+ margin-top: 10px;
+ display: grid;
+ margin-left: 20px;
+
+
+}
+.drop-down-menu-item:hover{
+  background-color: #4C7DFE;
+  color: white;
+}
+
+
+.icon-img{
+  width: 100%;
+  display: flex;
+  color: #4C7DFE;
+  margin-bottom: 10px;
+  align-self: center;
+  padding-left: 5px;
+ 
+  
+}
+.drop-down-menu-item >span{
+  color:black;
+  text-align: center;
+}

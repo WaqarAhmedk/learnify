@@ -1,0 +1,149 @@
+#brand-img {
+    width: 40%;
+}
+
+#home-navbar {
+    align-items: baseline;
+}
+
+
+/* ul list pages */
+
+.active {
+    color:#4C7DFE;
+}
+
+.link{
+    text-decoration: none;
+    margin-left: 30px;
+}
+
+.home-list {
+    margin-bottom: 2px;
+    margin-left: 40%;
+    width: 50%;
+}
+
+.home-list>ul>li {
+    display: inline;
+    margin-left: 30px;
+}
+
+.home-list>ul>li:hover {
+    color: #4C7DFE;
+    cursor: pointer;
+}
+
+
+/* main page content */
+
+.main-div {
+    height: 600px;
+    width: 100%;
+    padding-bottom: 50px;
+    border: 2px solidd green;
+    background-image: url("../assets/images/Rectangle\ 1.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+
+/*  inner div */
+
+.home-innerdiv {
+    width: 100%;
+    height: 80%;
+    background: rgba(50, 53, 61, 0.85);
+    text-align: center;
+    padding-top: 5%;
+    align-items: center;
+    text-align: center;
+}
+
+.home-innerdiv>span {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 50px;
+    line-height: 96px;
+    color: #FFFFFF;
+}
+
+.home-innerdiv>p {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 25px;
+    line-height: 40px;
+    margin-left: 21%;
+    margin-right: 23%;
+    color: #F8F9FA;
+    opacity: 0.7;
+}
+
+.home-card-div {
+    display: flex;
+    width: 80%;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    padding-left: 20%;
+}
+
+.home-card-div-child {
+    text-align: center;
+    margin: 30px;
+    width: 40%;
+    height: fit-content;
+    background: #FFFFFF;
+    border-radius: 20px;
+}
+
+.home-card-btn {
+    background-color:#4C7DFE;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 72px;
+    color: #FFFFFF;
+}
+.home-card-btn:hover{
+    background-color: #32353D;
+}
+
+.home-card-cntn {
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 10px;
+    margin: 27px;
+    margin-left: 30px;
+  
+
+}
+
+.home-card-cntn>span {
+    margin-left: 10px;
+    text-align: justify;
+    text-align: start;
+    align-self: flex-start;
+   
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 20px;
+    color: #000000;
+    
+
+}
+
+.home-check-icon {
+
+    font-size: 20px;
+    color: blue;
+   
+}
