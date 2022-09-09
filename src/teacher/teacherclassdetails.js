@@ -9,6 +9,7 @@ import axios from "axios";
 import { useCookies } from 'react-cookie';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import Discussionboard from "../components/discussionboard";
+import CreateAssignment from "./coursecomponents/createassignment";
 
 function TeacherClassDetails() {
 
@@ -20,17 +21,7 @@ function TeacherClassDetails() {
     const [cookies, setCookies] = useCookies();
     const [socket, setSocket] = useState(null);
 
-    // useEffect(() => {
-    //     if (socket === null) {
 
-    //         setSocket(io("http://localhost:4000"));
-
-
-    //     } else {
-    //         socket.emit("join_room", courseid)
-
-    //     }
-    // }, [socket])
 
 
 
@@ -44,7 +35,6 @@ function TeacherClassDetails() {
     //state variable for create new activity child options
     let [creatactc, setcreateactc] = useState("create-activity-child-content");
 
-    const [formcoursename, setformCoursename] = useState("");
     const [show, setShow] = useState(false);
 
     const openform = () => {
@@ -266,7 +256,8 @@ function TeacherClassDetails() {
 
                                                             })
                                                             .catch(err => console.error(err));
-                                                    }}>{index + 1}.  {assignment.title}</a>
+                                                    }}>
+                                                        {index + 1}.  {assignment.title}</a>
 
                                                 </div>
                                                 <div className="inner-content-right">
@@ -313,49 +304,21 @@ function TeacherClassDetails() {
 
                 })}
 
+        {/* create a topic */}
         <Modal show={show}>
             <ModalHeader closeButton onClick={closeform}>Create a Course</ModalHeader>
             <ModalBody>
-                <form>
-                    <div class="form-group">
-                        <label for="examzpleInputEmail1">Topic Name</label>
-                        <input type="text" class="form-control" placeholder="Enter Course name" value={formcoursename} onChange={(e) => {
-                            setformCoursename(e.target.value);
-                        }} />
-                    </div>
-
-
-
-                </form>
+          
             </ModalBody>
-            <ModalFooter>
-                <button type="submit" class="btn btn-primary" onClick={(e) => {
-                    e.preventDefault();
-                    if (formcoursename !== "") {
-                        axios
-                            .post("/create-topic/" + courseid, {
-                                title: formcoursename,
-                            }, {
-                                headers: {
-                                    'teacher-auth-token': cookies.teacherAuth,
+           
+        </Modal>
+        <Modal >
+        <ModalHeader closeButton onClick={closeform}>Create a Course</ModalHeader>
+            <ModalBody>
+            <CreateAssignment />
 
-                                }
-                            })
-                            .then((res) => {
-                                if (res.data.success == true) {
-                                    getAllTopics();
-                                }
-                                else {
-                                    console.log(res.data);
-
-                                }
-                                closeform();
-                            })
-                            .catch(err => console.error(err));
-
-                    }
-                }}>Create</button>
-            </ModalFooter>
+                
+            </ModalBody>
         </Modal>
         {/* Discuusion board */}
         <Modal show={discussion}>

@@ -2,19 +2,31 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
+import socketClient from "socket.io-client";
+
+
+
 
 
 
 export default function Discussionboard(props) {
+  const role = props.role;
+  const courseid = props.courseid;
+  var socket = socketClient("http://localhost:4000", { query: { courseid } });
+
+
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [cookies, Setcookies] = useCookies();
 
+
+
+  
+
   let sender = "";
 
-  const role = props.role;
-  const courseid = props.courseid;
+
   if (role === "teacher") {
     sender = cookies.teacherAuth
 
@@ -22,15 +34,47 @@ export default function Discussionboard(props) {
   else if (role === "student") {
     sender = cookies.StudentAuth;
   }
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+    
+      console.log(data);
+      setMessages((messages) => [...messages, data])
+    });
+  }, [])
 
-  // const loadmessages = () => {
-  //   socket.emit("load_message", {
-  //     discussion: courseid,
-  //   })
+  useEffect(() => {
 
-  // }
+    socket.on("connection", (data) => {
+      console.log("you are connected with chat" + data);
 
- 
+      socket.emit("load_message", {
+        discussion: courseid,
+      });
+
+
+      socket.on("early_messages", (data) => {
+        setMessages(data)
+      });
+
+
+
+
+    });
+
+
+
+
+  }, [])
+
+
+
+
+
+
+
+
+
+
 
 
   return (
@@ -44,7 +88,11 @@ export default function Discussionboard(props) {
                 return <div className="">
                   <div className="chat-body clearfix">
                     <div className="header">
-                      <strong className="primary-font">{message.sender.firstname}</strong> <small className="pull-right text-muted">
+                      {message.sender_type === "teacher" ?
+                        <strong className="primary-font text-success">{message.sender.firstname}</strong>
+                        : <strong className="primary-font text-primary">{message.sender.firstname}</strong>
+                      }
+                      <small className="pull-right text-muted">
                         <span className="glyphicon glyphicon-time"></span>12 mins ago</small>
                     </div>
                     <p>
@@ -83,6 +131,10 @@ export default function Discussionboard(props) {
             <span className="input-group-btn">
               <button className="btn btn-warning btn-md" id="btn-chat" onClick={(e) => {
                 e.preventDefault();
+                socket.emit("send_message", {
+                  role, sender, message, courseid
+                });
+                setMessage("");
               }}>
                 Send</button>
             </span>

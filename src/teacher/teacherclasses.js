@@ -10,8 +10,8 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 
 
 function TeacherClasses(props) {
-    const [tclasses, setTclasses] = useState([]);
     const navigate = useNavigate();
+    const [tclasses, setTclasses] = useState([]);
     const [cookies, setCookies] = useCookies();
     const [formcoursename, setformCoursename] = useState("");
     const [show, setShow] = useState(false);

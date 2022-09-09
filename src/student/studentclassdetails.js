@@ -9,6 +9,7 @@ import axios from "axios";
 import { useCookies } from 'react-cookie';
 import { Modal, ModalBody, ModalHeader } from 'react-bootstrap';
 import Discussionboard from "../components/discussionboard";
+import download from "js-file-download"
 
 
 function ClassDetails() {
@@ -167,29 +168,19 @@ function ClassDetails() {
                                                 <div className="main-content-1">
                                                     <div className="inner-content-left">
                                                         <FontAwesomeIcon icon={faClipboardList} />
-                                                        <a download onClick={() => {
+                                                        <span className="text-primary" 
+                                                        onClick={() => {
                                                             axios
-                                                                .post("/download-assignment", {
-                                                                    filename: assignment.filename,
-
-
-                                                                })
+                                                                .get("/download-assignment/"+assignment.filename,{responseType:"blob"})
                                                                 .then((res) => {
-
                                                                     console.log(res.data);
-
-                                                                    const url = window.URL.createObjectURL(new Blob([res.data]));
-                                                                    const link = document.createElement('a');
-                                                                    link.href = url;
-                                                                    console.log(url);
-                                                                    link.setAttribute('download', "app.pdf");
-                                                                    document.body.appendChild(link);
-                                                                    link.click();
-
+                                                                   download(res.data, assignment.filename);
 
                                                                 })
                                                                 .catch(err => console.error(err));
-                                                        }}>{index + 1}.  {assignment.title}</a>
+                                                        }}
+                                                        
+                                                        >{index + 1}.  {assignment.title}</span>
 
                                                     </div>
                                                     <div className="inner-content-right">
@@ -198,7 +189,7 @@ function ClassDetails() {
                                                     </div>
 
                                                 </div>
-                                                <button className="btn btn-sm btn-primary ms-3">submit</button>
+                                                <button className="btn btn-sm btn-primary ms-3">Upload Assignment</button>
                                             </div>
                                         })
                                     }
