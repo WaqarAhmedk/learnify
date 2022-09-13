@@ -5,11 +5,12 @@ import "../style/coursedetails.css"
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react';
-import axios from "axios";
+import axios, { Axios } from "axios";
 import { useCookies } from 'react-cookie';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import Discussionboard from "../components/discussionboard";
-import CreateAssignment from "./coursecomponents/createassignment";
+import "../style/login.css"
+import Datetimepicker from "../components/datetimepicker";
 
 function TeacherClassDetails() {
 
@@ -21,7 +22,17 @@ function TeacherClassDetails() {
     const [cookies, setCookies] = useCookies();
     const [socket, setSocket] = useState(null);
 
+    // useEffect(() => {
+    //     if (socket === null) {
 
+    //         setSocket(io("http://localhost:4000"));
+
+
+    //     } else {
+    //         socket.emit("join_room", courseid)
+
+    //     }
+    // }, [socket])
 
 
 
@@ -35,6 +46,7 @@ function TeacherClassDetails() {
     //state variable for create new activity child options
     let [creatactc, setcreateactc] = useState("create-activity-child-content");
 
+    const [formcoursename, setformCoursename] = useState("");
     const [show, setShow] = useState(false);
 
     const openform = () => {
@@ -52,6 +64,117 @@ function TeacherClassDetails() {
     const closediscussion = () => {
         setDiscussion(false)
     }
+
+    //******Enroll Student Modal/Pop Up********
+    const [StEmail, setStEmail] = useState("");
+    const [Emailerror, setEmailerror] = useState("");
+
+    const [enrollSt, setenrollSt] = useState(false);
+
+    const OpenenrollSt = () => {
+        setenrollSt(true)
+    }
+    const CloseenrollSt = () => {
+        setenrollSt(false)
+    }
+
+
+    //******This modal will display the student found by email to be enrolled in a course********
+    // const [FoundStudent, setFoundStudent] = useState(false);
+
+    // const OpenFoundStudent = () => {
+    //     setFoundStudent(true)
+    // }
+    // const CloseFoundStudent = () => {
+    //     setFoundStudent(false)
+    // }
+
+    //******This modal is for Removing a Course********
+    const [Delt_Crs, setDelt_Crs] = useState(false);
+
+    const OpenDelt_Crs = () => {
+        setDelt_Crs(true)
+    }
+    const CloseDelt_Crs = () => {
+        setDelt_Crs(false)
+    }
+
+
+    //******This modal is for Updating a Course Name********
+    const [Update_Crs, setUpdate_Crs] = useState(false);
+
+    const OpenUpdate_Crs = () => {
+        setUpdate_Crs(true)
+    }
+    const CloseUpdate_Crs = () => {
+        setUpdate_Crs(false)
+    }
+
+    //******This modal is for assignment creation********
+    const [crt_assginment, setcrt_assginment] = useState(false);
+
+    const Opencrt_assginment = () => {
+        setcrt_assginment(true)
+
+    }
+    const Closecrt_assginment = () => {
+        setcrt_assginment(false)
+    }
+
+    // ***State Management variables for assignment creation***
+    const [Asgm_title, setAsgm_title] = useState("");
+    const [Asgm_Desc, setAsgm_Desc] = useState("");
+
+    //******Quiz Creation Modal********
+    const [Quiz, setQuiz] = useState(false);
+
+    const OpenQuiz = () => {
+        setQuiz(true)
+
+    }
+    const CloseQuiz = () => {
+        setQuiz(false)
+    }
+
+    // ***State Management for Quiz Creation***
+    const [Question, setQuestion] = useState([]);
+    const [Answer, setAnswer] = useState([]);
+    const [Option, setOption] = useState([]);
+
+    const [Q_error, setQ_error] = useState([]);
+
+
+    //******Video Session Modal********
+    const [Vid_session, setVid_session] = useState(false);
+
+    const OpenVid_session = () => {
+        setVid_session(true)
+
+    }
+    const CloseVid_session = () => {
+        setVid_session(false)
+    }
+
+    // ***State Management for Quiz Creation***
+    const [Vid_title, setVid_title] = useState("");
+    const [Vid_Desc, setVid_Desc] = useState("");
+
+     //******Helping Material Modal********
+     const [Hlp_matr, setHlp_matr] = useState(false);
+
+     const OpenHlp_matr = () => {
+         setHlp_matr(true)
+ 
+     }
+     const CloseHlp_matr = () => {
+         setHlp_matr(false)
+     }
+
+     // ***State Management for Quiz Creation***
+    const [H_mat_title, setH_mat_title] = useState("");
+    const [H_mat_Desc, setH_mat_Desc] = useState("");
+
+
 
     const getAllTopics = () => {
         axios
@@ -132,13 +255,13 @@ function TeacherClassDetails() {
 
                                     </span>
 
-                                    <span className="course-mang-list">Assignment</span>
+                                    <span className="course-mang-list" onClick={Opencrt_assginment}>Assignment</span>
 
-                                    <span className="course-mang-list">Quiz</span>
+                                    <span className="course-mang-list" onClick={OpenQuiz}>Quiz</span>
 
-                                    <span className="course-mang-list">Video Sesssion</span>
+                                    <span className="course-mang-list" onClick={OpenVid_session}>Video Sesssion</span>
 
-                                    <span className="course-mang-list">Helping Materail</span>
+                                    <span className="course-mang-list" onClick={OpenHlp_matr}>Helping Material</span>
 
                                 </div>
 
@@ -159,12 +282,12 @@ function TeacherClassDetails() {
                             <span>Course Settings</span>
                             <div className={dropshow}>
 
-                                <span className="course-mang-list">Enroll a Student</span>
+                                <span className="course-mang-list" onClick={OpenenrollSt} >Enroll a Student</span>
 
                                 <span className="course-mang-list">Remove A Student</span>
 
-                                <span className="course-mang-list">Update Course Name</span>
-                                <span className="course-mang-list">Remove this course</span>
+                                <span className="course-mang-list" onClick={OpenUpdate_Crs}>Update Course Name</span>
+                                <span className="course-mang-list" onClick={OpenDelt_Crs}>Remove this course</span>
 
 
 
@@ -256,8 +379,7 @@ function TeacherClassDetails() {
 
                                                             })
                                                             .catch(err => console.error(err));
-                                                    }}>
-                                                        {index + 1}.  {assignment.title}</a>
+                                                    }}>{index + 1}.  {assignment.title}</a>
 
                                                 </div>
                                                 <div className="inner-content-right">
@@ -304,21 +426,49 @@ function TeacherClassDetails() {
 
                 })}
 
-        {/* create a topic */}
         <Modal show={show}>
-            <ModalHeader closeButton onClick={closeform}>Create a Course</ModalHeader>
+            <ModalHeader closeButton onClick={closeform}>Create Topic</ModalHeader>
             <ModalBody>
-          
-            </ModalBody>
-           
-        </Modal>
-        <Modal >
-        <ModalHeader closeButton onClick={closeform}>Create a Course</ModalHeader>
-            <ModalBody>
-            <CreateAssignment />
+                <form>
+                    <div class="form-group">
+                        <label for="examzpleInputEmail1">Topic Name</label>
+                        <input type="text" class="form-control" placeholder="Enter Topic Name" value={formcoursename} onChange={(e) => {
+                            setformCoursename(e.target.value);
+                        }} />
+                    </div>
 
-                
+
+
+                </form>
             </ModalBody>
+            <ModalFooter>
+                <button type="submit" class="btn btn-primary" onClick={(e) => {
+                    e.preventDefault();
+                    if (formcoursename !== "") {
+                        axios
+                            .post("/create-topic/" + courseid, {
+                                title: formcoursename,
+                            }, {
+                                headers: {
+                                    'teacher-auth-token': cookies.teacherAuth,
+
+                                }
+                            })
+                            .then((res) => {
+                                if (res.data.success == true) {
+                                    getAllTopics();
+                                }
+                                else {
+                                    console.log(res.data);
+
+                                }
+                                closeform();
+                            })
+                            .catch(err => console.error(err));
+
+                    }
+                }}>Create</button>
+            </ModalFooter>
         </Modal>
         {/* Discuusion board */}
         <Modal show={discussion}>
@@ -327,7 +477,328 @@ function TeacherClassDetails() {
                 <Discussionboard role="teacher" courseid={courseid} />
             </ModalBody>
         </Modal>
+
+        {/* Enroll Student Modal */}
+        <Modal show={enrollSt}>
+            <ModalHeader closeButton onClick={CloseenrollSt}>Enroll a Student</ModalHeader>
+            <ModalBody>
+
+                <ModalBody>
+                    <form>
+                        <div class="form-group">
+                            <label for="Searchbyemail">Search By Email</label>
+                            <input type="text" class="form-control" placeholder="Enter Student Email" value={StEmail} onChange={(e) => {
+                                setStEmail(e.target.value);
+                            }} />
+                        </div>
+
+
+
+                    </form>
+                </ModalBody>
+
+                <p className="error">{Emailerror}</p>
+
+                <ModalFooter>
+                    <button type="submit" class="btn btn-primary" onClick={(e) => {
+                        e.preventDefault();
+                        if (StEmail === "") {
+
+                            setEmailerror('Email invalid or empty')
+
+                        }
+
+                        else {
+
+                            axios.post("/findStudent", {
+                                StudentEmail: StEmail
+
+                                //half complete...require to make API to find student by email.
+
+                            })
+
+
+                        }
+
+
+                    }}>Find Student</button>
+                </ModalFooter>
+
+                {/* *****Course Removal Modal***** */}
+            </ModalBody>
+        </Modal>
+
+        <Modal show={Delt_Crs}>
+            <ModalHeader closeButton onClick={CloseDelt_Crs}>Course Removal Confirmation</ModalHeader>
+            <ModalBody>
+                <p>Are you sure that you want to remove the course? Please be noticed that it cannot be undone!</p>
+            </ModalBody>
+
+            <ModalFooter>
+
+                <button type="button" className="btn btn-danger" onClick={() => {
+
+                    // axios.post("/deleteCourse", {
+                    navigate("/courseDeleteMsg")
+
+                    // })
+
+                }}>Remove</button>
+
+                <button type="button" className="btn btn-secondary" onClick={CloseDelt_Crs}>Cancel</button>
+            </ModalFooter>
+        </Modal>
+
+        {/******This modal is for Updating a Course Name******/}
+
+        <Modal show={Update_Crs}>
+            <ModalHeader closeButton onClick={CloseUpdate_Crs}>Edit Course</ModalHeader>
+            <ModalBody>
+
+                <form>
+                    <div class="form-group">
+                        <label for="examzpleInputEmail1">Course Name</label>
+                        <input type="text" class="form-control" placeholder="Enter new course name" value={formcoursename} onChange={(e) => {
+                            setformCoursename(e.target.value);
+                        }} />
+                    </div>
+
+
+
+                </form>
+            </ModalBody>
+            <ModalFooter>
+                <button type="submit" class="btn btn-primary" > Save Changes</button>
+                <button type="button" className="btn btn-secondary" onClick={CloseUpdate_Crs}>Cancel</button>
+            </ModalFooter>
+        </Modal>
+
+        {/***Assignment Creation Modal***/}
+
+
+        <Modal show={crt_assginment}>
+            <ModalHeader closeButton onClick={Closecrt_assginment}>Assignment Creation</ModalHeader>
+            <ModalBody>
+
+                <div class="mb-3">
+
+                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="enter assignment title" onChange={(e) => {
+
+                        setAsgm_title(e.target.value)
+
+                    }} />
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" className="form-label">Description</label>
+                    <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
+
+                        setAsgm_Desc(e.target.value)
+
+                    }} ></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" className="form-label">Description</label>
+                    <input type="date" />
+                </div>
+                
+
+                {/* ***Choose Topics*** */}
+
+                <select className="form-select" aria-label="Default select example">
+                    <option selected>Choose Topic</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+                <br />
+
+                {/*********/}
+
+                <div className="input-group mb-3">
+                    <input type="file" className="form-control" id="inputGroupFile02" />
+                    <label className="input-group-text" for="inputGroupFile02">Upload</label>
+                </div>
+
+
+                <Datetimepicker title="Submission Date"/>
+
+
+
+
+
+
+            </ModalBody>
+            <ModalFooter>
+                <button type="submit" class="btn btn-primary" > Save Changes</button>
+                <button type="button" className="btn btn-secondary" onClick={Closecrt_assginment}>Cancel</button>
+            </ModalFooter>
+
+
+       
+        </Modal>
+
+             {/* ****Quiz Creation Modal*** */}
+
+        <Modal show={Quiz}>
+
+            <ModalHeader closeButton onClick={CloseQuiz}>Quiz Creation</ModalHeader>
+
+            <ModalBody>
+
+                <label for="exampleFormControlTextarea1" className="form-label">Q.</label>
+                <textarea className="form-control" id="exampleFormControlTextarea1" rows="2" onChange={(e) => {
+
+                    setQuestion(e.target.value)
+
+                }} ></textarea>
+
+                <p className="error">{Q_error}</p>
+
+                <button type="submit" className="Btn btn-primary my-1 " onClick={() => {
+
+                    if (Question === []) {
+
+                        setQ_error("question cannot be empty")
+                    }
+
+                   
+
+                }}> Add </button>
+
+
+
+
+
+
+            </ModalBody>
+
+
+        </Modal>
+
+        {/* ******Video Session Modal******** */}
+
+        <Modal show={Vid_session}>
+            <ModalHeader closeButton onClick={CloseVid_session}>Meeting Creation</ModalHeader>
+            <ModalBody>
+
+                <div class="mb-3">
+
+                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="enter meeting title" onChange={(e) => {
+
+                        setVid_title(e.target.value)
+
+                    }} />
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" className="form-label">Description</label>
+                    <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
+
+                        setVid_Desc(e.target.value)
+
+                    }} ></textarea>
+                </div>
+
+                {/* ***Choose Topics*** */}
+
+                <select className="form-select" aria-label="Default select example">
+                    <option selected>Choose Topic</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+                <br />
+
+                {/*********/}
+
+
+                <Datetimepicker title="Meeting Start Time"/>
+                <Datetimepicker title="Meeting End Time"/>
+
+
+
+
+
+
+            </ModalBody>
+            <ModalFooter>
+                <button type="submit" class="btn btn-primary" > Create Session</button>
+                <button type="button" className="btn btn-secondary" onClick={CloseVid_session}>Cancel</button>
+            </ModalFooter>
+
+
+            
+        </Modal>
+
+
+        {/* ***Helping Material Modal*** */}
+
+        <Modal show={Hlp_matr}>
+            <ModalHeader closeButton onClick={CloseHlp_matr}>Helping Material Creation</ModalHeader>
+            <ModalBody>
+
+                <div class="mb-3">
+
+                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="enter helping material title" onChange={(e) => {
+
+                        setH_mat_title(e.target.value)
+
+                    }} />
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" className="form-label">Description</label>
+                    <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
+
+                        setH_mat_Desc(e.target.value)
+
+                    }} ></textarea>
+                </div>
+
+                {/* ***Choose Topics*** */}
+
+                <select className="form-select" aria-label="Default select example">
+                    <option selected>Choose Topic</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+                <br />
+
+                {/*********/}
+
+                <div className="input-group mb-3">
+                    <input type="file" className="form-control" id="inputGroupFile02" />
+                    <label className="input-group-text" for="inputGroupFile02">Upload</label>
+                </div>
+
+
+            </ModalBody>
+            <ModalFooter>
+                <button type="submit" class="btn btn-primary" > Save Changes</button>
+                <button type="button" className="btn btn-secondary" onClick={CloseHlp_matr}>Cancel</button>
+            </ModalFooter>
+
+
+       
+        </Modal>
+
+
+
+
     </>
+
 }
 
 export default TeacherClassDetails;
