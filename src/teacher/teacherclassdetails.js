@@ -22,6 +22,7 @@ function TeacherClassDetails() {
     const [cookies, setCookies] = useCookies();
     const [socket, setSocket] = useState(null);
 
+
     // useEffect(() => {
     //     if (socket === null) {
 
@@ -124,6 +125,7 @@ function TeacherClassDetails() {
     // ***State Management variables for assignment creation***
     const [Asgm_title, setAsgm_title] = useState("");
     const [Asgm_Desc, setAsgm_Desc] = useState("");
+    const [Asgmfile, setAsgmfile] = useState("");
 
     //******Quiz Creation Modal********
     const [Quiz, setQuiz] = useState(false);
@@ -159,18 +161,18 @@ function TeacherClassDetails() {
     const [Vid_title, setVid_title] = useState("");
     const [Vid_Desc, setVid_Desc] = useState("");
 
-     //******Helping Material Modal********
-     const [Hlp_matr, setHlp_matr] = useState(false);
+    //******Helping Material Modal********
+    const [Hlp_matr, setHlp_matr] = useState(false);
 
-     const OpenHlp_matr = () => {
-         setHlp_matr(true)
- 
-     }
-     const CloseHlp_matr = () => {
-         setHlp_matr(false)
-     }
+    const OpenHlp_matr = () => {
+        setHlp_matr(true)
 
-     // ***State Management for Quiz Creation***
+    }
+    const CloseHlp_matr = () => {
+        setHlp_matr(false)
+    }
+
+    // ***State Management for Quiz Creation***
     const [H_mat_title, setH_mat_title] = useState("");
     const [H_mat_Desc, setH_mat_Desc] = useState("");
 
@@ -199,6 +201,16 @@ function TeacherClassDetails() {
     useEffect(() => {
         getAllTopics();
     }, []);
+
+
+    const [optionvalue, setOptionvalue] = useState("");
+    const handleTopicsselectchange = (e) => {
+
+
+        setOptionvalue(e.target.value);
+        console.log(e.target.value);
+
+    }
 
 
 
@@ -327,7 +339,7 @@ function TeacherClassDetails() {
                                     <span classame="">Helping Material</span>
                                     {
                                         topic.helpingmaterial.map((item, index) => {
-                                            return <div className="main-content-1">
+                                            return <div key={index + 1} className="main-content-1">
                                                 <div className="inner-content-left">
                                                     <FontAwesomeIcon icon={faBookOpen} />
                                                     <span>{item.title}</span>
@@ -353,7 +365,7 @@ function TeacherClassDetails() {
 
                                     {
                                         topic.assignments.map((assignment, index) => {
-                                            return <div key={index + 1} y className="main-content-1">
+                                            return <div key={index + 1} className="main-content-1">
 
                                                 <div className="inner-content-left">
                                                     <FontAwesomeIcon icon={faClipboardList} />
@@ -397,7 +409,7 @@ function TeacherClassDetails() {
                                     <span className="">Online class</span>
                                     {
                                         topic.onlineclass.map((item, index) => {
-                                            return <div className="main-content-1">
+                                            return <div key={index + 1} className="main-content-1">
                                                 <div className="inner-content-left">
                                                     <FontAwesomeIcon icon={faBrain} />
                                                     <span>{item.title}</span>
@@ -485,9 +497,9 @@ function TeacherClassDetails() {
 
                 <ModalBody>
                     <form>
-                        <div class="form-group">
-                            <label for="Searchbyemail">Search By Email</label>
-                            <input type="text" class="form-control" placeholder="Enter Student Email" value={StEmail} onChange={(e) => {
+                        <div className="form-group">
+                            <label htmlFor="Searchbyemail">Search By Email</label>
+                            <input type="text" className="form-control" placeholder="Enter Student Email" value={StEmail} onChange={(e) => {
                                 setStEmail(e.target.value);
                             }} />
                         </div>
@@ -500,7 +512,7 @@ function TeacherClassDetails() {
                 <p className="error">{Emailerror}</p>
 
                 <ModalFooter>
-                    <button type="submit" class="btn btn-primary" onClick={(e) => {
+                    <button  className="btn btn-primary" onClick={(e) => {
                         e.preventDefault();
                         if (StEmail === "") {
 
@@ -510,12 +522,27 @@ function TeacherClassDetails() {
 
                         else {
 
-                            axios.post("/findStudent", {
-                                StudentEmail: StEmail
 
-                                //half complete...require to make API to find student by email.
+                            axios.post("/enroll-student/"+courseid, {
+                                studentid:"6300e47824aba29306024052"
+                            },{
+                                headers: {
+                                    'teacher-auth-token': cookies.teacherAuth
 
+                                }
+                            }).then((res)=>{
+                                console.log(res.data);
                             })
+
+
+                            // axios.post("/find-student-byemail/" + StEmail, {},{
+                            //     headers: {
+                            //         'teacher-auth-token': cookies.teacherAuth
+
+                            //     }
+                            // }).then((res)=>{
+                            //     console.log(res.data);
+                            // })
 
 
                         }
@@ -568,7 +595,7 @@ function TeacherClassDetails() {
                 </form>
             </ModalBody>
             <ModalFooter>
-                <button type="submit" class="btn btn-primary" > Save Changes</button>
+                <button type="submit" className="btn btn-primary" > Save Changes</button>
                 <button type="button" className="btn btn-secondary" onClick={CloseUpdate_Crs}>Cancel</button>
             </ModalFooter>
         </Modal>
@@ -580,10 +607,12 @@ function TeacherClassDetails() {
             <ModalHeader closeButton onClick={Closecrt_assginment}>Assignment Creation</ModalHeader>
             <ModalBody>
 
-                <div class="mb-3">
 
-                    <label for="exampleFormControlInput1" class="form-label">Title</label>
-                    <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="enter assignment title" onChange={(e) => {
+
+                <div className="mb-3">
+
+                    <label htmlFor="exampleFormControlInput1" className="form-label">Title</label>
+                    <input type="text" className="form-control" placeholder="enter assignment title" onChange={(e) => {
 
                         setAsgm_title(e.target.value)
 
@@ -591,8 +620,8 @@ function TeacherClassDetails() {
                 </div>
 
 
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" className="form-label">Description</label>
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Description</label>
                     <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
 
                         setAsgm_Desc(e.target.value)
@@ -600,19 +629,25 @@ function TeacherClassDetails() {
                     }} ></textarea>
                 </div>
 
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" className="form-label">Description</label>
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Description</label>
                     <input type="date" />
                 </div>
-                
+
 
                 {/* ***Choose Topics*** */}
 
-                <select className="form-select" aria-label="Default select example">
-                    <option selected>Choose Topic</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select className="form-select" aria-label="Default select example" onChange={(e) => { handleTopicsselectchange(e) }}>
+                    <option value="">Choose Topic</option>
+
+                    {
+
+                        topics.map((topic, index) => {
+                            return <option key={index + 1} value={topic._id}>{topic.title}</option>
+
+                        })
+                    }
+
                 </select>
 
                 <br />
@@ -620,29 +655,50 @@ function TeacherClassDetails() {
                 {/*********/}
 
                 <div className="input-group mb-3">
-                    <input type="file" className="form-control" id="inputGroupFile02" />
-                    <label className="input-group-text" for="inputGroupFile02">Upload</label>
+                    <input type="file" className="form-control" id="inputGroupFile02" onChange={(e) => {
+                        setAsgmfile(e.target.files[0]);
+                    }} />
                 </div>
 
 
-                <Datetimepicker title="Submission Date"/>
-
-
-
-
+                <input type="datetime-local" className="form-control" />
 
 
             </ModalBody>
             <ModalFooter>
-                <button type="submit" class="btn btn-primary" > Save Changes</button>
+                <button className="btn btn-primary" type="submit" onClick={(e) => {
+                    e.preventDefault();
+                    const formdata = new FormData();
+                    formdata.append("title", Asgm_title);
+                    formdata.append("courseid", courseid);
+                    formdata.append("description", Asgm_Desc);
+                    formdata.append("submissiondate", Date.now());
+                    formdata.append("file", Asgmfile);
+                    axios
+                        .post("/create-assignment/" + optionvalue, formdata,
+                            {
+                                headers: {
+                                    headers: { 'content-type': 'multipart/form-data' }
+
+                                }
+                            }
+                        )
+                        .then((res) => {
+                            console.log(res);
+                            getAllTopics();
+                            setcrt_assginment(false)
+
+                        })
+                        .catch(err => console.error(err));
+                }}> Save Changes</button>
                 <button type="button" className="btn btn-secondary" onClick={Closecrt_assginment}>Cancel</button>
             </ModalFooter>
 
 
-       
+
         </Modal>
 
-             {/* ****Quiz Creation Modal*** */}
+        {/* ****Quiz Creation Modal*** */}
 
         <Modal show={Quiz}>
 
@@ -666,7 +722,7 @@ function TeacherClassDetails() {
                         setQ_error("question cannot be empty")
                     }
 
-                   
+
 
                 }}> Add </button>
 
@@ -686,9 +742,9 @@ function TeacherClassDetails() {
             <ModalHeader closeButton onClick={CloseVid_session}>Meeting Creation</ModalHeader>
             <ModalBody>
 
-                <div class="mb-3">
+                <div className="mb-3">
 
-                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <label for="exampleFormControlInput1" className="form-label">Title</label>
                     <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="enter meeting title" onChange={(e) => {
 
                         setVid_title(e.target.value)
@@ -697,7 +753,7 @@ function TeacherClassDetails() {
                 </div>
 
 
-                <div class="mb-3">
+                <div className="mb-3">
                     <label for="exampleFormControlTextarea1" className="form-label">Description</label>
                     <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
 
@@ -720,8 +776,8 @@ function TeacherClassDetails() {
                 {/*********/}
 
 
-                <Datetimepicker title="Meeting Start Time"/>
-                <Datetimepicker title="Meeting End Time"/>
+                <Datetimepicker title="Meeting Start Time" />
+                <Datetimepicker title="Meeting End Time" />
 
 
 
@@ -730,12 +786,12 @@ function TeacherClassDetails() {
 
             </ModalBody>
             <ModalFooter>
-                <button type="submit" class="btn btn-primary" > Create Session</button>
+                <button type="submit" className="btn btn-primary" > Create Session</button>
                 <button type="button" className="btn btn-secondary" onClick={CloseVid_session}>Cancel</button>
             </ModalFooter>
 
 
-            
+
         </Modal>
 
 
@@ -745,9 +801,9 @@ function TeacherClassDetails() {
             <ModalHeader closeButton onClick={CloseHlp_matr}>Helping Material Creation</ModalHeader>
             <ModalBody>
 
-                <div class="mb-3">
+                <div className="mb-3">
 
-                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <label for="exampleFormControlInput1" className="form-label">Title</label>
                     <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="enter helping material title" onChange={(e) => {
 
                         setH_mat_title(e.target.value)
@@ -756,7 +812,7 @@ function TeacherClassDetails() {
                 </div>
 
 
-                <div class="mb-3">
+                <div className="mb-3">
                     <label for="exampleFormControlTextarea1" className="form-label">Description</label>
                     <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
 
@@ -786,12 +842,12 @@ function TeacherClassDetails() {
 
             </ModalBody>
             <ModalFooter>
-                <button type="submit" class="btn btn-primary" > Save Changes</button>
+                <button type="submit" className="btn btn-primary" > Save Changes</button>
                 <button type="button" className="btn btn-secondary" onClick={CloseHlp_matr}>Cancel</button>
             </ModalFooter>
 
 
-       
+
         </Modal>
 
 
@@ -803,7 +859,7 @@ function TeacherClassDetails() {
 
 export default TeacherClassDetails;
 
-{/* <div className="class-det-topic-content"> */ }
+{/* <div className="className-det-topic-content"> */ }
 
 {/* {
                                     //checking if there is any helping material uploaded  if yes then show else nothing

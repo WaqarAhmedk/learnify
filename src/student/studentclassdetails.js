@@ -64,6 +64,7 @@ function ClassDetails() {
             .then((res) => {
                 console.log(res.data);
                 if (res.data.success === true) {
+                console.log(res.data);
                     setTopics(res.data.topics)
 
                 }
