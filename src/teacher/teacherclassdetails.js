@@ -11,6 +11,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import Discussionboard from "../components/discussionboard";
 import "../style/login.css"
 import Datetimepicker from "../components/datetimepicker";
+import Studentcard from "../components/studentcard";
 
 function TeacherClassDetails() {
 
@@ -45,6 +46,9 @@ function TeacherClassDetails() {
     let [creatactp, setcreateactp] = useState("create-activity-parent-content");
     //state variable for create new activity child options
     let [creatactc, setcreateactc] = useState("create-activity-child-content");
+
+    let [St_show, setSt_show] = useState(false);
+
 
     const [formcoursename, setformCoursename] = useState("");
     const [show, setShow] = useState(false);
@@ -110,6 +114,11 @@ function TeacherClassDetails() {
         setUpdate_Crs(false)
     }
 
+    // ***State Management for course update***
+    const [Updated_crs_name, setUpdated_crs_name] = useState("");
+
+
+
     //******This modal is for assignment creation********
     const [crt_assginment, setcrt_assginment] = useState(false);
 
@@ -159,18 +168,18 @@ function TeacherClassDetails() {
     const [Vid_title, setVid_title] = useState("");
     const [Vid_Desc, setVid_Desc] = useState("");
 
-     //******Helping Material Modal********
-     const [Hlp_matr, setHlp_matr] = useState(false);
+    //******Helping Material Modal********
+    const [Hlp_matr, setHlp_matr] = useState(false);
 
-     const OpenHlp_matr = () => {
-         setHlp_matr(true)
- 
-     }
-     const CloseHlp_matr = () => {
-         setHlp_matr(false)
-     }
+    const OpenHlp_matr = () => {
+        setHlp_matr(true)
 
-     // ***State Management for Quiz Creation***
+    }
+    const CloseHlp_matr = () => {
+        setHlp_matr(false)
+    }
+
+    // ***State Management for Quiz Creation***
     const [H_mat_title, setH_mat_title] = useState("");
     const [H_mat_Desc, setH_mat_Desc] = useState("");
 
@@ -492,6 +501,8 @@ function TeacherClassDetails() {
                             }} />
                         </div>
 
+                        {St_show? <Studentcard/>:""}
+
 
 
                     </form>
@@ -510,13 +521,7 @@ function TeacherClassDetails() {
 
                         else {
 
-                            axios.post("/findStudent", {
-                                StudentEmail: StEmail
-
-                                //half complete...require to make API to find student by email.
-
-                            })
-
+                            setSt_show(true);
 
                         }
 
@@ -538,12 +543,24 @@ function TeacherClassDetails() {
 
                 <button type="button" className="btn btn-danger" onClick={() => {
 
-                    // axios.post("/deleteCourse", {
-                    navigate("/courseDeleteMsg")
+                    axios
+                        .delete("/delete-course/" + courseid, {
+                            headers: {
+                                'teacher-auth-token': cookies.teacherAuth
 
-                    // })
+                            }
+                        })
+                        .then((res) => {
+                            console.log(res.data);
+                            if (res.data.success === true) {
+                                
 
-                }}>Remove</button>
+                            }
+
+                        })
+                        .catch(err => console.error(err));
+                }
+                }>Remove</button>
 
                 <button type="button" className="btn btn-secondary" onClick={CloseDelt_Crs}>Cancel</button>
             </ModalFooter>
@@ -556,10 +573,11 @@ function TeacherClassDetails() {
             <ModalBody>
 
                 <form>
+
                     <div class="form-group">
                         <label for="examzpleInputEmail1">Course Name</label>
-                        <input type="text" class="form-control" placeholder="Enter new course name" value={formcoursename} onChange={(e) => {
-                            setformCoursename(e.target.value);
+                        <input type="text" class="form-control" placeholder="Enter new course name" onChange={(e) => {
+                            setUpdated_crs_name(e.target.value);
                         }} />
                     </div>
 
@@ -568,7 +586,37 @@ function TeacherClassDetails() {
                 </form>
             </ModalBody>
             <ModalFooter>
-                <button type="submit" class="btn btn-primary" > Save Changes</button>
+                <button type="submit" class="btn btn-primary" onClick={(e) => {
+                    e.preventDefault();
+
+                    console.log(courseid)
+
+                    if (Updated_crs_name != "") {
+
+                        axios.post("/update-course/" + courseid, {
+                            coursename: Updated_crs_name
+                        },
+
+                            {
+                                headers: {
+                                    'teacher-auth-token': cookies.teacherAuth
+
+                                }
+                            })
+                            .then((res) => {
+                                if (res.data.success === true) {
+                                    setformCoursename(res.data.coursename);
+
+                                }
+                                else {
+                                    console.log(res.data);
+                                }
+                            })
+
+                    }
+
+
+                }}> Save Changes</button>
                 <button type="button" className="btn btn-secondary" onClick={CloseUpdate_Crs}>Cancel</button>
             </ModalFooter>
         </Modal>
@@ -604,7 +652,7 @@ function TeacherClassDetails() {
                     <label for="exampleFormControlTextarea1" className="form-label">Description</label>
                     <input type="date" />
                 </div>
-                
+
 
                 {/* ***Choose Topics*** */}
 
@@ -625,7 +673,7 @@ function TeacherClassDetails() {
                 </div>
 
 
-                <Datetimepicker title="Submission Date"/>
+                <Datetimepicker title="Submission Date" />
 
 
 
@@ -639,10 +687,10 @@ function TeacherClassDetails() {
             </ModalFooter>
 
 
-       
+
         </Modal>
 
-             {/* ****Quiz Creation Modal*** */}
+        {/* ****Quiz Creation Modal*** */}
 
         <Modal show={Quiz}>
 
@@ -666,7 +714,7 @@ function TeacherClassDetails() {
                         setQ_error("question cannot be empty")
                     }
 
-                   
+
 
                 }}> Add </button>
 
@@ -720,8 +768,8 @@ function TeacherClassDetails() {
                 {/*********/}
 
 
-                <Datetimepicker title="Meeting Start Time"/>
-                <Datetimepicker title="Meeting End Time"/>
+                <Datetimepicker title="Meeting Start Time" />
+                <Datetimepicker title="Meeting End Time" />
 
 
 
@@ -735,7 +783,7 @@ function TeacherClassDetails() {
             </ModalFooter>
 
 
-            
+
         </Modal>
 
 
@@ -791,7 +839,7 @@ function TeacherClassDetails() {
             </ModalFooter>
 
 
-       
+
         </Modal>
 
 
