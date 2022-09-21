@@ -1,9 +1,11 @@
 .callpage-container {}
 
 .video-container {
-    height: 100vh;
-    width: 100%;
+    height: 300px;
+    width: 300px;
     object-fit: cover;
-    z-index: -1;
-    position: absolute;
+    display: flex;
+}
+.video-grid{
+    display: flex;
 }

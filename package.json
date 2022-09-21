@@ -22,6 +22,8 @@
     "js-file-download": "^0.4.12",
     "material-icons": "^1.10.7",
     "moment": "^2.29.1",
+    "peer": "^0.6.1",
+    "peerjs": "^1.4.7",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-bootstrap": "^2.2.1",
@@ -30,9 +32,6 @@
     "react-fontawesome": "^1.7.1",
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.0",
-    "react-webcam": "^7.0.1",
-    "shortid": "^2.2.16",
-    "simple-peer": "^9.11.1",
     "socket.io-client": "^4.5.1",
     "web-vitals": "^2.1.4"
   },

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function CallHomePage() {
     const [title, setTitle] = useState("");
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     return <>
         <form>
             <input type="text" value={title} onChange={(e) => {
@@ -16,8 +16,8 @@ export default function CallHomePage() {
             <button onClick={(e) => {
                 e.preventDefault();
                 axios.post("/create-online-meeting", { title }).then((res) => {
-                    if (res.data.success===true) {
-                        navigate("/meeting/"+res.data.meetingid)
+                    if (res.data.success === true) {
+                        navigate("/meeting/" + res.data.meetingid, { state: { meetingid: res.data.meetingid } })
                     }
                 })
 
