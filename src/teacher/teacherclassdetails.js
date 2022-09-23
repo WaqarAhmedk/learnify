@@ -11,6 +11,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import Discussionboard from "../components/discussionboard";
 import "../style/login.css"
 import Datetimepicker from "../components/datetimepicker";
+import Studentcard from "../components/studentcard";
 
 function TeacherClassDetails() {
 
@@ -47,6 +48,9 @@ function TeacherClassDetails() {
     //state variable for create new activity child options
     let [creatactc, setcreateactc] = useState("create-activity-child-content");
 
+    let [St_show, setSt_show] = useState(false);
+
+
     const [formcoursename, setformCoursename] = useState("");
     const [show, setShow] = useState(false);
 
@@ -78,6 +82,9 @@ function TeacherClassDetails() {
     const CloseenrollSt = () => {
         setenrollSt(false)
     }
+
+    //student found object
+    const [getStudent, setStudent]= useState({});
 
 
     //******This modal will display the student found by email to be enrolled in a course********
@@ -111,6 +118,10 @@ function TeacherClassDetails() {
         setUpdate_Crs(false)
     }
 
+    // ***State Management for course update***
+    const [Updated_crs_name, setUpdated_crs_name] = useState("");
+    const [new_crs_name, setnew_crs_name] = useState(data.state.coursename);
+
     //******This modal is for assignment creation********
     const [crt_assginment, setcrt_assginment] = useState(false);
 
@@ -126,6 +137,22 @@ function TeacherClassDetails() {
     const [Asgm_title, setAsgm_title] = useState("");
     const [Asgm_Desc, setAsgm_Desc] = useState("");
     const [Asgmfile, setAsgmfile] = useState("");
+    const [show_footer, setshow_footer]=useState(true);
+
+    const [Asg_edit, setAsg_edit] = useState(false);
+
+    // Asignment title edit modal
+
+    const OpenAsg_edit = () => {
+        setAsg_edit(true)
+
+    }
+    const CloseAsg_edit = () => {
+        setAsg_edit(false)
+    }
+
+    //Asignment title getter
+    const [get_asg_title, set_asg_title ]= useState("");
 
     //******Quiz Creation Modal********
     const [Quiz, setQuiz] = useState(false);
@@ -216,11 +243,11 @@ function TeacherClassDetails() {
 
     return <>
 
-        <div id="class-details-container"  >
+        <div id="class-details-container">
 
             <div className="d-flex class-details-hd" >
 
-                <h1 className="col-3 " >{coursename}</h1>
+                <h1 className="col-3 " >{new_crs_name}</h1>
 
                 <div className="form-group has-search class-details-searchdiv">
                     <span className="fa fa-search form-control-feedback"></span>
@@ -396,7 +423,7 @@ function TeacherClassDetails() {
                                                 </div>
                                                 <div className="inner-content-right">
                                                     <span className="time">Due Date :{assignment.submissiondate}</span>
-                                                    <FontAwesomeIcon icon={faEdit} />
+                                                    <FontAwesomeIcon icon={faEdit} onClick={OpenAsg_edit}/>
                                                     <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
                                                 </div>
                                             </div>
@@ -504,15 +531,26 @@ function TeacherClassDetails() {
                             }} />
                         </div>
 
-
+                        {St_show ? <Studentcard title={getStudent.firstname} 
+                        
+                        image={getStudent.avatar}
+                        email={getStudent.email}
+                        std_id={getStudent._id}
+                        cookies={cookies}
+                        courseid={courseid}
+                        
+                        /> : ""}
 
                     </form>
                 </ModalBody>
 
                 <p className="error">{Emailerror}</p>
 
-                <ModalFooter>
-                    <button  className="btn btn-primary" onClick={(e) => {
+            
+
+
+               {show_footer ? <ModalFooter>
+                    <button className="btn btn-primary" onClick={(e) => {
                         e.preventDefault();
                         if (StEmail === "") {
 
@@ -522,34 +560,47 @@ function TeacherClassDetails() {
 
                         else {
 
+                            
 
-                            axios.post("/enroll-student/"+courseid, {
-                                studentid:"6300e47824aba29306024052"
-                            },{
-                                headers: {
-                                    'teacher-auth-token': cookies.teacherAuth
-
-                                }
-                            }).then((res)=>{
-                                console.log(res.data);
-                            })
-
-
-                            // axios.post("/find-student-byemail/" + StEmail, {},{
+                            // axios.post("/enroll-student/" + courseid, {
+                            //     studentid: "6300e47824aba29306024052"
+                            // }, {
                             //     headers: {
                             //         'teacher-auth-token': cookies.teacherAuth
 
                             //     }
-                            // }).then((res)=>{
+                            // }).then((res) => {
                             //     console.log(res.data);
                             // })
 
 
+                            axios.post("/find-student-byemail/" + StEmail, {}, {
+                                headers: {
+                                    'teacher-auth-token': cookies.teacherAuth
+
+                                }
+                            }).then((res) => {
+                                console.log(res.data);
+
+                                if (res.data.success === true) {
+
+                                    setshow_footer(false)
+
+                                    setStudent(res.data.student);
+
+                                    setSt_show(true);
+
+                                    console.log(getStudent.email);
+
+                                    
+                                }   
+                            }
+                            )
+
+
                         }
-
-
                     }}>Find Student</button>
-                </ModalFooter>
+                </ModalFooter> : ""}
 
                 {/* *****Course Removal Modal***** */}
             </ModalBody>
@@ -563,30 +614,43 @@ function TeacherClassDetails() {
 
             <ModalFooter>
 
+
                 <button type="button" className="btn btn-danger" onClick={() => {
 
-                    // axios.post("/deleteCourse", {
-                    navigate("/courseDeleteMsg")
+                    axios
+                        .delete("/delete-course/" + courseid, {
+                            headers: {
+                                'teacher-auth-token': cookies.teacherAuth
 
-                    // })
+                            }
+                        })
+                        .then((res) => {
+                            console.log(res.data);
+                            if (res.data.success === true) {
+                                navigate("/dashboard")
 
-                }}>Remove</button>
+                            }
+
+                        })
+                        .catch(err => console.error(err));
+                }
+                }>Remove</button>
 
                 <button type="button" className="btn btn-secondary" onClick={CloseDelt_Crs}>Cancel</button>
             </ModalFooter>
         </Modal>
 
         {/******This modal is for Updating a Course Name******/}
-
         <Modal show={Update_Crs}>
             <ModalHeader closeButton onClick={CloseUpdate_Crs}>Edit Course</ModalHeader>
             <ModalBody>
 
                 <form>
+
                     <div class="form-group">
                         <label for="examzpleInputEmail1">Course Name</label>
-                        <input type="text" class="form-control" placeholder="Enter new course name" value={formcoursename} onChange={(e) => {
-                            setformCoursename(e.target.value);
+                        <input type="text" class="form-control" placeholder="Enter new course name" value={Updated_crs_name} onChange={(e) => {
+                            setUpdated_crs_name(e.target.value);
                         }} />
                     </div>
 
@@ -595,7 +659,39 @@ function TeacherClassDetails() {
                 </form>
             </ModalBody>
             <ModalFooter>
-                <button type="submit" className="btn btn-primary" > Save Changes</button>
+                <button type="submit" class="btn btn-primary" onClick={(e) => {
+                    e.preventDefault();
+
+
+
+                    if (Updated_crs_name != "") {
+
+                        axios.post("/update-course/" + courseid, {
+                            coursename: Updated_crs_name
+                        },
+
+                            {
+                                headers: {
+                                    'teacher-auth-token': cookies.teacherAuth
+
+                                }
+                            })
+                            .then((res) => {
+                                console.log(res.data);
+                                if (res.data.success === true) {
+                                    setnew_crs_name(res.data.coursename);
+                                    CloseDelt_Crs();
+
+                                }
+                                else {
+                                    console.log(res.data);
+                                }
+                            })
+
+                    }
+
+
+                }}> Save Changes</button>
                 <button type="button" className="btn btn-secondary" onClick={CloseUpdate_Crs}>Cancel</button>
             </ModalFooter>
         </Modal>
@@ -661,7 +757,6 @@ function TeacherClassDetails() {
                 </div>
 
 
-                <input type="datetime-local" className="form-control" />
 
 
             </ModalBody>
