@@ -37,9 +37,9 @@ function App() {
 
       <BrowserRouter>
 
-        {
+        {/* {
           cookies.StudentAuth || cookies.teacherAuth ? <Header /> : <Navbarmain />
-        }
+        } */}
 
 
 
@@ -47,13 +47,15 @@ function App() {
 
         <Routes>
 
+
+          <Route exact path='/meeting/:id'  element={<CallPage />} />
+          <Route exact path='/createmeeting' element={<CallHomePage />} />
+
+          {/* 
+         
+
           <Route exact path='/signup' element={<Signup />} />
           <Route exact path='/signin' element={<Login />} />
-
-
-          <Route exact path='/:id' element={<CallPage />} />
-          <Route exact path='/meetinghome' element={<CallHomePage />} />
-
 
           <Route exact path='/' element={<Landingpage />} />
 
@@ -61,16 +63,16 @@ function App() {
 
 
           <Route exact path="/dashboard" element={<Dashboard />} />
-          <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
+          <Route exact path='/dashboard/classdetails' element={<ClassDetails />} /> */}
 
 
           {/* teacher */}
-          <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
+          {/* <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
           <Route exact path='teacher/dashboard/classdetails' element={<TeacherClassDetails />} />
           <Route exact path="/events" element={<Calendar />} />
           <Route exact path="/scanface" element={<CustomPopup />} />
           <Route exact path='/participationReport' element={<ParticipationReport />} />
-          <Route exact path='/showface' element={<CustomPopupShowFace />} />
+          <Route exact path='/showface' element={<CustomPopupShowFace />} /> */}
         </Routes>
 
       </BrowserRouter>
