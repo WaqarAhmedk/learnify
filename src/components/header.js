@@ -19,12 +19,7 @@ import axios from "axios"
 function Header() {
     const [cookies, setCookies, removeCookie] = useCookies("");
     const navigate = useNavigate();
-    const [user, setUser] = useState({
-        firstname: "User",
-        email: "example@user.com",
-        avatar:"avatar.jpg"
-
-    });
+    const [user, setUser] = useState({ });
 
     const getUser = () => {
         if (cookies.teacherAuth) {
@@ -73,7 +68,7 @@ function Header() {
 
 
 
-            <img src={require("../assets/images/"+user.avatar)} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
+            <img src={require("../assets/images/avatar.jpg")} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
             <span className="d-block">{user.firstname}</span>
 
 

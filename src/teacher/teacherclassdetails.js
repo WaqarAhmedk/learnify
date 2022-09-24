@@ -18,23 +18,13 @@ function TeacherClassDetails() {
     let navigate = useNavigate();
     const data = useLocation();
     const courseid = data.state.courseid;
-    const coursename = data.state.coursename;
+    const [coursename, setCoursename] = useState("");
     const [topics, setTopics] = useState([]);
     const [cookies, setCookies] = useCookies();
     const [socket, setSocket] = useState(null);
 
 
-    // useEffect(() => {
-    //     if (socket === null) {
 
-    //         setSocket(io("http://localhost:4000"));
-
-
-    //     } else {
-    //         socket.emit("join_room", courseid)
-
-    //     }
-    // }, [socket])
 
 
 
@@ -84,7 +74,7 @@ function TeacherClassDetails() {
     }
 
     //student found object
-    const [getStudent, setStudent]= useState({});
+    const [getStudent, setStudent] = useState({});
 
 
     //******This modal will display the student found by email to be enrolled in a course********
@@ -120,7 +110,6 @@ function TeacherClassDetails() {
 
     // ***State Management for course update***
     const [Updated_crs_name, setUpdated_crs_name] = useState("");
-    const [new_crs_name, setnew_crs_name] = useState(data.state.coursename);
 
     //******This modal is for assignment creation********
     const [crt_assginment, setcrt_assginment] = useState(false);
@@ -137,7 +126,7 @@ function TeacherClassDetails() {
     const [Asgm_title, setAsgm_title] = useState("");
     const [Asgm_Desc, setAsgm_Desc] = useState("");
     const [Asgmfile, setAsgmfile] = useState("");
-    const [show_footer, setshow_footer]=useState(true);
+    const [show_footer, setshow_footer] = useState(true);
 
     const [Asg_edit, setAsg_edit] = useState(false);
 
@@ -152,7 +141,7 @@ function TeacherClassDetails() {
     }
 
     //Asignment title getter
-    const [get_asg_title, set_asg_title ]= useState("");
+    const [get_asg_title, set_asg_title] = useState("");
 
     //******Quiz Creation Modal********
     const [Quiz, setQuiz] = useState(false);
@@ -205,6 +194,32 @@ function TeacherClassDetails() {
 
 
 
+
+
+
+    const getCourse = () => {
+        axios
+            .get("/get-course/" + courseid, {
+                headers: {
+                    'teacher-auth-token': cookies.teacherAuth
+
+                }
+            })
+            .then((res) => {
+                if (res.data.success === true) {
+                    console.log(res.data.details);
+                    setCoursename(res.data.details.coursename);
+                    console.log(coursename);
+                }
+                else {
+                    console.log(res.data);
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+
+
     const getAllTopics = () => {
         axios
             .get("/get-topics/" + courseid, {
@@ -217,6 +232,7 @@ function TeacherClassDetails() {
                 if (res.data.success === true) {
                     setTopics(res.data.topics);
 
+
                 }
                 else {
                     console.log(res.data);
@@ -226,8 +242,15 @@ function TeacherClassDetails() {
     }
 
     useEffect(() => {
+        getCourse();
         getAllTopics();
+
     }, []);
+
+    // useEffect(() => {
+    //     getCourse();
+
+    // }, [coursename]);
 
 
     const [optionvalue, setOptionvalue] = useState("");
@@ -247,7 +270,7 @@ function TeacherClassDetails() {
 
             <div className="d-flex class-details-hd" >
 
-                <h1 className="col-3 " >{new_crs_name}</h1>
+                <h1 className="col-3 " >{coursename}</h1>
 
                 <div className="form-group has-search class-details-searchdiv">
                     <span className="fa fa-search form-control-feedback"></span>
@@ -423,7 +446,7 @@ function TeacherClassDetails() {
                                                 </div>
                                                 <div className="inner-content-right">
                                                     <span className="time">Due Date :{assignment.submissiondate}</span>
-                                                    <FontAwesomeIcon icon={faEdit} onClick={OpenAsg_edit}/>
+                                                    <FontAwesomeIcon icon={faEdit} onClick={OpenAsg_edit} />
                                                     <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
                                                 </div>
                                             </div>
@@ -531,25 +554,26 @@ function TeacherClassDetails() {
                             }} />
                         </div>
 
-                        {St_show ? <Studentcard title={getStudent.firstname} 
-                        
+                    </form>
+
+                    {St_show ? <Studentcard title={getStudent.firstname}
+
                         image={getStudent.avatar}
                         email={getStudent.email}
                         std_id={getStudent._id}
                         cookies={cookies}
                         courseid={courseid}
-                        
-                        /> : ""}
 
-                    </form>
+                    /> : ""}
+
                 </ModalBody>
 
                 <p className="error">{Emailerror}</p>
 
-            
 
 
-               {show_footer ? <ModalFooter>
+
+                {show_footer ? <ModalFooter>
                     <button className="btn btn-primary" onClick={(e) => {
                         e.preventDefault();
                         if (StEmail === "") {
@@ -560,19 +584,6 @@ function TeacherClassDetails() {
 
                         else {
 
-                            
-
-                            // axios.post("/enroll-student/" + courseid, {
-                            //     studentid: "6300e47824aba29306024052"
-                            // }, {
-                            //     headers: {
-                            //         'teacher-auth-token': cookies.teacherAuth
-
-                            //     }
-                            // }).then((res) => {
-                            //     console.log(res.data);
-                            // })
-
 
                             axios.post("/find-student-byemail/" + StEmail, {}, {
                                 headers: {
@@ -580,7 +591,6 @@ function TeacherClassDetails() {
 
                                 }
                             }).then((res) => {
-                                console.log(res.data);
 
                                 if (res.data.success === true) {
 
@@ -592,8 +602,8 @@ function TeacherClassDetails() {
 
                                     console.log(getStudent.email);
 
-                                    
-                                }   
+
+                                }
                             }
                             )
 
@@ -615,7 +625,9 @@ function TeacherClassDetails() {
             <ModalFooter>
 
 
-                <button type="button" className="btn btn-danger" onClick={() => {
+                <button type="button" className="btn btn-danger" onClick={(e) => {
+                    console.log("i a, c");
+                    e.preventDefault();
 
                     axios
                         .delete("/delete-course/" + courseid, {
@@ -625,9 +637,10 @@ function TeacherClassDetails() {
                             }
                         })
                         .then((res) => {
-                            console.log(res.data);
                             if (res.data.success === true) {
-                                navigate("/dashboard")
+                                console.log(res.data);
+                                CloseDelt_Crs()
+                                navigate("/teacher/dashboard")
 
                             }
 
@@ -673,19 +686,18 @@ function TeacherClassDetails() {
                             {
                                 headers: {
                                     'teacher-auth-token': cookies.teacherAuth
-
                                 }
                             })
                             .then((res) => {
-                                console.log(res.data);
-                                if (res.data.success === true) {
-                                    setnew_crs_name(res.data.coursename);
-                                    CloseDelt_Crs();
 
+                                if (res.data.success === true) {
+                                    setCoursename(res.data.details.coursename);
+                                    CloseUpdate_Crs()
                                 }
                                 else {
                                     console.log(res.data);
                                 }
+
                             })
 
                     }
@@ -954,142 +966,3 @@ function TeacherClassDetails() {
 
 export default TeacherClassDetails;
 
-{/* <div className="className-det-topic-content"> */ }
-
-{/* {
-                                    //checking if there is any helping material uploaded  if yes then show else nothing
-
-                                    topic.helpingmaterial.helpingmaterialp
-                                        ?
-                                        <>
-                                            <div className="main-content-1">
-
-                                                <div className="inner-content-left">
-
-                                                    <FontAwesomeIcon icon={faBookOpen} />
-
-                                                    <span>Helping Material</span>
-                                                </div>
-                                                <div className="inner-content-right">
-
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-                                                </div>
-
-                                            </div>
-                                            <hr className="hr" />
-                                        </>
-
-                                        :
-                                        ""
-
-                                } */}
-{/* checking if thee assignment part is present */ }
-
-{/* {
-                                    topic.Assignment.assignp ?
-
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faClipboardList} />
-                                                    <span>Assignment No {topic.topicid}</span>
-                                                </div>
-                                                <div className="inner-content-right">
-                                                    <span className="time">Due Date :{topic.Assignment.duedate}</span>
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> :
-                                        ""
-
-
-                                } */}
-
-{/* checking if the quiz part is present */ }
-{/* {
-
-                                    topic.quiz.quizp ?
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faBrain} />
-                                                    <span>Quiz no {topic.topicid}</span>
-                                                </div>
-                                                <div className="inner-content-right">
-                                                    <span className="time">Scheduled :{topic.quiz.duedate}</span>
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> : ""
-
-                                } */}
-{/* checking if there is any online class created */ }
-{/* {
-
-                                    topic.onlineclass.onlineclassp ?
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faBrain} />
-                                                    <span>{"Online Class " + topic.topicname}</span>
-                                                </div>
-                                                <div className="inner-content-right">
-
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-
-
-
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> : ""
-
-                                } */}
-
-
-{/* checking if te recorded sessions are available */ }
-{/* {
-                                    topic.recordedsession.recordedsessionp ?
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faCirclePlay} />
-                                                    <span>Recorded Video Session</span>
-                                                </div>
-                                                <div className="inner-content-right">
-
-                                             
-                                                     
-                                                            <FontAwesomeIcon icon={faEdit} />
-                                                            <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-                                                       
-
-                                                    
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> : ""
-                                }
-                            </div> */}
