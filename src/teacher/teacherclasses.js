@@ -32,12 +32,11 @@ function TeacherClasses(props) {
         axios
             .get("/get-all-courses", {
                 headers: {
-                    'teacher-auth-token': cookies.teacherAuth,
+                    'teacher-auth-token': cookies.user.AuthToken,
 
                 }
             })
             .then((res) => {
-                console.log(res.data);
 
                 if (res.data.success === true) {
                     setTclasses(res.data.courses)
@@ -139,13 +138,12 @@ function TeacherClasses(props) {
                                 coursename: formcoursename,
                             }, {
                                 headers: {
-                                    'teacher-auth-token': cookies.teacherAuth,
+                                    'teacher-auth-token': cookies.user.AuthToken,
 
                                 }
                             })
                             .then((res) => {
                                 if (res.data.success === true) {
-                                    console.log(res.data);
 
                                     getAllcourses();
 

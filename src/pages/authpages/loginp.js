@@ -1,12 +1,15 @@
 
 import "../../style/login.css"
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
-import { useCookies } from "react-cookie";
+import { Cookies, useCookies } from "react-cookie";
+import { UserContext } from "../../context/usercontext";
 
 
 function Login() {
+
+    const [user, setUser] = useContext(UserContext);
 
 
     let [error, seterror] = useState("");
@@ -14,7 +17,8 @@ function Login() {
     let [userpassword, setuserpassword] = useState("");
     const [cookies, setCookies] = useCookies();
     const [teacher, setTeacher] = useState(false);
-    
+
+
 
 
 
@@ -80,20 +84,25 @@ function Login() {
                                         })
                                             .then((res) => {
                                                 console.log(res.data);
-                                                if (res.data.success==true) {
+                                                if (res.data.success == true) {
+                                                    const data = { "AuthToken": res.data.AuthToken, "role": res.data.user.role };
+                                                    setCookies("user", JSON.stringify(data), { path: "/" });
+                                                    console.log(cookies.user);
 
-                                                   if (res.data.user.role=="teacher") {
-                                                    setCookies("teacherAuth", res.data.AuthToken, { path: "/" })
-                                                     navigate("/teacher/dashboard");
-                                                     
-                                                    
-                                                   }else if (res.data.user.role=="student") {
-                                                    setCookies("StudentAuth", res.data.AuthToken, { path: "/" })
-                                                     navigate("/dashboard")
-                                                   }
+                                                    if (res.data.user.role == "teacher") {
+
+                                                        setUser(res.data.user)
+                                                        navigate("/teacher/dashboard");
+
+
+                                                    } else if (res.data.user.role == "student") {
+                                                        setUser(res.data.user)
+
+                                                        navigate("/dashboard")
+                                                    }
 
                                                 }
-                                               
+
 
                                             })
                                             .catch(err => console.log(err));

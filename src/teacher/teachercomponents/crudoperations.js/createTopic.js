@@ -33,6 +33,7 @@ export default function CreateTopic(props) {
 
 
                     <button type="submit" class="btn btn-primary" onClick={(e) => {
+                        console.log(cookies.user.AuthToken);
                         e.preventDefault();
                         if (topicname !== "") {
                             axios
@@ -40,7 +41,7 @@ export default function CreateTopic(props) {
                                     title: topicname,
                                 }, {
                                     headers: {
-                                        'teacher-auth-token': cookies.teacherAuth,
+                                        'teacher-auth-token': cookies.user.AuthToken
 
                                     }
                                 })

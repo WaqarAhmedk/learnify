@@ -27,7 +27,6 @@ function OurMoto() {
     }
 
     return <>
-    <Navbarmain />
 
         <div className="home-card-div">
             <div className="home-card-div-child">

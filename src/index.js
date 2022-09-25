@@ -6,8 +6,10 @@ import { UserProvider } from './context/usercontext';
 
 
 ReactDOM.render(
-  <App />
-  , document.getElementById('root')
+  <UserProvider>
+    <App />
+  </UserProvider>,
+  document.getElementById('root')
 );
 
 

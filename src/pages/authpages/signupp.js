@@ -43,7 +43,6 @@ function Signup() {
 
 
     return <>
-        <Navbarmain />
         <div className=" d-flex align-items-center justify-content-center" id="signup-form-div">
 
 

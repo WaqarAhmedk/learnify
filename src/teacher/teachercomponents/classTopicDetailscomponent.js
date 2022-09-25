@@ -23,7 +23,6 @@ export default function ClassTopicsDetail() {
     let navigate = useNavigate();
     const data = useLocation();
     const courseid = data.state.courseid;
-    const [cookies, setCookies] = useCookies();
 
     return (
 

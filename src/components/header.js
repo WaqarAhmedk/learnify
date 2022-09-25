@@ -12,46 +12,25 @@ import { Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMessage, faBell } from '@fortawesome/free-solid-svg-icons'
 import { useCookies } from 'react-cookie';
-import { useEffect, useState } from "react";
-import axios from "axios"
+import { useContext } from "react";
+import { UserContext } from "../context/usercontext"
+
+
 
 
 function Header() {
-    const [cookies, setCookies, removeCookie] = useCookies("");
+
+
+    const [Cookies, setCookies, removeCookie] = useCookies('user');
+    const [user, setUser] = useContext(UserContext);
+    console.log(user);
+
     const navigate = useNavigate();
-    const [user, setUser] = useState({ });
-
-    const getUser = () => {
-        if (cookies.teacherAuth) {
-            axios
-                .get("/getteacher", {
-                    headers: {
-                        "teacher-auth-token": cookies.teacherAuth
-                    }
-                })
-                .then((res) => {
-                    setUser(res.data);
-                })
-                .catch(err => console.error(err));
-        }
-        if (cookies.StudentAuth) {
-            axios
-                .get("/getstudent", {
-                    headers: {
-                        "student-auth-token": cookies.StudentAuth
-                    }
-                })
-                .then((res) => {
-                    setUser(res.data)
-                })
-                .catch(err => console.error(err));
-        }
-    }
 
 
-    useEffect(() => {
-        getUser();
-    }, [])
+
+
+
     return <nav className="navbar navbar-expand-lg navbar-light bg-light " id="navbar">
 
         <Link className="navbar-brand ps-5" id="brand" to="/">
@@ -93,7 +72,7 @@ function Header() {
                             <span>Dashboard</span>
                         </div>
 
-                        <div className="drop-down-menu-item" onClick={()=>{
+                        <div className="drop-down-menu-item" onClick={() => {
                             navigate("/events")
                         }}>
                             <Calendersvg className="icon-img" />
@@ -126,16 +105,12 @@ function Header() {
                         </div>
 
                         <div className="drop-down-menu-item" onClick={() => {
-                            removeCookie("teacherAuth");
-                            removeCookie("StudentAuth");
-                            if(!cookies.teacherAuth){
-                                navigate("/signin")
+                            removeCookie('user', { path: "/" })
 
-                            }
-                            if(!cookies.StudentAuth){
-                                navigate("/signin")
+                            setUser({});
+                            navigate("/signin")
 
-                            }
+
                         }}>
                             <Signoutsvg className="icon-img" />
                             <span >Signout</span>

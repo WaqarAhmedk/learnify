@@ -20,50 +20,50 @@ import Dashboard from './student/studentdashboard';
 import ClassDetails from './student/studentclassdetails';
 import TeacherDashboard from './teacher/teacherdashboard';
 import Calendar from './components/calendar';
-import {UserContext, UserProvider} from "./context/usercontext"
+import { UserContext, UserProvider } from "./context/usercontext"
 
 
 function App() {
-  const [cookies, setCookies] = useCookies();
 
-const user=useContext(UserContext);
-
-
+  const [user, setUser] = useContext(UserContext);
 
 
 
   return (
 
 
-    <div className="">
+    <>
 
 
       <BrowserRouter>
 
         {
-          
 
-          cookies.StudentAuth || cookies.teacherAuth ? <Header /> : <Navbarmain />
+          Object.keys(user).length > 0 ? <Header /> : <Navbarmain />
+
         }
 
 
 
 
 
-        <Routes>
 
+        <Routes>
+          <Route exact path='/' element={<Landingpage />} />
+          <Route exact path='/moto' element={<OurMoto />} />
+          <Route exact path='/signup' element={<Signup />} />
+          <Route exact path='/signin' element={<Login />} />
 
           <Route exact path='/meeting/:id' element={<CallPage />} />
           <Route exact path='/createmeeting' element={<CallHomePage />} />
-          <Route exact path='/signup' element={<Signup />} />
-          <Route exact path='/signin' element={<Login />} />
-          <Route exact path='/' element={<Landingpage />} />
-          <Route exact path='/moto' element={<OurMoto />} />
+
+
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
 
 
           {/* teacher */}
+
 
 
           <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
@@ -80,7 +80,7 @@ const user=useContext(UserContext);
 
 
 
-    </div>
+    </>
   );
 }
 

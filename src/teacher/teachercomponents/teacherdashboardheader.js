@@ -219,15 +219,14 @@ export default function TeacherDashboardHeader(props) {
         axios
             .get("/get-course/" + courseid, {
                 headers: {
-                    'teacher-auth-token': cookies.teacherAuth
+                    'teacher-auth-token': cookies.user.AuthToken
 
                 }
             })
             .then((res) => {
                 if (res.data.success === true) {
-                    console.log(res.data.details);
                     setCoursename(res.data.details.coursename);
-                    console.log(coursename);
+
                 }
                 else {
                     console.log(res.data);
@@ -240,7 +239,7 @@ export default function TeacherDashboardHeader(props) {
         axios
             .get("/get-topics/" + courseid, {
                 headers: {
-                    'teacher-auth-token': cookies.teacherAuth
+                    'teacher-auth-token': cookies.user.AuthToken
 
                 }
             })
@@ -432,7 +431,7 @@ export default function TeacherDashboardHeader(props) {
 
                                 axios.post("/find-student-byemail/" + StEmail, {}, {
                                     headers: {
-                                        'teacher-auth-token': cookies.teacherAuth
+                                        'teacher-auth-token': cookies.user.AuthToken
 
                                     }
                                 }).then((res) => {
@@ -476,14 +475,12 @@ export default function TeacherDashboardHeader(props) {
                         axios
                             .delete("/delete-course/" + courseid, {
                                 headers: {
-                                    'teacher-auth-token': cookies.teacherAuth
+                                    'teacher-auth-token': cookies.user.AuthToken
 
                                 }
                             })
                             .then((res) => {
                                 if (res.data.success === true) {
-                                    console.log(res.data);
-                                    CloseDelt_Crs()
                                     navigate("/teacher/dashboard")
 
                                 }
@@ -529,7 +526,7 @@ export default function TeacherDashboardHeader(props) {
 
                                 {
                                     headers: {
-                                        'teacher-auth-token': cookies.teacherAuth
+                                        'teacher-auth-token': cookies.user.AuthToken
                                     }
                                 })
                                 .then((res) => {
@@ -629,7 +626,15 @@ export default function TeacherDashboardHeader(props) {
                             .post("/create-assignment/" + optionvalue, formdata,
                                 {
                                     headers: {
-                                        headers: { 'content-type': 'multipart/form-data' }
+                                        'teacher-auth-token': cookies.user.AuthToken,
+                                        headers:
+                                        {
+
+                                            'content-type': 'multipart/form-data',
+
+
+
+                                        }
 
                                     }
                                 }
