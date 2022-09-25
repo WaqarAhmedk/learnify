@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import "../style/enrolledclasses.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
@@ -8,8 +9,12 @@ import { useCookies } from 'react-cookie';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 
 
+import { CourseContext } from "./context/Coursecontext";
 
 function TeacherClasses(props) {
+
+
+
     const navigate = useNavigate();
     const [tclasses, setTclasses] = useState([]);
     const [cookies, setCookies] = useCookies();
