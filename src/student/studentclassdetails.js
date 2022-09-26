@@ -41,7 +41,7 @@ function ClassDetails() {
         axios
             .get("/get-all-participents/" + courseid, {
                 headers: {
-                    'student-auth-token': cookies.StudentAuth
+                    'student-auth-token': cookies.user.AuthToken
 
                 }
             })
@@ -53,18 +53,16 @@ function ClassDetails() {
     }
 
     const getAllTopics = () => {
-        console.log(courseid);
-        axios
-            .get("/get-topics/" + courseid, {
+        axios.get("/get-topics/" + courseid, {
                 headers: {
-                    'student-auth-token': cookies.StudentAuth
+                    'student-auth-token': cookies.user.AuthToken
 
                 }
             })
             .then((res) => {
                 console.log(res.data);
                 if (res.data.success === true) {
-                console.log(res.data);
+                    console.log(res.data);
                     setTopics(res.data.topics)
 
                 }
@@ -169,18 +167,18 @@ function ClassDetails() {
                                                 <div className="main-content-1">
                                                     <div className="inner-content-left">
                                                         <FontAwesomeIcon icon={faClipboardList} />
-                                                        <span className="text-primary" 
-                                                        onClick={() => {
-                                                            axios
-                                                                .get("/download-assignment/"+assignment.filename,{responseType:"blob"})
-                                                                .then((res) => {
-                                                                    console.log(res.data);
-                                                                   download(res.data, assignment.filename);
+                                                        <span className="text-primary"
+                                                            onClick={() => {
+                                                                axios
+                                                                    .get("/download-assignment/" + assignment.filename, { responseType: "blob" })
+                                                                    .then((res) => {
+                                                                        console.log(res.data);
+                                                                        download(res.data, assignment.filename);
 
-                                                                })
-                                                                .catch(err => console.error(err));
-                                                        }}
-                                                        
+                                                                    })
+                                                                    .catch(err => console.error(err));
+                                                            }}
+
                                                         >{index + 1}.  {assignment.title}</span>
 
                                                     </div>

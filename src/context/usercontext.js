@@ -36,6 +36,18 @@ export const UserProvider = (props) => {
                 })
                 .catch(err => console.error(err));
         }
+        else if (cookies.user.role === "student") {
+            axios
+                .get("/getstudent", {
+                    headers: {
+                        "student-auth-token": cookies.user.AuthToken
+                    }
+                })
+                .then((res) => {
+                    setUser(res.data);
+                })
+                .catch(err => console.error(err));
+        }
 
     }
 

@@ -22,6 +22,8 @@ export default function CreateTopic(props) {
 
     return (
         <>
+
+        
             <ModalBody>
                 <form>
                     <div class="form-group">
@@ -47,9 +49,7 @@ export default function CreateTopic(props) {
                                 })
                                 .then((res) => {
                                     if (res.data.success == true) {
-
-
-                                        setTopics([...topics, res.data.topic])
+                                        
 
                                     }
                                     else {

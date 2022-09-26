@@ -21,6 +21,7 @@ import ClassDetails from './student/studentclassdetails';
 import TeacherDashboard from './teacher/teacherdashboard';
 import Calendar from './components/calendar';
 import { UserContext, UserProvider } from "./context/usercontext"
+import TeacherProtectedRoutes from './teacher/teachercomponents/teacherroutecomponents/TeacherProtectedRoutes';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
 
         }
 
+      
 
 
 
@@ -64,11 +66,15 @@ function App() {
 
           {/* teacher */}
 
+          <Route element={<TeacherProtectedRoutes />}>
+           
+            <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
+            <Route exact path='teacher/dashboard/classdetails' element={<TeacherClassDetails />} />
+            <Route exact path="/events" element={<Calendar />} />
 
+          </Route>
 
-          <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
-          <Route exact path='teacher/dashboard/classdetails' element={<TeacherClassDetails />} />
-          <Route exact path="/events" element={<Calendar />} />
+          
           <Route exact path="/scanface" element={<CustomPopup />} />
           <Route exact path='/participationReport' element={<ParticipationReport />} />
           <Route exact path='/showface' element={<CustomPopupShowFace />} />

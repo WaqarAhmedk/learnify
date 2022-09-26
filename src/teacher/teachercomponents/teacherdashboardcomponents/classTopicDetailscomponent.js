@@ -2,14 +2,13 @@ import React from 'react';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faCircleXmark, faBookOpen, faClipboardList, faBrain, } from '@fortawesome/free-solid-svg-icons';
-import "../../style/coursedetails.css"
+import "../../../style/coursedetails.css"
 import { useState, useContext } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react';
 import axios, { Axios } from "axios";
 import { useCookies } from 'react-cookie';
-import "../../style/login.css";
-import { CourseContext } from '../context/Coursecontext';
+import { CourseContext } from '../../context/Coursecontext';
 
 export default function ClassTopicsDetail() {
 

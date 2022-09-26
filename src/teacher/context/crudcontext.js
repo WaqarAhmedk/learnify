@@ -14,7 +14,7 @@ const modalobj={
     hideModal: () => {}
 
 };
-const [modal ,setmodal]=useState(false);
+const [modal ,setmodal]=useState({});
 
 
 

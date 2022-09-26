@@ -1,18 +1,17 @@
 import React, { useState, useContext } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../../style/coursedetails.css"
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react';
 import axios, { Axios } from "axios";
 import { useCookies } from 'react-cookie';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
-import Discussionboard from "../../components/discussionboard";
-import "../../style/login.css"
-import Datetimepicker from "../../components/datetimepicker";
-import Studentcard from "../../components/studentcard";
+import Discussionboard from "../../../components/discussionboard";
+import "../../../style/login.css"
+import Studentcard from "../../../components/studentcard";
 import { faBars, faPeopleArrowsLeftRight, faCirclePlus, faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import { CourseContext } from '../context/Coursecontext';
-import CreateTopic from './crudoperations.js/createTopic';
+import { CourseContext } from '../../context/Coursecontext';
+import CreateTopic from '../crudoperations/createTopic';
+import DateTimePicker from 'react-datetime-picker';
 
 export default function TeacherDashboardHeader(props) {
 
@@ -131,11 +130,12 @@ export default function TeacherDashboardHeader(props) {
     }
 
     // ***State Management variables for assignment creation***
+
     const [Asgm_title, setAsgm_title] = useState("");
     const [Asgm_Desc, setAsgm_Desc] = useState("");
     const [Asgmfile, setAsgmfile] = useState("");
+    const [Asgmdate, setAsgmdate] = useState(new Date())
     const [show_footer, setshow_footer] = useState(true);
-
     const [Asg_edit, setAsg_edit] = useState(false);
 
     // Asignment title edit modal
@@ -181,9 +181,10 @@ export default function TeacherDashboardHeader(props) {
         setVid_session(false)
     }
 
-    // ***State Management for Quiz Creation***
-    const [Vid_title, setVid_title] = useState("");
-    const [Vid_Desc, setVid_Desc] = useState("");
+    // ***State Management for ONline class**
+    const [class_title, setClass_title] = useState("");
+    const [class_Desc, setClass_Desc] = useState("");
+    const [class_time, setClass_time] = useState(new Date());
 
     //******Helping Material Modal********
     const [Hlp_matr, setHlp_matr] = useState(false);
@@ -326,7 +327,7 @@ export default function TeacherDashboardHeader(props) {
 
                                     <span className="course-mang-list" onClick={OpenQuiz}>Quiz</span>
 
-                                    <span className="course-mang-list" onClick={OpenVid_session}>Video Sesssion</span>
+                                    <span className="course-mang-list" onClick={OpenVid_session}>Online Class</span>
 
                                     <span className="course-mang-list" onClick={OpenHlp_matr}>Helping Material</span>
 
@@ -405,7 +406,6 @@ export default function TeacherDashboardHeader(props) {
                             image={getStudent.avatar}
                             email={getStudent.email}
                             std_id={getStudent._id}
-                            cookies={cookies}
                             courseid={courseid}
 
                         /> : ""}
@@ -574,13 +574,15 @@ export default function TeacherDashboardHeader(props) {
                         <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
 
                             setAsgm_Desc(e.target.value)
-
                         }} ></textarea>
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="exampleFormControlTextarea1" className="form-label">Description</label>
-                        <input type="date" />
+                        <label htmlFor="exampleFormControlTextarea1" className="form-label">Submission date</label>
+                        <DateTimePicker value={Asgmdate} onChange={(value) => {
+                            setAsgmdate(value)
+                        }} />
+
                     </div>
 
 
@@ -620,7 +622,7 @@ export default function TeacherDashboardHeader(props) {
                         formdata.append("title", Asgm_title);
                         formdata.append("courseid", courseid);
                         formdata.append("description", Asgm_Desc);
-                        formdata.append("submissiondate", Date.now());
+                        formdata.append("submissiondate", Asgmdate);
                         formdata.append("file", Asgmfile);
                         axios
                             .post("/create-assignment/" + optionvalue, formdata,
@@ -629,19 +631,19 @@ export default function TeacherDashboardHeader(props) {
                                         'teacher-auth-token': cookies.user.AuthToken,
                                         headers:
                                         {
-
                                             'content-type': 'multipart/form-data',
-
-
-
                                         }
-
                                     }
                                 }
-                            )
-                            .then((res) => {
+                            ).then((res) => {
                                 console.log(res);
                                 getAllTopics();
+
+
+                                setAsgm_title("");
+                                setAsgm_Desc("");
+                                setAsgmdate("");
+                                setAsgmfile("");
                                 setcrt_assginment(false)
 
                             })
@@ -692,57 +694,77 @@ export default function TeacherDashboardHeader(props) {
 
             </Modal>
 
-            {/* ******Video Session Modal******** */}
+            {/* ******Online Class Creation******** */}
 
             <Modal show={Vid_session}>
-                <ModalHeader closeButton onClick={CloseVid_session}>Meeting Creation</ModalHeader>
+                <ModalHeader closeButton onClick={CloseVid_session}>CREATE ONLINE CLASS</ModalHeader>
                 <ModalBody>
 
                     <div className="mb-3">
 
                         <label for="exampleFormControlInput1" className="form-label">Title</label>
-                        <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="enter meeting title" onChange={(e) => {
-
-                            setVid_title(e.target.value)
-
+                        <input type="text" className="form-control" value={class_title} placeholder="enter meeting title" onChange={(e) => {
+                            setClass_title(e.target.value);
                         }} />
                     </div>
 
 
                     <div className="mb-3">
-                        <label for="exampleFormControlTextarea1" className="form-label">Description</label>
-                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => {
+                        <label className="form-label">Description</label>
+                        <textarea className="form-control" value={class_Desc} rows="3" onChange={(e) => {
 
-                            setVid_Desc(e.target.value)
-
+                            class_Desc(e.target.value);
                         }} ></textarea>
                     </div>
 
                     {/* ***Choose Topics*** */}
 
-                    <select className="form-select" aria-label="Default select example">
-                        <option selected>Choose Topic</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                    <select className="form-select" aria-label="Default select example" onChange={(e) => { handleTopicsselectchange(e) }}>
+                        <option value="">Choose Topic</option>
+
+                        {
+
+                            topics.map((topic, index) => {
+                                return <option key={index + 1} value={topic._id}>{topic.title}</option>
+
+                            })
+                        }
+
                     </select>
 
-                    <br />
+                    <div className="mb-3">
+                        <label className="form-label">Online Class Time</label>
+                        <DateTimePicker value={class_time} className="form-control" onChange={(value) => {
+                            setClass_time(value)
+                        }} />
 
+                    </div>
                     {/*********/}
-
-
-                    <Datetimepicker title="Meeting Start Time" />
-                    <Datetimepicker title="Meeting End Time" />
-
-
-
-
-
-
                 </ModalBody>
                 <ModalFooter>
-                    <button type="submit" className="btn btn-primary" > Create Session</button>
+                    <button type="submit" className="btn btn-primary" onClick={(e) => {
+
+                        e.preventDefault();
+                        axios
+                            .post("/create-online-class/" + optionvalue,
+                                {
+                                    title: class_title,
+                                    desscription: class_Desc,
+                                    classtime: class_time
+
+                                },
+                                {
+                                    headers: {
+                                        'teacher-auth-token': cookies.user.AuthToken,
+
+                                    }
+                                }
+                            ).then((res) => {
+
+
+                            })
+                            .catch(err => console.error(err));
+                    }}> Create Class</button>
                     <button type="button" className="btn btn-secondary" onClick={CloseVid_session}>Cancel</button>
                 </ModalFooter>
 

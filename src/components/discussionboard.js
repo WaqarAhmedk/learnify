@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import socketClient from "socket.io-client";
+import { UserContext } from '../context/usercontext';
 
 
 
@@ -10,7 +9,9 @@ import socketClient from "socket.io-client";
 
 
 export default function Discussionboard(props) {
-  const role = props.role;
+
+  const [user] = useContext(UserContext);
+  const role = user.role;
   const courseid = props.courseid;
   var socket = socketClient("http://localhost:4000", { query: { courseid } });
 
@@ -22,26 +23,18 @@ export default function Discussionboard(props) {
 
 
 
-  
+
 
   let sender = "";
 
 
   if (role === "teacher") {
-    sender = cookies.teacherAuth
+    sender = cookies.user.AuthToken;
 
   }
   else if (role === "student") {
-    sender = cookies.StudentAuth;
+    sender = cookies.user.AuthToken;
   }
-  useEffect(() => {
-    socket.on("receive_message", (data) => {
-    
-      console.log(data);
-      setMessages((messages) => [...messages, data])
-    });
-  }, [])
-
   useEffect(() => {
 
     socket.on("connection", (data) => {
@@ -56,26 +49,23 @@ export default function Discussionboard(props) {
         setMessages(data)
       });
 
+    });
+    socket.on("receive_message", (data) => {
 
+      if (data.success === false) {
+        console.log("somrthing bad happend ");
+        console.log(data);
 
+      }
+      else {
+        setMessages((messages) => [...messages, data])
 
+      }
     });
 
 
 
-
   }, [])
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div>
@@ -85,40 +75,62 @@ export default function Discussionboard(props) {
           {
             messages.length < 1 ? "PLease send a messgae nothing to show" :
               messages.map((message) => {
-                return <div className="">
-                  <div className="chat-body clearfix">
-                    <div className="header">
-                      {message.sender_type === "teacher" ?
-                        <strong className="primary-font text-success">{message.sender.firstname}</strong>
-                        : <strong className="primary-font text-primary">{message.sender.firstname}</strong>
-                      }
-                      <small className="pull-right text-muted">
-                        <span className="glyphicon glyphicon-time"></span>12 mins ago</small>
-                    </div>
-                    <p>
-                      {
-                        message.message
-                      }
-                    </p>
-                  </div>
+                return <div key={message._id} className="">
+
+
+                  {
+                    message.sender._id === user._id ?
+                      <div className="text-end">
+
+                        <div className="chat-body clearfix">
+                          <div className="header">
+                            <small className='me-3'>{message.createdAt}</small>
+
+                            {
+
+                              message.sender_type === "teacher" ?
+                                <strong className="primary-font text-success">{message.sender.firstname}</strong>
+                                : <strong className="primary-font">{message.sender.firstname}</strong>
+                            }
+
+                          </div>
+                          <p>
+                            {
+                              message.message
+                            }
+
+                          </p>
+
+                        </div>
+                      </div> : <div className="chat-body clearfix">
+
+                        <div className="header">
+                          {
+
+                            message.sender_type === "teacher" ?
+                              <strong className="primary-font text-success">{message.sender.firstname}</strong>
+                              : <strong className="primary-font">{message.sender.firstname}</strong>
+                          }
+                          <small className='ms-3'>{message.createdAt}</small>
+                        </div>
+                        <p>
+                          {
+                            message.message
+                          }
+
+                        </p>
+
+
+                      </div>
+                  }
+
                 </div>
               })
 
           }
 
 
-          <div className="text-end">
 
-            <div className="chat-body clearfix">
-              <div className="header">
-                <strong className="primary-font">Jack Sparrow</strong>
-                <small className="text-muted ms-2">12 mins ago</small>
-              </div>
-              <p>
-                hy
-              </p>
-            </div>
-          </div>
 
         </div>
       </div>
@@ -131,10 +143,16 @@ export default function Discussionboard(props) {
             <span className="input-group-btn">
               <button className="btn btn-warning btn-md" id="btn-chat" onClick={(e) => {
                 e.preventDefault();
-                socket.emit("send_message", {
-                  role, sender, message, courseid
-                });
-                setMessage("");
+                if (message === "") {
+                  console.log("type a  message plese");
+                }
+                else {
+                  socket.emit("send_message", {
+                    role, sender, message, courseid
+                  });
+                  setMessage("");
+                }
+
               }}>
                 Send</button>
             </span>

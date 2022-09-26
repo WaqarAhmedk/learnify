@@ -1,14 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { useCookies } from 'react-cookie';
 
 export default function Studentcard(props) {
+  const[cookies]=useCookies();
 
 
   return (
-
-    
 
     <>
       <br />
@@ -37,7 +36,21 @@ export default function Studentcard(props) {
 
 
             </table>
-            <button className="btn btn-primary">Enroll Now</button>
+            <button className="btn btn-primary" onClick={() => {
+              axios
+                .post("/enroll-student/" + props.courseid, {
+                  studentid: props.std_id
+                },{
+                  headers:{
+                    'teacher-auth-token': cookies.user.AuthToken
+
+                  }
+                })
+                .then((res) => {
+                  console.log(res.data);
+                })
+                .catch(err => console.error(err));
+            }}>Enroll Now</button>
           </div>
         </div>
       </div>

@@ -23,7 +23,6 @@ function Header() {
 
     const [Cookies, setCookies, removeCookie] = useCookies('user');
     const [user, setUser] = useContext(UserContext);
-    console.log(user);
 
     const navigate = useNavigate();
 

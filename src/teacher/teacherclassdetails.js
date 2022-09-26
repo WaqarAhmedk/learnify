@@ -1,10 +1,8 @@
 
-import "../style/coursedetails.css";
-import "../style/login.css";
 import { useLocation } from "react-router-dom";
-import TeacherDashboardHeader from "./teachercomponents/teacherdashboardheader";
 import { CourseDetailsProvider } from "./context/Coursecontext";
-import ClassTopicsDetail from "./teachercomponents/classTopicDetailscomponent";
+import ClassTopicsDetail from "./teachercomponents/teacherdashboardcomponents/classTopicDetailscomponent";
+import TeacherDashboardHeader from "./teachercomponents/teacherdashboardcomponents/teacherdashboardheader";
 
 function TeacherClassDetails() {
 
@@ -15,11 +13,9 @@ function TeacherClassDetails() {
 
 
         <CourseDetailsProvider>
-
             <TeacherDashboardHeader courseid={courseid} />
             {/* class topic details*/}
             <ClassTopicsDetail />
-
 
 
         </CourseDetailsProvider>
