@@ -50,17 +50,16 @@ function EnrolledClasses(props) {
 
                 {
                     courses.map((course, index) => {
-                        console.log(course);
 
                         return <div className="card" onClick={() => {
                             //to do here we will rediect to the page where the deatils of the enrolled classes will show
-                            navigate('/dashboard/classdetails', { state: { courseid: course.courseid } })
+                            navigate('/dashboard/classdetails', { state: { courseid: course.course._id } })
 
                         }}  >
 
                             <img className="card-img" src={require("../assets/images/images.png")} alt="Card cap" />
                             <div className="card-body">
-                                <p className="card-">{course.coursename}</p>
+                                <p className="card-">{course.course.coursename}</p>
                             </div>
                         </div>
 
