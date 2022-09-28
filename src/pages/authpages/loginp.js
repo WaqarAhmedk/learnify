@@ -87,16 +87,15 @@ function Login() {
                                                 if (res.data.success == true) {
                                                     const data = { "AuthToken": res.data.AuthToken, "role": res.data.user.role };
                                                     setCookies("user", JSON.stringify(data), { path: "/" });
-                                                    console.log(cookies.user);
 
                                                     if (res.data.user.role == "teacher") {
 
-                                                        setUser(res.data.user)
+                                                        setUser({ logedin: true, user: res.data.user })
                                                         navigate("/teacher/dashboard");
 
 
                                                     } else if (res.data.user.role == "student") {
-                                                        setUser(res.data.user)
+                                                        setUser({ logedin: true, user: res.data.user })
 
                                                         navigate("/dashboard")
                                                     }

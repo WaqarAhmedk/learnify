@@ -4,25 +4,16 @@ import { UserContext } from '../../../context/usercontext';
 
 export default function TeacherProtectedRoutes(props) {
 
-    const [user,setUser] = useContext(UserContext);
-    let role;
-    let logedin;
-    console.log(user);
-    if (Object.keys(user).length > 0) {
-        console.log("dd");
-        logedin = true;
-        role=user.role;
-        
-    }
-    else {
-        logedin=false;
-    }
+    const [user, setUser] = useContext(UserContext);
+
+
+
 
 
 
     return (
-        logedin ? <> {role==="teacher" ?   <Outlet />:"" } </>  : <Navigate to="/" />
-        
-        )
+        user.logedin ? <> {user.user.role === "teacher" ? <Outlet /> : "jjdkj"} </> : <Navigate to="/" />
+
+    )
 
 }

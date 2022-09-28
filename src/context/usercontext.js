@@ -15,7 +15,8 @@ export const UserProvider = (props) => {
 
 
     const [user, setUser] = useState({
-
+        logedin:false,
+        user:{}
     });
 
     const [cookies, setCookies] = useCookies();
@@ -32,7 +33,7 @@ export const UserProvider = (props) => {
                     }
                 })
                 .then((res) => {
-                    setUser(res.data);
+                    setUser({logedin:true ,user:res.data});
                 })
                 .catch(err => console.error(err));
         }
@@ -44,7 +45,7 @@ export const UserProvider = (props) => {
                     }
                 })
                 .then((res) => {
-                    setUser(res.data);
+                    setUser({logedin:true ,user:res.data});
                 })
                 .catch(err => console.error(err));
         }

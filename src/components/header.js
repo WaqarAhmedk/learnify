@@ -47,7 +47,7 @@ function Header() {
 
 
             <img src={require("../assets/images/avatar.jpg")} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
-            <span className="d-block">{user.firstname}</span>
+            <span className="d-block">{user.user.firstname}</span>
 
 
             {/* Drop down using react-bootstrap component  */}
@@ -62,7 +62,7 @@ function Header() {
                         <div id="drop-down-profile">
                             <img src={require("../assets/images/avatar.jpg")} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
                             <br />
-                            <span>{user.firstname}</span>
+                            <span>{user.user.firstname}</span>
                         </div>
 
 

@@ -15,22 +15,20 @@ import DateTimePicker from 'react-datetime-picker';
 
 export default function TeacherDashboardHeader(props) {
 
+    let courseid = props.courseid;
 
     // geeting and updating coursename and topics through contextApi
     const context = useContext(CourseContext);
-    const [coursename, setCoursename] = context['course']
-    const [topics, setTopics] = context['topics']
+    const [coursename, setCoursename] = context['course'];
+    const [topics, setTopics] = context['topics'];
+    //cookies
+    const [cookies, setCookies] = useCookies();
 
 
 
 
     let navigate = useNavigate();
 
-    let courseid = props.courseid;
-
-
-
-    const [cookies, setCookies] = useCookies();
 
 
 

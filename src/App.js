@@ -40,11 +40,11 @@ function App() {
 
         {
 
-          Object.keys(user).length > 0 ? <Header /> : <Navbarmain />
+          user.logedin ? <Header /> : <Navbarmain />
 
         }
 
-      
+
 
 
 
@@ -67,14 +67,14 @@ function App() {
           {/* teacher */}
 
           <Route element={<TeacherProtectedRoutes />}>
-           
+
             <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
             <Route exact path='teacher/dashboard/classdetails' element={<TeacherClassDetails />} />
             <Route exact path="/events" element={<Calendar />} />
 
           </Route>
 
-          
+
           <Route exact path="/scanface" element={<CustomPopup />} />
           <Route exact path='/participationReport' element={<ParticipationReport />} />
           <Route exact path='/showface' element={<CustomPopupShowFace />} />
