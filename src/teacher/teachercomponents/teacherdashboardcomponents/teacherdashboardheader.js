@@ -12,9 +12,11 @@ import { faBars, faPeopleArrowsLeftRight, faCirclePlus, faCaretDown } from '@for
 import { CourseContext } from '../../context/Coursecontext';
 import CreateTopic from '../crudoperations/createTopic';
 import DateTimePicker from 'react-datetime-picker';
+import { useAlert } from 'react-alert';
 
 export default function TeacherDashboardHeader(props) {
 
+    const alert = useAlert();
     let courseid = props.courseid;
 
     // geeting and updating coursename and topics through contextApi
@@ -636,7 +638,7 @@ export default function TeacherDashboardHeader(props) {
                             ).then((res) => {
                                 console.log(res);
                                 getAllTopics();
-
+                                alert.success(res.data.message )
 
                                 setAsgm_title("");
                                 setAsgm_Desc("");

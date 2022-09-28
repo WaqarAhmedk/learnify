@@ -5,10 +5,12 @@ import { useState, useContext } from 'react';
 import axios from 'axios';
 import { Cookies, useCookies } from "react-cookie";
 import { UserContext } from "../../context/usercontext";
+import { useAlert } from "react-alert";
 
 
 function Login() {
 
+    const alert=useAlert();
     const [user, setUser] = useContext(UserContext);
 
 
@@ -90,12 +92,16 @@ function Login() {
 
                                                     if (res.data.user.role == "teacher") {
 
-                                                        setUser({ logedin: true, user: res.data.user })
+                                                        setUser({ logedin: true, user: res.data.user });
+                                                        alert.show("welcome "+res.data.user.firstname);
                                                         navigate("/teacher/dashboard");
 
 
                                                     } else if (res.data.user.role == "student") {
-                                                        setUser({ logedin: true, user: res.data.user })
+                                                        setUser({ logedin: true, user: res.data.user });
+                                                        alert.show("welcome "+res.data.user.firstname);
+
+                                                        
 
                                                         navigate("/dashboard")
                                                     }

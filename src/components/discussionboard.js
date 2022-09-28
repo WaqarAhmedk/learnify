@@ -11,7 +11,7 @@ import { UserContext } from '../context/usercontext';
 export default function Discussionboard(props) {
 
   const [user] = useContext(UserContext);
-  const role = user.role;
+  const role = user.user.role;
   const courseid = props.courseid;
   var socket = socketClient("http://localhost:4000", { query: { courseid } });
 
@@ -25,7 +25,7 @@ export default function Discussionboard(props) {
 
 
 
-  let sender = "";
+  let sender ;
 
 
   if (role === "teacher") {
@@ -79,7 +79,7 @@ export default function Discussionboard(props) {
 
 
                   {
-                    message.sender._id === user._id ?
+                    message.sender._id === user.user._id ?
                       <div className="text-end">
 
                         <div className="chat-body clearfix">
