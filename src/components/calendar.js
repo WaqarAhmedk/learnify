@@ -18,7 +18,7 @@ export default function Calendar() {
         axios
             .get("/get-all-upcoming-events", {
                 headers: {
-                    "student-auth-token": cookies.StudentAuth
+                    "student-auth-token": cookies.user.AuthToken
                 }
             })
             .then((res) => {
@@ -28,21 +28,30 @@ export default function Calendar() {
             .catch(err => console.error(err));
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getevents();
-    },[]);
+    }, []);
+
+
 
     return (
         <FullCalendar
+            height={600}
+
             plugins={[dayGridPlugin]}
             initialView="dayGridMonth"
-        
-            events={events.map((item)=>{
-                
+            eventClick={() => {
+
+            }}
+
+
+            events={events.map((item) => {
+
+
                 return {
-                    
-                    title:item.title,
-                    date:item.submissiondate || item.classtime
+
+                    title: item.title,
+                    date: item.submissiondate || item.classtime
                 }
             })}
         />

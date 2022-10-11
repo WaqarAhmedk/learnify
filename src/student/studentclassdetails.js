@@ -54,11 +54,11 @@ function ClassDetails() {
 
     const getAllTopics = () => {
         axios.get("/get-topics/" + courseid, {
-                headers: {
-                    'student-auth-token': cookies.user.AuthToken
+            headers: {
+                'student-auth-token': cookies.user.AuthToken
 
-                }
-            })
+            }
+        })
             .then((res) => {
                 console.log(res.data);
                 if (res.data.success === true) {
@@ -115,37 +115,106 @@ function ClassDetails() {
 
         {
 
-            topics.map.length < 1 ? "nothing toshow" : topics.map((topic, index) => {
+            topics.length < 1 ? <div className="ms-5 mt-2"> No Course Topic are Posted By the Teacher </div> :
 
-                return <div key={index + 1} className="row classdetails-content">
+                topics.map.length < 1 ? "nothing toshow" : topics.map((topic, index) => {
 
-                    <div>
-                        <div className="class-det-topic-heading">
-                            <span>{index + 1}.</span>
-                            <span>{topic.title}</span>
+                    return <div key={index + 1} className="row classdetails-content">
 
-                        </div>
+                        <div>
+                            <div className="class-det-topic-heading">
+                                <span>{index + 1}.</span>
+                                <span>{topic.title}</span>
 
-                        <div className="class-det-topic-content">
-                            {
-                                topic.helpingmaterial.length < 1 ? "" : <div>
+                            </div>
 
-                                    <span className="">Helping Material</span>
+                            <div className="class-det-topic-content">
+                                {
+                                    topic.helpingmaterial.length < 1 ? "" : <div>
+
+                                        <span className="">Helping Material</span>
+                                        {
+                                            topic.helpingmaterial.map((item, index) => {
+                                                return <div className="main-content-1">
+                                                    <div className="inner-content-left">
+                                                        <FontAwesomeIcon icon={faBookOpen} />
+                                                        <span>{item.title}</span>
+                                                    </div>
+                                                    <div className="inner-content-right">
+
+                                                        <FontAwesomeIcon icon={faCircleCheck} />
+                                                        <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            })
+                                        }
+                                        <hr className="hr" />
+
+                                    </div>
+                                }
+
+                                {
+                                    topic.assignments.length < 1 ? "" : <div>
+
+                                        <span className="">Assignment</span>
+
+                                        {
+                                            topic.assignments.map((assignment, index) => {
+                                                return <div key={index + 1} >
+                                                    <div className="main-content-1">
+                                                        <div className="inner-content-left">
+                                                            <FontAwesomeIcon icon={faClipboardList} />
+                                                            <span className="text-primary"
+                                                                onClick={() => {
+                                                                    axios
+                                                                        .get("/download-assignment/" + assignment.filename, { responseType: "blob" })
+                                                                        .then((res) => {
+                                                                            console.log(res.data);
+                                                                            download(res.data, assignment.filename);
+
+                                                                        })
+                                                                        .catch(err => console.error(err));
+                                                                }}
+
+                                                            >{index + 1}.  {assignment.title}</span>
+
+                                                        </div>
+                                                        <div className="inner-content-right">
+                                                            <span className="time">Due Date :{assignment.submissiondate}</span>
+                                                            <FontAwesomeIcon icon={faCircleCheck} />
+                                                        </div>
+
+                                                    </div>
+                                                    <button className="btn btn-sm btn-primary ms-3">Upload Assignment</button>
+                                                </div>
+                                            })
+                                        }
+                                        <hr className="hr" />
+
+                                    </div>
+                                }
+                                <div>
+                                    <span className="">Online class</span>
                                     {
-                                        topic.helpingmaterial.map((item, index) => {
-                                            return <div className="main-content-1">
+                                        topic.onlineclass.map((item, index) => {
+                                            return <div key={index} className="main-content-1">
                                                 <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faBookOpen} />
+                                                    <FontAwesomeIcon icon={faBrain} />
                                                     <span>{item.title}</span>
                                                 </div>
                                                 <div className="inner-content-right">
-
-                                                    <FontAwesomeIcon icon={faCircleCheck} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
+                                                    <button className="btn btn-primary" onClick={() => {
+                                                        navigate(item.classlink)
+                                                    }}>Join</button>
                                                 </div>
+
                                             </div>
+
 
 
 
@@ -154,80 +223,68 @@ function ClassDetails() {
                                     <hr className="hr" />
 
                                 </div>
-                            }
-
-                            {
-                                topic.assignments.length < 1 ? "" : <div>
-
-                                    <span className="">Assignment</span>
+                                <div>
 
                                     {
-                                        topic.assignments.map((assignment, index) => {
-                                            return <div key={index + 1} >
-                                                <div className="main-content-1">
-                                                    <div className="inner-content-left">
-                                                        <FontAwesomeIcon icon={faClipboardList} />
-                                                        <span className="text-primary"
-                                                            onClick={() => {
-                                                                axios
-                                                                    .get("/download-assignment/" + assignment.filename, { responseType: "blob" })
-                                                                    .then((res) => {
-                                                                        console.log(res.data);
-                                                                        download(res.data, assignment.filename);
+                                        topic.quiz.length > 0 ? <><span className="">Quiz</span>
 
-                                                                    })
-                                                                    .catch(err => console.error(err));
-                                                            }}
 
-                                                        >{index + 1}.  {assignment.title}</span>
+                                            {
+                                                topic.quiz.map((item, index) => {
+                                                    return <div key={index + 1} className="main-content-1">
+                                                        <div className="inner-content-left">
+                                                            <FontAwesomeIcon icon={faBrain} />
+                                                            <span>{item.quizref.title}</span>
+                                                        </div>
+
+                                                        <div className="inner-content-right d-block">
+
+
+                                                            <span className="time">Available at :{item.quizref.quiztime}</span>
+                                                            <button className='btn btn-primary' onClick={() => {
+
+
+
+
+
+                                                            }}>View Result</button>
+
+                                                            <button className='btn btn-primary ms-3' onClick={() => {
+                                                                //check time is started
+                                                                axios.get("/check-quiztime/" + item.quizref._id,).then((res) => {
+                                                                    console.log(res.data);
+                                                                }
+                                                                ).catch((err) => {
+                                                                    console.log(err);
+                                                                })
+                                                            }}>Attempt Quiz</button>
+
+                                                        </div>
+
 
                                                     </div>
-                                                    <div className="inner-content-right">
-                                                        <span className="time">Due Date :{assignment.submissiondate}</span>
-                                                        <FontAwesomeIcon icon={faCircleCheck} />
-                                                    </div>
 
-                                                </div>
-                                                <button className="btn btn-sm btn-primary ms-3">Upload Assignment</button>
-                                            </div>
-                                        })
+
+
+                                                })
+                                            }
+
+                                            <hr className="hr" />
+
+                                        </> : ""
                                     }
-                                    <hr className="hr" />
+
 
                                 </div>
-                            }
-                            <div>
-                                <span className="">Online class</span>
-                                {
-                                    topic.onlineclass.map((item, index) => {
-                                        return <div key={index} className="main-content-1">
-                                            <div className="inner-content-left">
-                                                <FontAwesomeIcon icon={faBrain} />
-                                                <span>{item.title}</span>
-                                            </div>
-                                            <div className="inner-content-right">
-                                                <button className="btn btn-primary">Join</button>
-                                            </div>
-
-                                        </div>
-
-
-
-
-                                    })
-                                }
-                                <hr className="hr" />
-
                             </div>
+
                         </div>
 
                     </div>
 
-                </div>
 
 
-
-            })}
+                })}
 
 
         {/* Discuusion board */}
@@ -242,142 +299,3 @@ function ClassDetails() {
 
 export default ClassDetails;
 
-{/* <div className="class-det-topic-content"> */ }
-
-{/* {
-                                    //checking if there is any helping material uploaded  if yes then show else nothing
-
-                                    topic.helpingmaterial.helpingmaterialp
-                                        ?
-                                        <>
-                                            <div className="main-content-1">
-
-                                                <div className="inner-content-left">
-
-                                                    <FontAwesomeIcon icon={faBookOpen} />
-
-                                                    <span>Helping Material</span>
-                                                </div>
-                                                <div className="inner-content-right">
-
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-                                                </div>
-
-                                            </div>
-                                            <hr className="hr" />
-                                        </>
-
-                                        :
-                                        ""
-
-                                } */}
-{/* checking if thee assignment part is present */ }
-
-{/* {
-                                    topic.Assignment.assignp ?
-
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faClipboardList} />
-                                                    <span>Assignment No {topic.topicid}</span>
-                                                </div>
-                                                <div className="inner-content-right">
-                                                    <span className="time">Due Date :{topic.Assignment.duedate}</span>
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> :
-                                        ""
-
-
-                                } */}
-
-{/* checking if the quiz part is present */ }
-{/* {
-
-                                    topic.quiz.quizp ?
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faBrain} />
-                                                    <span>Quiz no {topic.topicid}</span>
-                                                </div>
-                                                <div className="inner-content-right">
-                                                    <span className="time">Scheduled :{topic.quiz.duedate}</span>
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> : ""
-
-                                } */}
-{/* checking if there is any online class created */ }
-{/* {
-
-                                    topic.onlineclass.onlineclassp ?
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faBrain} />
-                                                    <span>{"Online Class " + topic.topicname}</span>
-                                                </div>
-                                                <div className="inner-content-right">
-
-
-
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                    <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-
-
-
-
-
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> : ""
-
-                                } */}
-
-
-{/* checking if te recorded sessions are available */ }
-{/* {
-                                    topic.recordedsession.recordedsessionp ?
-                                        <>
-                                            <div className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faCirclePlay} />
-                                                    <span>Recorded Video Session</span>
-                                                </div>
-                                                <div className="inner-content-right">
-
-                                             
-                                                     
-                                                            <FontAwesomeIcon icon={faEdit} />
-                                                            <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
-                                                       
-
-                                                    
-                                                </div>
-                                            </div>
-                                            <hr className="hr" />
-                                        </> : ""
-                                }
-                            </div> */}

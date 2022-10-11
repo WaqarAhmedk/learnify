@@ -24,6 +24,10 @@ import { UserContext, UserProvider } from "./context/usercontext"
 import TeacherProtectedRoutes from './teacher/teachercomponents/teacherroutecomponents/TeacherProtectedRoutes';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
+import { CourseDetailsProvider } from './teacher/context/Coursecontext';
+import CreateQuiz from './teacher/teachercomponents/crudoperations/CreateQuiz';
+import { QuizContextProvider } from './teacher/context/QuizCOntext';
+import QuizParent from './teacher/teachercomponents/teacherdashboardcomponents/QuizParent';
 
 function App() {
 
@@ -60,30 +64,36 @@ function App() {
 
 
         <Routes>
+
+
+
+
+
+
           <Route exact path='/' element={<Landingpage />} />
           <Route exact path='/moto' element={<OurMoto />} />
           <Route exact path='/signup' element={<Signup />} />
           <Route exact path='/signin' element={<Login />} />
 
-          <Route exact path='/meeting/:id' element={<CallPage />} />
-          <Route exact path='/createmeeting' element={<CallHomePage />} />
+          {/* <Route exact path='/createmeeting' element={<CallHomePage />} /> */}
 
 
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
 
+          <Route exact path='/meeting/:id' element={<CallPage />} />
 
           {/* teacher */}
 
-          <Route element={<TeacherProtectedRoutes />}>
 
-            <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
-            <Route exact path='teacher/dashboard/classdetails' element={<TeacherClassDetails />} />
+
+          <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
+            <Route exact path='teacher/dashboard/classdetails/:courseid' element={<TeacherClassDetails />} />
             <Route exact path="/events" element={<Calendar />} />
+            <Route exact path="/createquiz/course/:courseid" element={<QuizParent />} />
 
-          </Route>
-
-
+          {/* <Route element={<TeacherProtectedRoutes />}>
+          </Route> */}
           <Route exact path="/scanface" element={<CustomPopup />} />
           <Route exact path='/participationReport' element={<ParticipationReport />} />
           <Route exact path='/showface' element={<CustomPopupShowFace />} />

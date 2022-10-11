@@ -1,0 +1,60 @@
+.quiz-div{
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 40px;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.option-div{
+    margin-bottom: 10px;
+}
+.option-label{
+    width: 100px;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.option-input{
+    border: none;
+    border-bottom: 1px solid;
+    height: 40px;
+    border-radius: 10px;
+    padding-left: 5px;
+}
+
+.quiz-header{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 40px;
+    padding-left: 5%;
+    padding-right: 5%;
+   
+    
+
+
+}
+.total{
+    margin-top: 12px;
+    margin-left: 10%;
+    margin-right: 11%;
+
+}
+.total >span{
+    color:blue;
+    font-size: larger;
+}
+.quiz-add{
+    margin-left: 35%;
+}
+.quiz-add>span{
+    display: block;
+   
+}
+
+.submit-btn{
+    margin-top: 30px;
+    margin-left: 40%;
+    margin-top: 20px;
+
+}

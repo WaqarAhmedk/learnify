@@ -8,15 +8,23 @@ import { useEffect } from 'react';
 import socketClient from "socket.io-client";
 import { useLocation, useParams } from 'react-router-dom';
 import Peer from "peerjs"
+import { UserContext } from '../../../context/usercontext';
+import { useContext } from 'react';
+import { useAlert } from 'react-alert';
+
 
 export default function CallPage() {
+
+  const [user] = useContext(UserContext);
+  const alert = useAlert();
+
+
 
 
   //runnig socketio on diffrent server port 
   var socket = socketClient("http://localhost:4001");
   const params = useParams();
   const meetingid = params.id;
-  console.log(meetingid);
 
   const peer = new Peer(undefined, {
     host: "localhost",
@@ -27,74 +35,102 @@ export default function CallPage() {
 
 
 
-  const videoRef = useRef(null);
-  const userVideoRef = useRef(null);
+  // getting my own video and appending it
+  navigator.mediaDevices
+    .getUserMedia({ video: true, audio: true })
+    .then(stream => {
+      const myvideo = document.createElement("video");
+      myvideo.setAttribute("id", "myvid");
 
-
-
-  const getVideo = () => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then(stream => {
-        let video = videoRef.current;
-        video.srcObject = stream;
-        video.play();
-
-        socket.on("user-connected", (userid, stream) => {
-          console.log(stream);
-          setTimeout(connectToNewuser ,3000,userid ,stream  );
-        });
-
-
-
-      })
-      .catch(err => {
-        console.error("error:", err);
-      });
-  };
-
-
-
-  const connectToNewuser = (userid, stream) => {
-    console.log("user joined hving id " + userid);
-console.log(stream);
-    var call = peer.call(userid, stream);
-    
-    call.on('stream', userVideoStream => {
-      let a = userVideoRef.current;
-      a.srcObject = userVideoStream;
-      a.play();
+      addVideoStream(myvideo, stream)
+    })
+    .catch(err => {
+      console.error("error:", err);
     });
 
 
 
 
+
+  const addVideoStream = (video, stream, userid) => {
+
+    video.srcObject = stream;
+    video.addEventListener("loadedmetadata", () => {
+      video.play();
+    });
+    document.getElementById("vid").appendChild(video);
 
 
   }
 
+  // get joined suer media and connect a call 
+  const connectToNewUser = (userid) => {
+    console.log("user joined hving id " + userid);
+    var getUserMedia = navigator.getUserMedia;
 
-  useEffect(() => {
-    socket.on("connection", () => {
+    getUserMedia({ audio: true, video: true }, (stream) => {
+      var call = peer.call(userid, stream);
+      console.log("calling");
+      const video = document.createElement("video");
+      video.setAttribute("id", userid)
 
-      peer.on("open", (id) => {
-        socket.emit("join-room", meetingid, id);
+      call.on('stream', userVideoStream => {
+        console.log("dskj");
+
+        addVideoStream(video, userVideoStream);
 
       });
 
-      peer.on("call", (call) => {
-        var getUserMedia = navigator.getUserMedia;
-        getUserMedia({ video: true }, (stream) => {
-          call.answer(stream);
-        });
-      });
+
+      // call.on("close", (userid) => {
+      //   console.log("asked");
+      //   document.getElementById(userid).remove();
+      //   video.remove();
+      // })
+
+    })
+
+  }
+
+
+
+
+  socket.on("connection", () => {
+
+
+    peer.on("open", (id) => {
+      console.log("connectionn opened");
+      socket.emit("join-room", meetingid, user.user._id);
     });
 
+  });
+
+  socket.on("user-connected", (user) => {
+    alert.info("New user" + user.firstname + " joined the meeting")
+    connectToNewUser(user._id)
+  });
+
+  peer.on("call", (call) => {
+    console.log("on called");
+    var getUserMedia = navigator.getUserMedia;
+    getUserMedia({ video: true }, (stream) => {
+      const video = document.createElement("video")
+      call.answer(stream);
+      call.on('stream', userVideoStream => {
+        addVideoStream(video, userVideoStream)
+      });
+
+
+      call.on("close", () => {
+        console.log("asked");
+        video.remove();
+      })
+    });
+  });
 
 
 
 
-  }, [socket])
 
 
 
@@ -107,9 +143,11 @@ console.log(stream);
 
 
 
-  useEffect(() => {
-    getVideo();
-  }, [videoRef])
+
+
+  // useEffect(() => {
+  //   getVideo();
+  // }, [videoRef])
 
 
 
@@ -121,8 +159,6 @@ console.log(stream);
 
     <div className='callpage-container'>
       <div className='video-grid' id='vid'>
-        <video ref={videoRef} className="video-container" />
-        <video ref={userVideoRef} className="video-container" controls />
 
 
       </div>

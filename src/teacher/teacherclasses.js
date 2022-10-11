@@ -95,7 +95,7 @@ function TeacherClasses(props) {
 
 
                                 //to do here we will rediect to the page where the deatils of the enrolled classes will show
-                                navigate('/teacher/dashboard/classdetails', { state: { courseid: sclass._id} })
+                                navigate('/teacher/dashboard/classdetails/'+sclass._id)
 
                             }}  >
 

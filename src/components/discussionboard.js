@@ -13,7 +13,7 @@ export default function Discussionboard(props) {
   const [user] = useContext(UserContext);
   const role = user.user.role;
   const courseid = props.courseid;
-  var socket = socketClient("http://localhost:4000", { query: { courseid } });
+  var socket = socketClient("http://localhost:4001", { query: { courseid } });
 
 
 

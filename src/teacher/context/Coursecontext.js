@@ -6,6 +6,7 @@ export const CourseContext = createContext();
 export const CourseDetailsProvider = (props) => {
     const [coursename, setCoursename] = useState("");
     const [topics, setTopics] = useState([]);
+    const [courseid, setCourseid] = useState();
 
 
 
@@ -15,6 +16,8 @@ export const CourseDetailsProvider = (props) => {
             value={{
                 'course': [coursename, setCoursename],
                 'topics': [topics, setTopics],
+                'courseid': [courseid, setCourseid],
+
             }}>
             {
                 props.children

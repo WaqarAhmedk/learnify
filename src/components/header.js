@@ -66,7 +66,16 @@ function Header() {
                         </div>
 
 
-                        <div className="drop-down-menu-item" >
+                        <div className="drop-down-menu-item"  onClick={()=>{
+                            if (Cookies.user.role==="teacher") {
+                                navigate("/teacher/dashboard")
+                                
+                            }
+                            else{
+                                navigate("/dashboard")
+
+                            }
+                        }}>
                             <Dashboardsvg className="icon-img" />
                             <span>Dashboard</span>
                         </div>

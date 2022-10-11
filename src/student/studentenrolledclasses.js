@@ -22,6 +22,7 @@ function EnrolledClasses(props) {
                 }
             })
             .then((res) => {
+                console.log(res.data);
                 setCourses(res.data.allcourses)
             })
             .catch(err => console.error(err));
@@ -49,21 +50,23 @@ function EnrolledClasses(props) {
 
 
                 {
-                    courses.map((course, index) => {
 
-                        return <div className="card" onClick={() => {
-                            //to do here we will rediect to the page where the deatils of the enrolled classes will show
-                            navigate('/dashboard/classdetails', { state: { courseid: course.course._id } })
+                    courses.length < 1 ? "Currently you have No Course Ask Your Instructor for Enrollment" :
+                        courses.map((course, index) => {
 
-                        }}  >
+                            return <div className="card" onClick={() => {
+                                //to do here we will rediect to the page where the deatils of the enrolled classes will show
+                                navigate('/dashboard/classdetails', { state: { courseid: course.course._id } })
 
-                            <img className="card-img" src={require("../assets/images/images.png")} alt="Card cap" />
-                            <div className="card-body">
-                                <p className="card-">{course.course.coursename}</p>
+                            }}  >
+
+                                <img className="card-img" src={require("../assets/images/images.png")} alt="Card cap" />
+                                <div className="card-body">
+                                    <p className="card-">{course.course.coursename}</p>
+                                </div>
                             </div>
-                        </div>
 
-                    })
+                        })
 
                 }
 

@@ -1,24 +1,25 @@
 
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CourseDetailsProvider } from "./context/Coursecontext";
 import ClassTopicsDetail from "./teachercomponents/teacherdashboardcomponents/classTopicDetailscomponent";
 import TeacherDashboardHeader from "./teachercomponents/teacherdashboardcomponents/teacherdashboardheader";
+import { CourseContext } from "./context/Coursecontext";
+import { useContext } from 'react';
 
 function TeacherClassDetails() {
+    const params = useParams();
+    const cid = params.id;
 
-    const data = useLocation();
-    const courseid = data.state.courseid;
+
+
 
     return <>
-
-
         <CourseDetailsProvider>
-            <TeacherDashboardHeader courseid={courseid} />
+            <TeacherDashboardHeader />
             {/* class topic details*/}
             <ClassTopicsDetail />
-
-
         </CourseDetailsProvider>
+
 
     </>
 
