@@ -25,7 +25,7 @@ export default function Discussionboard(props) {
 
 
 
-  let sender ;
+  let sender;
 
 
   if (role === "teacher") {

@@ -28,6 +28,8 @@ import { CourseDetailsProvider } from './teacher/context/Coursecontext';
 import CreateQuiz from './teacher/teachercomponents/crudoperations/CreateQuiz';
 import { QuizContextProvider } from './teacher/context/QuizCOntext';
 import QuizParent from './teacher/teachercomponents/teacherdashboardcomponents/QuizParent';
+import StartQuiz from './student/Quiz/startQuiz';
+import AttemptQuiz from './student/Quiz/AttemptQuiz';
 
 function App() {
 
@@ -81,6 +83,9 @@ function App() {
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
 
+          <Route exact path='/startquiz/:quizid' element={<StartQuiz />} />
+          <Route exact path='/attemptquiz/:quizid' element={<AttemptQuiz />} />
+
           <Route exact path='/meeting/:id' element={<CallPage />} />
 
           {/* teacher */}
@@ -88,9 +93,9 @@ function App() {
 
 
           <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
-            <Route exact path='teacher/dashboard/classdetails/:courseid' element={<TeacherClassDetails />} />
-            <Route exact path="/events" element={<Calendar />} />
-            <Route exact path="/createquiz/course/:courseid" element={<QuizParent />} />
+          <Route exact path='teacher/dashboard/classdetails/:courseid' element={<TeacherClassDetails />} />
+          <Route exact path="/events" element={<Calendar />} />
+          <Route exact path="/createquiz/course/:courseid" element={<QuizParent />} />
 
           {/* <Route element={<TeacherProtectedRoutes />}>
           </Route> */}

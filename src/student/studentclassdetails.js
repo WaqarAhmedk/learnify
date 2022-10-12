@@ -10,9 +10,12 @@ import { useCookies } from 'react-cookie';
 import { Modal, ModalBody, ModalHeader } from 'react-bootstrap';
 import Discussionboard from "../components/discussionboard";
 import download from "js-file-download"
+import { useAlert } from "react-alert";
+
 
 
 function ClassDetails() {
+    const alert = useAlert();
 
     let navigate = useNavigate();
     const data = useLocation();
@@ -226,7 +229,9 @@ function ClassDetails() {
                                 <div>
 
                                     {
-                                        topic.quiz.length > 0 ? <><span className="">Quiz</span>
+
+                                        topic.quiz.length > 0 ? <>
+                                            <span className="">Quiz</span>
 
 
                                             {
@@ -242,17 +247,33 @@ function ClassDetails() {
 
                                                             <span className="time">Available at :{item.quizref.quiztime}</span>
                                                             <button className='btn btn-primary' onClick={() => {
+// todo
 
 
+                                                                axios
+                                                                    .get("/get-your-quiz-result/" + item.quizref._id, {
+                                                                        headers: {
+                                                                            'student-auth-token': cookies.user.AuthToken
+
+                                                                        }
+                                                                    })
+                                                                    .then(() => {
 
 
+                                                                    })
+                                                                    .catch(err => console.error(err));
 
                                                             }}>View Result</button>
 
                                                             <button className='btn btn-primary ms-3' onClick={() => {
                                                                 //check time is started
                                                                 axios.get("/check-quiztime/" + item.quizref._id,).then((res) => {
-                                                                    console.log(res.data);
+                                                                    if (res.data.success === true && res.data.allowed === true) {
+                                                                        navigate('/startquiz/' + item.quizref._id)
+                                                                    }
+                                                                    else if (res.data.success === true && res.data.allowed === false) {
+                                                                        alert.info(res.data.message)
+                                                                    }
                                                                 }
                                                                 ).catch((err) => {
                                                                     console.log(err);

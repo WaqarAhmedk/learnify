@@ -1,0 +1,22 @@
+.start-main-div {
+    height: 60vh;
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: whitesmoke;
+    margin-top: 5%;
+}
+
+.start-inner-div {
+    padding-top: 20px;
+    margin-left: 30px;
+    margin-right: 50px;
+}
+
+
+.start-btn {
+    margin-left: 45%;
+    margin-top: 80px;
+}
+.quiz-title{
+    padding-left: 35%;
+}

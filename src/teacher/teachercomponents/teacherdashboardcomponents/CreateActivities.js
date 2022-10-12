@@ -320,6 +320,7 @@ export default function CreateActivities(props) {
                     <div className="mb-3">
                         <label htmlFor="exampleFormControlTextarea1" className="form-label">Submission date</label>
                         <DateTimePicker value={Asgmdate} onChange={(value) => {
+                            console.log(value);
                             setAsgmdate(value)
                         }} />
 
