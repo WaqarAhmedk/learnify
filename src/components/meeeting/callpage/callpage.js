@@ -1,15 +1,13 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
-import styled from "styled-components";
-import micmute from "../../../assets/icons/micmute.svg";
-import micunmute from "../../../assets/icons/micunmute.svg";
-import webcam from "../../../assets/icons/webcam.svg";
-import webcamoff from "../../../assets/icons/webcamoff.svg";
 import { useParams } from 'react-router-dom';
 import "./callpage.css"
+import "../meetingfooter/meetingfooter.css"
 import { useAlert } from 'react-alert';
 import { UserContext } from "../../../context/usercontext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrophone, faMicrophoneAltSlash, faPhone, faExpand, faAngleUp, faClosedCaptioning, faDesktop, faMicrophoneSlash, faVideo, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -28,12 +26,18 @@ const Video = (props) => {
 
   useEffect(() => {
     props.peer.on("stream", (stream) => {
+
       ref.current.srcObject = stream;
     });
   }, []);
 
-  return <video className="video" playsInline autoPlay ref={ref} />;
-};
+  return <>
+    <video className="others-video" playsInline autoPlay ref={ref} />
+    <span></span>
+  </>
+}
+
+
 
 const Room = (props) => {
   const user = useContext(UserContext);
@@ -58,6 +62,7 @@ const Room = (props) => {
 
     socketRef.current = io.connect("http://localhost:4001");
     createStream();
+    console.log(user);
   }, []);
 
   function createStream() {
@@ -65,7 +70,11 @@ const Room = (props) => {
       .getUserMedia({ video: videoConstraints, audio: true })
       .then((stream) => {
         userVideo.current.srcObject = stream;
-        socketRef.current.emit("join room", roomID);
+        socketRef.current.emit("join room", {
+          roomID,
+          user: user[0].user
+        });
+
         socketRef.current.on("all users", (users) => {
           console.log(users)
           const peers = [];
@@ -153,41 +162,24 @@ const Room = (props) => {
   }
 
   return (
-    <div >
-      <video className="video" muted ref={userVideo} autoPlay playsInline />
-      <div className="controls-div">
-        <img className="controls-img"
-          src={videoFlag ? webcam : webcamoff}
-          onClick={() => {
-            if (userVideo.current.srcObject) {
-              userVideo.current.srcObject.getTracks().forEach(function (track) {
-                if (track.kind === "video") {
-                  if (track.enabled) {
-                    socketRef.current.emit("change", [...userUpdate, {
-                      id: socketRef.current.id,
-                      videoFlag: false,
-                      audioFlag,
-                    }]);
-                    track.enabled = false;
-                    setVideoFlag(false);
-                  } else {
-                    socketRef.current.emit("change", [...userUpdate, {
-                      id: socketRef.current.id,
-                      videoFlag: true,
-                      audioFlag,
-                    }]);
-                    track.enabled = true;
-                    setVideoFlag(true);
-                  }
-                }
-              });
-            }
-          }}
-        />
+    <div className="d-flex">
+      <div className="my-video">
 
-        <img className="controls-img"
-          src={audioFlag ? micunmute : micmute}
-          onClick={() => {
+        <video className="video" muted ref={userVideo} autoPlay playsInline />
+        <FontAwesomeIcon icon={faExpand} className="expand-video" />
+      </div>
+      <div className='meeting-footer-container'>
+
+        <div className='meeting-footer-left-item'>
+          <div >
+            <span>  Meeting Details</span>
+            <FontAwesomeIcon icon={faAngleUp} className="meeting-footer-icon" />
+          </div>
+        </div>
+
+
+        <div className='meeting-footer-center-item'>
+          <div className='meeting-footer-icon-block' onClick={() => {
             if (userVideo.current.srcObject) {
               userVideo.current.srcObject.getTracks().forEach(function (track) {
                 if (track.kind === "audio") {
@@ -211,50 +203,84 @@ const Room = (props) => {
                 }
               });
             }
-          }}
-        />
+          }}>
+            <FontAwesomeIcon icon={audioFlag ? faMicrophone : faMicrophoneAltSlash} className="icon" />
+          </div>
+
+          <div className='meeting-footer-icon-block' >
+            <FontAwesomeIcon icon={faPhone} className="icon red" />
+          </div>
+
+          <div className='meeting-footer-icon-block' onClick={() => {
+            if (userVideo.current.srcObject) {
+              userVideo.current.srcObject.getTracks().forEach(function (track) {
+                if (track.kind === "video") {
+                  if (track.enabled) {
+                    socketRef.current.emit("change", [...userUpdate, {
+                      id: socketRef.current.id,
+                      videoFlag: false,
+                      audioFlag,
+                    }]);
+                    track.enabled = false;
+                    setVideoFlag(false);
+                  } else {
+                    socketRef.current.emit("change", [...userUpdate, {
+                      id: socketRef.current.id,
+                      videoFlag: true,
+                      audioFlag,
+                    }]);
+                    track.enabled = true;
+                    setVideoFlag(true);
+                  }
+                }
+              });
+            }
+          }}>
+            <FontAwesomeIcon icon={videoFlag ? faVideo : faVideoSlash} className="icon" />
+          </div>
+
+        </div>
+
+
+        <div className='meeting-footer-right-item'>
+
+          <div className='meeting-footer-icon-block-right'>
+            <FontAwesomeIcon icon={faDesktop} className="icon red" />
+            <p>Present now</p>
+          </div>
+        </div>
       </div>
 
 
+      <div>
+        {peers.map((peer, index) => {
+          let audioFlagTemp = true;
+          let videoFlagTemp = true;
+          if (userUpdate) {
+            userUpdate.forEach((entry) => {
+              if (peer && peer.peerID && peer.peerID === entry.id) {
+                audioFlagTemp = entry.audioFlag;
+                videoFlagTemp = entry.videoFlag;
+              }
+            });
+          }
+          return (
 
-
-
-
-
-
-
-
-
-    
+            //video of ALl the connected peers
+            <div key={peer.peerID} className="others-vid">
+              <Video peer={peer.peer} />
+              {/* <div className="small-controls">
+                <img src={videoFlagTemp ? webcam : webcamoff} />
+                &nbsp;&nbsp;&nbsp;
+                <img src={audioFlagTemp ? micunmute : micmute} />
+              </div> */}
+            </div>
+          );
+        })}
+      </div>
     </div>
 
   );
 };
 
 export default Room;
-
-
-// {peers.map((peer, index) => {
-//   let audioFlagTemp = true;
-//   let videoFlagTemp = true;
-//   if (userUpdate) {
-//     userUpdate.forEach((entry) => {
-//       if (peer && peer.peerID && peer.peerID === entry.id) {
-//         audioFlagTemp = entry.audioFlag;
-//         videoFlagTemp = entry.videoFlag;
-//       }
-//     });
-//   }
-//   return (
-
-//     //video of ALl the connected peers
-//     <div key={peer.peerID} className="others-vid">
-//       <Video peer={peer.peer} />
-//       <div className="small-controls">
-//         <img src={videoFlagTemp ? webcam : webcamoff} />
-//         &nbsp;&nbsp;&nbsp;
-//         <img src={audioFlagTemp ? micunmute : micmute} />
-//       </div>
-//     </div>
-//   );
-// })}
