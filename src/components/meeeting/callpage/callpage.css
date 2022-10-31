@@ -1,16 +1,44 @@
+.controls-div {
+    margin: 3px;
+    padding: 5px;
+    height: 27px;
+    width: 98%;
+    background-color: rgba(255, 226, 104, 0.1);
+    margin-top: -8.5vh;
+    filter: brightness(1);
+    z-index: 1;
+    border-radius: 6px;
+}
 
-.video-container {
-    height: 300px;
-    width: 300px;
-    object-fit: cover;
+.small-controls {
+    margin: 3px;
+    padding: 5px;
+    height: 16px;
+    width: 98%;
+    margin-top: -6vh;
+    filter: brightness(1);
+    z-index: 1;
+    border-radius: 6px;
     display: flex;
+    justify-content: center;
 }
-.video-grid{
-    display: flexbox;
-    width: 100%;
+
+.controls-img {
+    height: 30px;
 }
 
 
-.video-grid >video{
-    height: 340px;
+.img-small {
+    height: 15px;
+    text-align: left;
+    opacity: 0.5;
+}
+
+
+.video {
+    width: 30%;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1px;
+    border: 5px solid gray;
 }

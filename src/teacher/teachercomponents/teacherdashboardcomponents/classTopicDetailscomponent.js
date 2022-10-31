@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 import axios, { Axios } from "axios";
 import { useCookies } from 'react-cookie';
 import { CourseContext } from '../../context/Coursecontext';
+import { Modal, ModalBody, ModalHeader } from 'react-bootstrap';
+import QuizResult from './QuizResult';
 
 
 
@@ -20,6 +22,13 @@ export default function ClassTopicsDetail() {
     const [topics, setTopics] = context['topics'];
     const [courseid, setCourseid] = context['courseid'];
     const [cookies, setCookies] = useCookies();
+
+    const [showquizresultmodal, setShowquizModal] = useState(false);
+    const [quizResult, setQuizresult] = useState({
+
+    });
+    const [students, setStudents] = useState([]);
+
 
     let navigate = useNavigate();
     const params = useParams();
@@ -75,6 +84,7 @@ export default function ClassTopicsDetail() {
                                         <hr className="hr" />
 
                                     </div>
+
                                     <div>
                                         <span className="">Assignment</span>
 
@@ -93,7 +103,6 @@ export default function ClassTopicsDetail() {
                                                                 })
                                                                 .then((res) => {
 
-                                                                    console.log(res.data);
 
                                                                     const url = window.URL.createObjectURL(new Blob([res.data]));
                                                                     const link = document.createElement('a');
@@ -113,6 +122,9 @@ export default function ClassTopicsDetail() {
                                                         <span className="time">Due Date :{assignment.submissiondate}</span>
                                                         <FontAwesomeIcon icon={faEdit} />
                                                         <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
+                                                        <div>
+                                                            <button className='btn btn-primary'>View Records</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             })
@@ -120,6 +132,7 @@ export default function ClassTopicsDetail() {
                                         <hr className="hr" />
 
                                     </div>
+
                                     <div>
                                         <span className="">Online class</span>
                                         {
@@ -150,11 +163,12 @@ export default function ClassTopicsDetail() {
                                         <hr className="hr" />
 
                                     </div>
+
                                     <div>
                                         <span className="">Quiz</span>
                                         {
                                             topic.quiz.map((item, index) => {
-                                                return  <div key={index + 1} className="main-content-1">
+                                                return <div key={index + 1} className="main-content-1">
                                                     <div className="inner-content-left">
                                                         <FontAwesomeIcon icon={faBrain} />
                                                         <span>{item.quizref.title}</span>
@@ -163,18 +177,41 @@ export default function ClassTopicsDetail() {
                                                     <div className="inner-content-right d-block">
 
                                                         <div>
-                                                            <span className="time">Due Date :{item.quizref.quiztime}</span>
+                                                            <span className="time">Available At :{item.quizref.quiztime}</span>
 
                                                             <FontAwesomeIcon icon={faEdit} className="ms-3" />
                                                             <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" />
                                                         </div>
                                                         <div>
                                                             <button className='btn btn-primary' onClick={() => {
-                                                                console.log(timenow);
+                                                                console.log(item.quizref._id);
+                                                                setShowquizModal(true)
+                                                                axios.get("/get-all-students-quiz-result/" + item.quizref._id, {
+
+                                                                    headers: {
+                                                                        'student-auth-token': cookies.user.AuthToken
+
+                                                                    }
+                                                                })
+                                                                    .then((res) => {
+                                                                        if (res.data.success === true) {
+
+                                                                            setQuizresult(res.data.details);
+                                                                            setStudents(res.data.details.students);
+
+                                                                        } else {
+
+                                                                        }
+
+                                                                    })
+                                                                    .catch(err => console.error(err));
+
+
+
                                                             }}>View Records</button>
                                                         </div>
                                                     </div>
-                                                  
+
 
                                                 </div>
 
@@ -193,6 +230,15 @@ export default function ClassTopicsDetail() {
 
                     })
             }
+
+            <QuizResult
+                show={showquizresultmodal}
+                details={quizResult}
+                students={students}
+                onHide={() => setShowquizModal(false)}
+            />
+
+
         </>
 
     )

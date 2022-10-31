@@ -1,0 +1,162 @@
+import React, { useRef } from 'react'
+import MeetingHeader from '../meetingheader/meetingheader';
+import MeetingFooter from '../meetingfooter/meetingfooter';
+import MeetingInfo from '../meetinginfo/meetinginfo';
+import MeetingMessages from '../meetingmessages/meetingmessages';
+import "./callpage.css";
+import { useEffect } from 'react';
+import socketClient from "socket.io-client";
+import { useLocation, useParams } from 'react-router-dom';
+import Peer from "peerjs"
+import { UserContext } from '../../../context/usercontext';
+import { useContext } from 'react';
+import { useAlert } from 'react-alert';
+import { useState } from 'react';
+
+
+export default function CallPage() {
+
+  const [user] = useContext(UserContext);
+  const alert = useAlert();
+  console.log(user);
+
+  const mywebcamvid = useRef();
+
+  //runnig socketio on diffrent server port 
+  var socket = socketClient("http://localhost:4001");
+  const params = useParams();
+  const meetingid = params.id;
+
+  const peer = new Peer(undefined, {
+    host: "localhost",
+    port: "4000",
+    path: "/peerjs"
+  });
+
+
+  const [audio, setAudio] = useState(false);
+  const [video, setVideo] = useState(true);
+
+
+  const getMedia = () => {
+
+    navigator.mediaDevices.getUserMedia(
+      {
+        audio: audio,
+        video: video,
+      }
+    ).then((stream) => {
+      mywebcamvid.current.srcObject = stream;
+      //when user is connected
+
+    }).catch((err) => {
+      console.log(err);
+    });
+
+
+
+  }
+
+  // const ConnectToNewUser = (user, stream) => {
+  //   const call = peer.call(user, stream);
+  //   CreateVideoElement(user, stream)
+
+  //   call.on("stream", uservideostream => {
+  //     console.log("Dadadada");
+
+  //   })
+  // }
+
+  // get joined suer media and connect a call 
+  const connectToNewUser = (userid) => {
+    console.log("user joined hving id " + userid);
+    var getUserMedia = navigator.getUserMedia;
+
+    getUserMedia({ audio: true, video: true }, (stream) => {
+      var call = peer.call(userid, stream);
+      console.log("calling");
+      const video = document.createElement("video");
+      const name=document.createElement("h3");
+      name.id=userid+name;
+      document.getElementById("")
+      video.id = user;
+      video.autoplay = true;
+      video.srcObject=stream
+      document.getElementById("f").appendChild(video);
+      document.getElementById("f").appendChild(name);
+
+
+
+
+      call.answer(stream)
+      call.on('stream', userVideoStream => {
+        console.log("dskj");
+        video.srcObject = userVideoStream;
+      });
+
+
+      // call.on("close", (userid) => {
+      //   console.log("asked");
+      //   document.getElementById(userid).remove();
+      //   video.remove();
+      // })
+
+    })
+
+  }
+
+  // const CreateVideoElement = (stream, user) => {
+  //   const viddiv = document.createElement("div");
+  //   const video = document.createElement("video");
+  //   document.getElementsByClassName("callpage-container").appendChild(video);
+
+  //   video.id = user;
+  //   video.srcObject = stream;
+  //   video.autoplay = true;
+
+
+
+  // }
+
+
+  socket.on("user-connected", (userid) => {
+    alert.show("new User Joined " + userid);
+    connectToNewUser(userid)
+  })
+
+
+  useEffect(() => {
+
+    getMedia();
+
+    socket.on("connection", () => {
+
+
+      peer.on("open", (id) => {
+        console.log(" connection opened by peer id" + id);
+        socket.emit("join-room", meetingid, id)
+      })
+
+
+    });
+  }, [])
+
+  return (
+
+
+    <div className='callpage-container' id="f">
+
+      <div className='vid-container'>
+        <video ref={mywebcamvid} autoPlay />
+        <h4>{user.firstname}</h4>
+        <h3>sd</h3>
+      </div>
+
+
+      {/* <MeetingHeader />
+      <MeetingInfo />
+      <MeetingFooter />
+      <MeetingMessages /> */}
+    </div>
+  )
+}

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../style/login.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbarmain from "../mainnavbar";
@@ -24,6 +24,10 @@ function Signup() {
     let [passworderror, setpassworderror] = useState("");
 
     let [formerror, setformerror] = useState("");
+    const [role, setRole] = useState("student");
+
+
+
 
 
 
@@ -32,11 +36,6 @@ function Signup() {
 
     var navigate = useNavigate();
 
-    //getting data of role from moto page through navigate method params
-
-    const state = useLocation();
-
-    const role = state.state.role;
 
 
 
@@ -53,7 +52,7 @@ function Signup() {
                     <span className="signup-logo-learnify">Learnify</span>
                     <span>Sign Up for Free! </span>
                     <br />
-                    <span> as a {role}</span>
+                    <span> as a<b> {role.toLocaleUpperCase()}</b></span>
                 </div>
 
 
@@ -66,52 +65,53 @@ function Signup() {
                                 <label className="col">Last Name</label>
                             </div>
                             <div className="form-input-1">
-                                <input className="col" type="text" value={fname} placeholder="Enter First Name" onChange={(e) => {
-
+                                <input className="col" type="text" value={fname} placeholder="First Name" onChange={(e) => {
                                     fname = e.target.value;
                                     setfname(fname);
-                                    if (fname.length >= 3) {
+                                }}
 
-                                        setfnameerror("");
-                                        setfname(fname);
-                                    }
-                                    else {
-                                        if (fname === "") {
-                                            fnameerror = "* You must provide First Name";
-                                            setfnameerror(fnameerror);
+                                    onBlur={() => {
+                                        if (fname.length >= 3) {
+
+                                            setfnameerror("");
+                                            setfname(fname);
                                         }
                                         else {
-                                            fnameerror = "* First name must be greater than 3";
-                                            setfnameerror(fnameerror);
+                                            if (fname === "") {
+                                                fnameerror = "* You must provide First Name";
+                                                setfnameerror(fnameerror);
+                                            }
+                                            else {
+                                                fnameerror = "* First name must be greater than 3";
+                                                setfnameerror(fnameerror);
+                                            }
                                         }
-                                    }
+                                    }} />
 
 
-                                }} />
-
-
-                                <input className="col" type="text" value={lname} placeholder="Ahmed" onChange={(e) => {
+                                <input className="col" type="text" placeholder="Last Name" value={lname} onChange={(e) => {
 
                                     lname = e.target.value;
                                     setlname(lname);
-                                    if (lname.length >= 3) {
+                                }}
 
-                                        setlnameerror("");
-                                        setlname(lname);
-                                    }
-                                    else {
-                                        if (lname === "") {
-                                            lnameerror = "* You must provide Last Name";
-                                            setlnameerror(lnameerror);
+                                    onBlur={() => {
+                                        if (lname.length >= 3) {
+
+                                            setlnameerror("");
+                                            setlname(lname);
                                         }
                                         else {
-                                            lnameerror = " * Last name must be greater then 3"
-                                            setlnameerror(lnameerror);
+                                            if (lname === "") {
+                                                lnameerror = "* You must provide Last Name";
+                                                setlnameerror(lnameerror);
+                                            }
+                                            else {
+                                                lnameerror = " * Last name must be greater then 3"
+                                                setlnameerror(lnameerror);
+                                            }
                                         }
-                                    }
-
-                                }
-                                } />
+                                    }} />
                             </div>
                         </div>
                         {/*  Form first name and last name error message  of validation */}
@@ -123,38 +123,42 @@ function Signup() {
 
                             <label className="">Email</label>
                             <input className="" type="email" value={email} onChange={(e) => {
-
-                                // Regex regular expressions which are used to match the required string format.
-
-                                let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
                                 email = e.target.value;
-
                                 setemail(email);
 
-
-                                if (re.test(email)) {
-                                    setemailerror("");
-                                }
-
-                                else {
-                                    setemailerror("* Enter a valid email");
-                                }
                             }
-                            } />
+                            }
+
+                                onBlur={() => {
+                                    // Regex regular expressions which are used to match the required string format.
+
+                                    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                                    if (re.test(email)) {
+                                        setemailerror("");
+                                    }
+
+                                    else {
+                                        setemailerror("* Enter a valid email");
+                                    }
+                                }} />
                             <span className="col error">{emailerror}</span>
 
                         </div>
-                        <div className="row form ">
-                            <div className="form-label-1">
-                                <label className="col">Password</label>
-                                <label className="col">Upload Pictures</label>
-                            </div>
-                            <div className="form-input-1">
-                                <input className="col" type="password" placeholder="*****" onChange={(e) => {
 
-                                    password = e.target.value;
-                                    setpassword(password);
+                        <div className="row email-div">
+
+                            <label className="">Password</label>
+                            <input type="password" placeholder="*****" onChange={(e) => {
+
+                                password = e.target.value;
+                                setpassword(password);
+
+
+                            }
+                            }
+
+                                onBlur={() => {
                                     if (password.length >= 8) {
 
                                         setpassworderror("");
@@ -164,16 +168,41 @@ function Signup() {
 
                                         setpassworderror("* Password must be greater then 8 words");
                                     }
+                                }} />
+                            <span className="col error">{passworderror}</span>
 
-                                }
-                                } />
+                        </div>
+                        <label className="mt-3">Signup as A </label>
 
-                                <input className="col in-file" type="file" placeholder="Ahmed" />
+                        <select className="form-select" aria-label="Default select example" onChange={(e) => {
+                            setRole(e.target.value)
+                        }}>
+                            <option value="student">Student</option>
+
+                            <option value="teacher">Teacher</option>
+
+
+
+
+                        </select>
+
+
+                        <div className="row form ">
+                            <div className="form-label-1">
+                                <label className="col">Upload Pictures</label>
+                            </div>
+                            <div className="form-input-1">
+
+
+                                <div className="input-group mb-3">
+                                    <input type="file" className="form-control" onChange={(e) => {
+
+                                    }} />
+                                </div>
                             </div>
 
-                            {/* password and pic error */}
+                            {/*  pic error */}
                             <div className="row">
-                                <span className="col ms-3 error">{passworderror}</span>
                                 <span className="col error"></span>
                             </div>
                         </div>
@@ -194,23 +223,44 @@ function Signup() {
                                         }
                                         else {
 
-                                            axios.post("/signup", {
-                                                firstname: fname,
-                                                lastname: lname,
-                                                email: email,
-                                                password: password,
+                                            if (role === 'student') {
+                                                axios.post("/signup", {
+                                                    firstname: fname,
+                                                    lastname: lname,
+                                                    email: email,
+                                                    password: password,
 
-                                            })
-                                                .then((res) => {
-                                                    if (res.data.success == true) {
-
-                                                        navigate("/signin");
-                                                    }
-                                                    else{
-                                                        setemailerror(res.data.msg)
-                                                    }
                                                 })
-                                                .catch(err => console.log(err))
+                                                    .then((res) => {
+                                                        if (res.data.success == true) {
+
+                                                            navigate("/signin");
+                                                        }
+                                                        else {
+                                                            setemailerror(res.data.msg)
+                                                        }
+                                                    })
+                                                    .catch(err => console.log(err))
+                                            }
+                                            else if (role === 'teacher') {
+                                                axios.post("/teacher/signup", {
+                                                    firstname: fname,
+                                                    lastname: lname,
+                                                    email: email,
+                                                    password: password,
+
+                                                })
+                                                    .then((res) => {
+                                                        if (res.data.success == true) {
+
+                                                            navigate("/signin");
+                                                        }
+                                                        else {
+                                                            setemailerror(res.data.msg)
+                                                        }
+                                                    })
+                                                    .catch(err => console.log(err))
+                                            }
 
 
                                         }

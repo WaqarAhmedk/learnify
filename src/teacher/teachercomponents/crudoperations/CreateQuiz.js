@@ -151,6 +151,8 @@ export default function CreateQuiz() {
 
                 }
                 else {
+                    const final=quiztime.toString();
+                    console.log(final);
 
                     axios
                         .post("/create-quiz/" + selectedtopic, { finalquestions,title, allowedtime, quiztime, courseid }, {

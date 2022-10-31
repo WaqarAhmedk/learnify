@@ -10,7 +10,7 @@ import { useAlert } from "react-alert";
 
 function Login() {
 
-    const alert=useAlert();
+    const alert = useAlert();
     const [user, setUser] = useContext(UserContext);
 
 
@@ -36,7 +36,11 @@ function Login() {
                 <div className="col-5 logo-div">
 
                     <span className="signup-logo-learnify">Learnify</span>
-                    <span>Sign in and start learnig Now</span>
+                    {
+                        teacher ? <span>Sign in As a <b>Teacher</b> and start learnig Now</span>
+                            :
+                            <span>Sign in As a <b>Student</b> and start Teaching Now</span>
+                    }
                 </div>
                 <div className="col-6 signup-form  login-div">
                     <form className="login-form">
@@ -54,13 +58,15 @@ function Login() {
                             }} />
                             <span className="error">{error}</span>
                         </div>
-                        <div className="row email-div">
-                            <label className="d-inline">if you are a teacher please check this </label>
-                            <input type={"checkbox"} className="d-inline " onClick={() => {
+                        <div className="ms-2 mt-5">
+                            <span>If you are a <b>{
+                                teacher ? "Student" : "Teacher"}</b> Login  </span>
+                            <span className="text-primary" onClick={() => {
 
                                 teacher ? setTeacher(false) : setTeacher(true);
 
-                            }} />
+                            }} >HERE</span>
+
                         </div>
                         <div className="signup-btn">
                             <div className="row">
@@ -93,15 +99,15 @@ function Login() {
                                                     if (res.data.user.role == "teacher") {
 
                                                         setUser({ logedin: true, user: res.data.user });
-                                                        alert.show("welcome "+res.data.user.firstname);
+                                                        alert.show("welcome " + res.data.user.firstname);
                                                         navigate("/teacher/dashboard");
 
 
                                                     } else if (res.data.user.role == "student") {
                                                         setUser({ logedin: true, user: res.data.user });
-                                                        alert.show("welcome "+res.data.user.firstname);
+                                                        alert.show("welcome " + res.data.user.firstname);
 
-                                                        
+
 
                                                         navigate("/dashboard")
                                                     }

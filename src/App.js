@@ -30,6 +30,7 @@ import { QuizContextProvider } from './teacher/context/QuizCOntext';
 import QuizParent from './teacher/teachercomponents/teacherdashboardcomponents/QuizParent';
 import StartQuiz from './student/Quiz/startQuiz';
 import AttemptQuiz from './student/Quiz/AttemptQuiz';
+import Room from './components/meeeting/callpage/callpage';
 
 function App() {
 
@@ -68,7 +69,13 @@ function App() {
         <Routes>
 
 
+          <Route exact path='/meeting/:id' element={<Room />} />
+          <Route exact path='/createmeeting' element={<CallHomePage />} />
 
+          
+          <Route exact path="/scanface" element={<CustomPopup />} />
+          <Route exact path='/participationReport' element={<ParticipationReport />} />
+          <Route exact path='/showface' element={<CustomPopupShowFace />} />
 
 
 
@@ -77,16 +84,16 @@ function App() {
           <Route exact path='/signup' element={<Signup />} />
           <Route exact path='/signin' element={<Login />} />
 
-          {/* <Route exact path='/createmeeting' element={<CallHomePage />} /> */}
+
 
 
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
-
           <Route exact path='/startquiz/:quizid' element={<StartQuiz />} />
           <Route exact path='/attemptquiz/:quizid' element={<AttemptQuiz />} />
 
-          <Route exact path='/meeting/:id' element={<CallPage />} />
+
+
 
           {/* teacher */}
 
@@ -99,9 +106,8 @@ function App() {
 
           {/* <Route element={<TeacherProtectedRoutes />}>
           </Route> */}
-          <Route exact path="/scanface" element={<CustomPopup />} />
-          <Route exact path='/participationReport' element={<ParticipationReport />} />
-          <Route exact path='/showface' element={<CustomPopupShowFace />} />
+
+
         </Routes>
 
       </BrowserRouter>

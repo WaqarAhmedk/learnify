@@ -16,8 +16,8 @@ export default function CallHomePage() {
             <button onClick={(e) => {
                 e.preventDefault();
                 axios.post("/create-online-meeting", { title }).then((res) => {
-                    if (res.data.success === true) {
-                        navigate("/meeting/" + res.data.meetingid, { state: { meetingid: res.data.meetingid } })
+                    if (res.data.link) {
+                        navigate(res.data.link);
                     }
                 })
 

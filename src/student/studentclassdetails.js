@@ -11,6 +11,7 @@ import { Modal, ModalBody, ModalHeader } from 'react-bootstrap';
 import Discussionboard from "../components/discussionboard";
 import download from "js-file-download"
 import { useAlert } from "react-alert";
+import UploadAssignment from "./StudentComponents.js/UploadAssignment";
 
 
 
@@ -23,11 +24,15 @@ function ClassDetails() {
     const coursename = data.state.coursename;
     const [topics, setTopics] = useState([]);
     const [cookies, setCookies] = useCookies();
+    const [quizresult, setQuizresult] = useState({ students: [{ score: 0, coreect: 0, wrong: 0 }] });
 
 
 
+    //Upload Assignment 
 
-    let today = Date().toString();
+    const [showuploadAssignment, setShowUploadAssignment] = useState(false);
+    const [Assignmentdata, setAssignmentData] = useState({});
+    const [currentTopic, setCurrentTopic] = useState("");
 
 
     const [discussion, setDiscussion] = useState(false);
@@ -36,6 +41,53 @@ function ClassDetails() {
     }
     const closediscussion = () => {
         setDiscussion(false)
+    }
+
+    const [showquizresult, setShowquizResult] = useState(false);
+    const openQuizresult = () => {
+        setShowquizResult(true);
+    }
+    const closeQuizresult = () => {
+        setShowquizResult(false);
+    }
+
+
+
+    const checkQuizAvailbility = (quizid) => {
+        axios.get("/check-quiztime/" + quizid, {
+            headers: {
+                'student-auth-token': cookies.user.AuthToken
+
+            }
+        }).then((res) => {
+            if (res.data.success === true && res.data.allowed === true) {
+                navigate('/startquiz/' + quizid)
+            }
+            else if (res.data.success === true && res.data.allowed === false) {
+                alert.info(res.data.message)
+            }
+        }
+        ).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    const getQuizResult = (quizid) => {
+        axios
+            .get("/get-your-quiz-result/" + quizid, {
+                headers: {
+                    'student-auth-token': cookies.user.AuthToken
+
+                }
+            })
+            .then((res) => {
+                if (res.data.success === true) {
+                    setQuizresult(res.data.details)
+                    openQuizresult();
+                }
+
+            })
+            .catch(err => console.error(err));
     }
 
 
@@ -73,10 +125,24 @@ function ClassDetails() {
             .catch(err => console.error(err));
     }
 
+
+    const downloadAssignment = (filename) => {
+        axios
+            .get("/download-assignment/" + filename, { responseType: "blob" })
+            .then((res) => {
+                console.log(res.data);
+                download(res.data, filename);
+
+            })
+            .catch(err => console.error(err));
+    }
     useEffect(() => {
 
         getAllTopics();
     }, []);
+
+
+
 
 
 
@@ -174,14 +240,7 @@ function ClassDetails() {
                                                             <FontAwesomeIcon icon={faClipboardList} />
                                                             <span className="text-primary"
                                                                 onClick={() => {
-                                                                    axios
-                                                                        .get("/download-assignment/" + assignment.filename, { responseType: "blob" })
-                                                                        .then((res) => {
-                                                                            console.log(res.data);
-                                                                            download(res.data, assignment.filename);
-
-                                                                        })
-                                                                        .catch(err => console.error(err));
+                                                                    downloadAssignment(assignment.filename);
                                                                 }}
 
                                                             >{index + 1}.  {assignment.title}</span>
@@ -190,10 +249,19 @@ function ClassDetails() {
                                                         <div className="inner-content-right">
                                                             <span className="time">Due Date :{assignment.submissiondate}</span>
                                                             <FontAwesomeIcon icon={faCircleCheck} />
+
+                                                            <button className="btn btn-sm btn-primary ms-3" onClick={() => {
+
+                                                                setAssignmentData(assignment);
+                                                                setCurrentTopic(topic._id);
+                                                                setShowUploadAssignment(true);
+
+                                                            }}>Upload Assignment</button>
+
+
                                                         </div>
 
                                                     </div>
-                                                    <button className="btn btn-sm btn-primary ms-3">Upload Assignment</button>
                                                 </div>
                                             })
                                         }
@@ -246,38 +314,10 @@ function ClassDetails() {
 
 
                                                             <span className="time">Available at :{item.quizref.quiztime}</span>
-                                                            <button className='btn btn-primary' onClick={() => {
-// todo
-
-
-                                                                axios
-                                                                    .get("/get-your-quiz-result/" + item.quizref._id, {
-                                                                        headers: {
-                                                                            'student-auth-token': cookies.user.AuthToken
-
-                                                                        }
-                                                                    })
-                                                                    .then(() => {
-
-
-                                                                    })
-                                                                    .catch(err => console.error(err));
-
-                                                            }}>View Result</button>
+                                                            <button className='btn btn-primary' onClick={() => { getQuizResult(item.quizref._id); }}>View Result</button>
 
                                                             <button className='btn btn-primary ms-3' onClick={() => {
-                                                                //check time is started
-                                                                axios.get("/check-quiztime/" + item.quizref._id,).then((res) => {
-                                                                    if (res.data.success === true && res.data.allowed === true) {
-                                                                        navigate('/startquiz/' + item.quizref._id)
-                                                                    }
-                                                                    else if (res.data.success === true && res.data.allowed === false) {
-                                                                        alert.info(res.data.message)
-                                                                    }
-                                                                }
-                                                                ).catch((err) => {
-                                                                    console.log(err);
-                                                                })
+                                                                checkQuizAvailbility(item.quizref._id);
                                                             }}>Attempt Quiz</button>
 
                                                         </div>
@@ -315,6 +355,46 @@ function ClassDetails() {
                 <Discussionboard role="student" courseid={courseid} />
             </ModalBody>
         </Modal>
+
+
+
+        {/* Show Quiz result Modal */}
+
+        <Modal show={showquizresult}>
+            <ModalHeader closeButton onClick={closeQuizresult} >Quiz Result</ModalHeader>
+            <ModalBody>
+
+                <div>
+                    <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
+                        <span>Your Score</span>
+                        <span>{quizresult.students[0].score}</span>
+
+                    </div>
+                    <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
+                        <span>Right Answers</span>
+                        <span>{quizresult.students[0].correct}</span>
+
+                    </div>
+
+                    <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
+                        <span>Time Spent </span>
+                        <span>43 Minutes</span>
+
+                    </div>
+                </div>
+            </ModalBody>
+        </Modal>
+
+
+
+        <UploadAssignment
+            show={showuploadAssignment}
+            data={Assignmentdata}
+            topic={currentTopic}
+            onHide={() => {
+                setShowUploadAssignment(false)
+            }}
+        />
     </>
 }
 

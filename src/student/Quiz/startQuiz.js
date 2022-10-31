@@ -4,13 +4,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { useAlert } from 'react-alert';
+
 
 export default function StartQuiz() {
 
     const params = useParams();
     const navigate = useNavigate();
+    const alert=useAlert();
 
     const quizid = params.quizid;
+    const [cookies ,setCookies]=useCookies();
 
 
 
@@ -23,13 +28,21 @@ export default function StartQuiz() {
 
     const getQuizdetails = () => {
         axios
-            .get("/get-quiz-details/" + quizid)
+            .get("/get-quiz-details/" + quizid, {
+                headers: {
+                    'student-auth-token': cookies.user.AuthToken
+
+                }
+            })
             .then((res) => {
-                console.log(res);
 
 
                 if (res.data.success === true) {
                     setQuizdetails(res.data.details);
+                } else if(res.data.success===false){
+                    alert.error(res.data.message);
+                    navigate("/dashboard");
+
                 }
             })
             .catch(err => console.error(err));
@@ -63,7 +76,10 @@ export default function StartQuiz() {
                     const allowedtime = quizdetails.allowedtime * 60;
                     var t = new Date();
                     t.setSeconds(t.getSeconds() + allowedtime);
-                    navigate('/attemptquiz/' + quizid, { state: { allowedtime: t } })
+
+
+
+                    navigate('/attemptquiz/' + quizid, { state: { allowedtime: t } });
                 }} >Start Quiz</button>
 
             </div>
