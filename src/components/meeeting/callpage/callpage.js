@@ -22,6 +22,7 @@ import { faMicrophone, faMicrophoneAltSlash, faPhone, faExpand, faAngleUp, faClo
 
 
 const Video = (props) => {
+  console.log(props);
   const ref = useRef();
 
   useEffect(() => {
@@ -33,14 +34,14 @@ const Video = (props) => {
 
   return <>
     <video className="others-video" playsInline autoPlay ref={ref} />
-    <span></span>
+    <span>{}</span>
   </>
 }
 
 
 
 const Room = (props) => {
-  const user = useContext(UserContext);
+  const [user] = useContext(UserContext);
   const [peers, setPeers] = useState([]);
   const [audioFlag, setAudioFlag] = useState(true);
   const [videoFlag, setVideoFlag] = useState(true);
@@ -58,6 +59,12 @@ const Room = (props) => {
     height: window.innerHeight / 1.8,
     width: window.innerWidth / 2,
   };
+
+
+  useEffect(() => { }, [user])
+
+
+
   useEffect(() => {
 
     socketRef.current = io.connect("http://localhost:4001");
@@ -65,18 +72,18 @@ const Room = (props) => {
     console.log(user);
   }, []);
 
+  useEffect(() => { })
+
   function createStream() {
     navigator.mediaDevices
       .getUserMedia({ video: videoConstraints, audio: true })
       .then((stream) => {
         userVideo.current.srcObject = stream;
-        socketRef.current.emit("join room", {
-          roomID,
-          user: user[0].user
-        });
+        console.log(user.user);
+        socketRef.current.emit("join room", roomID, user.user,);
 
-        socketRef.current.on("all users", (users) => {
-          console.log(users)
+        socketRef.current.on("all users", (users ,dbusers) => {
+          console.log(users);
           const peers = [];
           users.forEach((userID) => {
             const peer = createPeer(userID, socketRef.current.id, stream);
@@ -92,7 +99,7 @@ const Room = (props) => {
           setPeers(peers);
         });
         socketRef.current.on("user joined", (payload) => {
-          alert.info("user having id " + payload)
+          alert.info(payload.user.firstname + " " + payload.user.lastname + " Joined the Class")
           console.log("==", payload)
           const peer = addPeer(payload.signal, payload.callerID, stream);
           peersRef.current.push({
@@ -107,6 +114,7 @@ const Room = (props) => {
         });
 
         socketRef.current.on("user left", (id) => {
+          console.log(id);
           const peerObj = peersRef.current.find((p) => p.peerID === id);
           if (peerObj) {
             peerObj.peer.destroy();
@@ -139,6 +147,7 @@ const Room = (props) => {
         userToSignal,
         callerID,
         signal,
+        user
       });
     });
 
@@ -153,7 +162,7 @@ const Room = (props) => {
     });
 
     peer.on("signal", (signal) => {
-      socketRef.current.emit("returning signal", { signal, callerID });
+      socketRef.current.emit("returning signal", { signal, callerID ,user});
     });
 
     peer.signal(incomingSignal);
@@ -163,11 +172,16 @@ const Room = (props) => {
 
   return (
     <div className="d-flex">
-      <div className="my-video">
+      <div  className="my-video-div">
 
         <video className="video" muted ref={userVideo} autoPlay playsInline />
-        <FontAwesomeIcon icon={faExpand} className="expand-video" />
+        <div className=" d-flex justify-content-between mb-4 my-vid-bottom">
+        <span className="ms-5 me-5 text-primary">{user.user.firstname}</span>
+        </div>
+        <FontAwesomeIcon icon={faExpand} className="expand-btn" />
+
       </div>
+
       <div className='meeting-footer-container'>
 
         <div className='meeting-footer-left-item'>
@@ -254,6 +268,7 @@ const Room = (props) => {
 
       <div>
         {peers.map((peer, index) => {
+        console.log(peer);
           let audioFlagTemp = true;
           let videoFlagTemp = true;
           if (userUpdate) {
@@ -269,6 +284,7 @@ const Room = (props) => {
             //video of ALl the connected peers
             <div key={peer.peerID} className="others-vid">
               <Video peer={peer.peer} />
+              <span>{peer.peerID}</span>
               {/* <div className="small-controls">
                 <img src={videoFlagTemp ? webcam : webcamoff} />
                 &nbsp;&nbsp;&nbsp;

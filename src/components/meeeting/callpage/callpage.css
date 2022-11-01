@@ -1,14 +1,29 @@
-.my-video{
-    /* display: flex;
-    width:100% ; */
-}
+
 
 .video {
     width: 90%;
-    height: 70vh;
-    border-radius: 10px;
+    height:70vh;
     overflow: hidden;
-    border: 1px solid gray;
+}
+.my-video-div{
+    position: relative;
+    width: fit-content;
+}
+.expand-btn{
+    margin-left: 80%;
+    position: absolute;
+    color: green;
+    font-size: 30px;
+    font-weight: lighter;
+    bottom: 10%;
+    top: 85%;
+    right: 11%;
+    cursor: pointer;
+}
+
+.my-vid-bottom{
+    position:absolute;
+    bottom: 20px;
 }
 
 .others-video{
