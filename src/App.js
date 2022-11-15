@@ -31,6 +31,7 @@ import QuizParent from './teacher/teachercomponents/teacherdashboardcomponents/Q
 import StartQuiz from './student/Quiz/startQuiz';
 import AttemptQuiz from './student/Quiz/AttemptQuiz';
 import Room from './components/meeeting/callpage/callpage';
+import FaceRecognition from './components/faceRecognition';
 
 function App() {
 
@@ -68,11 +69,11 @@ function App() {
 
         <Routes>
 
-
+          <Route exact path='/face' element={<FaceRecognition />} />
           <Route exact path='/meeting/:id' element={<Room />} />
           <Route exact path='/createmeeting' element={<CallHomePage />} />
 
-          
+
           <Route exact path="/scanface" element={<CustomPopup />} />
           <Route exact path='/participationReport' element={<ParticipationReport />} />
           <Route exact path='/showface' element={<CustomPopupShowFace />} />
