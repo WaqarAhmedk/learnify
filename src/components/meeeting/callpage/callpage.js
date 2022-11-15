@@ -22,7 +22,12 @@ import { faMicrophone, faMicrophoneAltSlash, faPhone, faExpand, faAngleUp, faClo
 
 
 const Video = (props) => {
-  console.log(props);
+  const [name, setname] = useState("hello");
+
+
+
+
+
   const ref = useRef();
 
   useEffect(() => {
@@ -34,7 +39,7 @@ const Video = (props) => {
 
   return <>
     <video className="others-video" playsInline autoPlay ref={ref} />
-    <span>{}</span>
+    <span>{ }</span>
   </>
 }
 
@@ -43,6 +48,7 @@ const Video = (props) => {
 const Room = (props) => {
   const [user] = useContext(UserContext);
   const [peers, setPeers] = useState([]);
+  const [users, setUsers] = useState({});
   const [audioFlag, setAudioFlag] = useState(true);
   const [videoFlag, setVideoFlag] = useState(true);
   const [userUpdate, setUserUpdate] = useState([]);
@@ -56,8 +62,7 @@ const Room = (props) => {
   const videoConstraints = {
     minAspectRatio: 1.333,
     minFrameRate: 60,
-    height: window.innerHeight / 1.8,
-    width: window.innerWidth / 2,
+
   };
 
 
@@ -82,8 +87,8 @@ const Room = (props) => {
         console.log(user.user);
         socketRef.current.emit("join room", roomID, user.user,);
 
-        socketRef.current.on("all users", (users ,dbusers) => {
-          console.log(users);
+        socketRef.current.on("all users", (users, dbusers) => {
+          setUsers(dbusers);
           const peers = [];
           users.forEach((userID) => {
             const peer = createPeer(userID, socketRef.current.id, stream);
@@ -100,7 +105,6 @@ const Room = (props) => {
         });
         socketRef.current.on("user joined", (payload) => {
           alert.info(payload.user.firstname + " " + payload.user.lastname + " Joined the Class")
-          console.log("==", payload)
           const peer = addPeer(payload.signal, payload.callerID, stream);
           peersRef.current.push({
             peerID: payload.callerID,
@@ -162,7 +166,7 @@ const Room = (props) => {
     });
 
     peer.on("signal", (signal) => {
-      socketRef.current.emit("returning signal", { signal, callerID ,user});
+      socketRef.current.emit("returning signal", { signal, callerID, user });
     });
 
     peer.signal(incomingSignal);
@@ -171,17 +175,50 @@ const Room = (props) => {
   }
 
   return (
-    <div className="d-flex">
-      <div  className="my-video-div">
+    <div className="main-div-call">
+      <div className="d-flex">
+        <div className="my-video-div">
 
-        <video className="video" muted ref={userVideo} autoPlay playsInline />
-        <div className=" d-flex justify-content-between mb-4 my-vid-bottom">
-        <span className="ms-5 me-5 text-primary">{user.user.firstname}</span>
+          <video className="video" muted ref={userVideo} autoPlay playsInline />
+          <div className=" d-flex justify-content-between mb-4 my-vid-bottom">
+            <span className="ms-5 me-5 text-primary">{user.user.firstname}</span>
+          </div>
+          <FontAwesomeIcon icon={faExpand} className="expand-btn" />
+
         </div>
-        <FontAwesomeIcon icon={faExpand} className="expand-btn" />
 
+
+
+
+        <div className="">
+          {peers.map((peer, index) => {
+            console.log(peer);
+            let audioFlagTemp = true;
+            let videoFlagTemp = true;
+            if (userUpdate) {
+              userUpdate.forEach((entry) => {
+                if (peer && peer.peerID && peer.peerID === entry.id) {
+                  audioFlagTemp = entry.audioFlag;
+                  videoFlagTemp = entry.videoFlag;
+                }
+              });
+            }
+            return (
+
+              //video of ALl the connected peers
+              <div key={peer.peerID} className="others-vid">
+                <Video peer={peer.peer} users={users} />
+                <span>{peer.peerID}</span>
+                {/* <div className="small-controls">
+        <img src={videoFlagTemp ? webcam : webcamoff} />
+        &nbsp;&nbsp;&nbsp;
+        <img src={audioFlagTemp ? micunmute : micmute} />
+      </div> */}
+              </div>
+            );
+          })}
+        </div>
       </div>
-
       <div className='meeting-footer-container'>
 
         <div className='meeting-footer-left-item'>
@@ -263,36 +300,6 @@ const Room = (props) => {
             <p>Present now</p>
           </div>
         </div>
-      </div>
-
-
-      <div>
-        {peers.map((peer, index) => {
-        console.log(peer);
-          let audioFlagTemp = true;
-          let videoFlagTemp = true;
-          if (userUpdate) {
-            userUpdate.forEach((entry) => {
-              if (peer && peer.peerID && peer.peerID === entry.id) {
-                audioFlagTemp = entry.audioFlag;
-                videoFlagTemp = entry.videoFlag;
-              }
-            });
-          }
-          return (
-
-            //video of ALl the connected peers
-            <div key={peer.peerID} className="others-vid">
-              <Video peer={peer.peer} />
-              <span>{peer.peerID}</span>
-              {/* <div className="small-controls">
-                <img src={videoFlagTemp ? webcam : webcamoff} />
-                &nbsp;&nbsp;&nbsp;
-                <img src={audioFlagTemp ? micunmute : micmute} />
-              </div> */}
-            </div>
-          );
-        })}
       </div>
     </div>
 
