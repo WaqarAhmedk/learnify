@@ -7,11 +7,12 @@ import { useState } from 'react';
 import { useAlert } from 'react-alert';
 import { useEffect } from 'react';
 import { faBedPulse } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
+
 
 export default function UploadAssignment(props) {
     const data = props.data;
     const topic = props.topic;
-
     const [cookies, setCookies] = useCookies();
     const alert = useAlert();
 
@@ -19,10 +20,43 @@ export default function UploadAssignment(props) {
 
     const [uploaded, setUploaded] = useState(faBedPulse);
     const [uploadeddata, setuploadeddata] = useState({});
+    const [r, setR] = useState("");
+
+    const remainingtime = () => {
+        var now = new Date();
+        const submissiontime = data.submissiondate;
+        const sub = new Date(submissiontime);
+
+
+
+
+        var ms = moment(now, "DD/MM/YYYY HH:mm:ss");
+        // .diff(moment(sub, "DD/MM/YYYY HH:mm:ss"));
+        var d = moment.duration(ms.diff(sub));
+        const days = d._data.days;
+        const hours = d._data.hours;
+        const minutes = d._data.minutes;
+        const seconds = d._data.seconds;
+
+        const compapredates = now > sub;
+        if (compapredates) {
+            setR(`you are ${days} days ${hours} hours ${minutes} minutes ${seconds} seconds late`)
+        }
+        else {
+
+            console.log(days);
+            setR(` ${days} days ${hours} hours ${minutes} minutes ${seconds} seconds `)
+
+        }
+
+    }
 
 
     useEffect(() => {
+        remainingtime()
+
         if (props.show === true) {
+
             axios
                 .get("/check-uploaded-assignment/" + data._id, {
                     headers: {
@@ -34,6 +68,7 @@ export default function UploadAssignment(props) {
                     if (res.data.success === true && res.data.uploaded === true) {
                         setUploaded(true);
                         setuploadeddata(res.data.details);
+
 
 
                     }
@@ -105,6 +140,11 @@ export default function UploadAssignment(props) {
                             <div className="mb-3 d-flex justify-content-between ms-4 me-4">
                                 <label htmlFor="exampleFormControlTextarea1" className="form-label">Submission Time</label>
                                 <h5>{data.submissiondate}</h5>
+
+                            </div>
+                            <div className="mb-3 d-flex justify-content-between ms-4 me-4">
+                                <label htmlFor="exampleFormControlTextarea1" className="form-label">Remaning Time</label>
+                                <h5>{r}</h5>
 
                             </div>
 

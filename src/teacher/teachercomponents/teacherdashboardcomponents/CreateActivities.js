@@ -322,6 +322,7 @@ export default function CreateActivities(props) {
                         <DateTimePicker value={Asgmdate} onChange={(value) => {
                             console.log(value);
                             setAsgmdate(value)
+                            console.log(Asgmdate)
                         }} />
 
                     </div>
@@ -359,6 +360,7 @@ export default function CreateActivities(props) {
                 <ModalFooter>
                     <button className="btn btn-primary" type="submit" onClick={(e) => {
                         e.preventDefault();
+                        console.log(Asgmdate);
                         const formdata = new FormData();
                         formdata.append("title", Asgm_title);
                         formdata.append("courseid", courseid);
@@ -443,6 +445,7 @@ export default function CreateActivities(props) {
                     <div className="mb-3">
                         <label className="form-label">Online Class Time</label>
                         <DateTimePicker value={class_time} className="form-control" onChange={(value) => {
+                            console.log(value);
                             setClass_time(value)
                         }} />
 
@@ -453,12 +456,14 @@ export default function CreateActivities(props) {
                     <button type="submit" className="btn btn-primary" onClick={(e) => {
 
                         e.preventDefault();
+
+                        const convertedtime=class_time.toLocaleString();
                         axios
                             .post("/create-online-class/" + optionvalue,
                                 {
                                     title: class_title,
                                     desscription: class_Desc,
-                                    classtime: class_time
+                                    classtime: convertedtime
 
                                 },
                                 {
