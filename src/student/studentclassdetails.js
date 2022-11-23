@@ -24,7 +24,7 @@ function ClassDetails() {
     const coursename = data.state.coursename;
     const [topics, setTopics] = useState([]);
     const [cookies, setCookies] = useCookies();
-    const [quizresult, setQuizresult] = useState({ students: [{ score: 0, coreect: 0, wrong: 0 }] });
+    const [quizresult, setQuizresult] = useState({ students: [{ score: 0, correct: 0, wrong: 0 }] });
 
 
 
@@ -201,7 +201,7 @@ function ClassDetails() {
                                 {
                                     topic.helpingmaterial.length < 1 ? "" : <div>
 
-                                        <span className="">Helping Material</span>
+                                        <span className="ms-3">Helping Material</span>
                                         {
                                             topic.helpingmaterial.map((item, index) => {
                                                 return <div className="main-content-1">
@@ -230,7 +230,7 @@ function ClassDetails() {
                                 {
                                     topic.assignments.length < 1 ? "" : <div>
 
-                                        <span className="">Assignment</span>
+                                        <span className="ms-3">Assignment</span>
 
                                         {
                                             topic.assignments.map((assignment, index) => {
@@ -269,37 +269,39 @@ function ClassDetails() {
 
                                     </div>
                                 }
-                                <div>
-                                    <span className="">Online class</span>
-                                    {
-                                        topic.onlineclass.map((item, index) => {
-                                            return <div key={index} className="main-content-1">
-                                                <div className="inner-content-left">
-                                                    <FontAwesomeIcon icon={faBrain} />
-                                                    <span>{item.title}</span>
-                                                </div>
-                                                <div className="inner-content-right">
-                                                    <button className="btn btn-primary" onClick={() => {
-                                                        navigate(item.classlink)
-                                                    }}>Join</button>
-                                                </div>
-
+                               {
+                             topic.onlineclass.length>0   ? <div>
+                                <span className="ms-3">Online class</span>
+                                {
+                                    topic.onlineclass.map((item, index) => {
+                                        return <div key={index} className="main-content-1">
+                                            <div className="inner-content-left">
+                                                <FontAwesomeIcon icon={faBrain} />
+                                                <span>{item.title}</span>
+                                            </div>
+                                            <div className="inner-content-right">
+                                                <button className="btn btn-primary" onClick={() => {
+                                                    navigate(item.classlink)
+                                                }}>Join</button>
                                             </div>
 
+                                        </div>
 
 
 
-                                        })
-                                    }
-                                    <hr className="hr" />
 
-                                </div>
+                                    })
+                                }
+                                <hr className="hr" />
+
+                            </div> :""
+                               }
                                 <div>
 
                                     {
 
                                         topic.quiz.length > 0 ? <>
-                                            <span className="">Quiz</span>
+                                            <span className="ms-3">Quiz</span>
 
 
                                             {
@@ -371,7 +373,7 @@ function ClassDetails() {
 
                     </div>
                     <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
-                        <span>Right Answers</span>
+                        <span>Correct Answers</span>
                         <span>{quizresult.students[0].correct}</span>
 
                     </div>
