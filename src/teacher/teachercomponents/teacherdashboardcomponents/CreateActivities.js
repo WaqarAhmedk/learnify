@@ -379,7 +379,6 @@ export default function CreateActivities(props) {
                                     }
                                 }
                             ).then((res) => {
-                                console.log(res);
                                 getAllTopics();
                                 alert.success(res.data.message)
 

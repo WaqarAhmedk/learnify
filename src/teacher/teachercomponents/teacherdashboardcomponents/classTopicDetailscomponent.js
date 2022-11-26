@@ -14,6 +14,7 @@ import QuizResult from './QuizResult';
 import UpdateAssignment from '../crudoperations/UpdateAssignment';
 import { useAlert } from 'react-alert';
 import UpdateOnlineClass from '../crudoperations/UpdateOnlineclass';
+import UpdateQuiz from '../crudoperations/UpdateQuiz';
 
 
 
@@ -28,7 +29,7 @@ export default function ClassTopicsDetail() {
 
 
     const [toUpdateTopicid, setToUpdateTopicId] = useState("");
-    const [toUpdateId , setToUpdateId] = useState("");
+    const [toUpdateId, setToUpdateId] = useState("");
 
     const [todeleteItemId, setTodeleteItemid] = useState("");
     const [toDeleteItemTopicId, setTodeleteItemTopicId] = useState("");
@@ -37,8 +38,9 @@ export default function ClassTopicsDetail() {
     const [showquizresultmodal, setShowquizModal] = useState(false);
     const [showUpdateAssignment, setShowUpdateAssignment] = useState(false);
     const [deleteApi, setDeleteApi] = useState("");
-    const [showUpdateClass ,setShowUpdateClass]=useState(false);
-    
+    const [showUpdateClass, setShowUpdateClass] = useState(false);
+    const [showQuizupdate, setShowQuizUpdate] = useState(false);
+
 
     const [quizResult, setQuizresult] = useState({
 
@@ -144,7 +146,7 @@ export default function ClassTopicsDetail() {
                                                         return <div key={index + 1} className="main-content-1">
 
 
-                                                            <OverlayTrigger trigger="hover" on placement="right" overlay={popover} >
+                                                            <OverlayTrigger on placement="right" overlay={popover} >
 
 
                                                                 <div className="inner-content-left">
@@ -217,26 +219,26 @@ export default function ClassTopicsDetail() {
                                                             <FontAwesomeIcon icon={faBrain} />
                                                             <span>{item.title}</span>
                                                         </div>
-                                                     <div>
-                                                     <div className="inner-content-right">
-                                                            <span className='btn btn-primary' onClick={() => {
-                                                                navigate(item.classlink)
+                                                        <div>
+                                                            <div className="inner-content-right">
+                                                                <span className='btn btn-primary' onClick={() => {
+                                                                    navigate(item.classlink)
 
-                                                            }}>Join Class</span>
+                                                                }}>Join Class</span>
 
-                                                            
-                                                            <FontAwesomeIcon icon={faEdit} onClick={()=>{
-                                                                setShowUpdateClass(true);
-                                                                setToUpdateTopicId(topic._id);
-                                                                setToUpdateId(item._id);
-                                                            }} />
-                                                            <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" onClick={()=>{
-                                                                setDeleteApi(`/delete-online-class/${topic._id}/${item._id}`)
-                                                                setShowDelteModal(true);
-                                                            }} />
 
-                                                        </div>
-                                                        <span>starts at :{item.classtime}</span>
+                                                                <FontAwesomeIcon icon={faEdit} onClick={() => {
+                                                                    setShowUpdateClass(true);
+                                                                    setToUpdateTopicId(topic._id);
+                                                                    setToUpdateId(item._id);
+                                                                }} />
+                                                                <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" onClick={() => {
+                                                                    setDeleteApi(`/delete-online-class/${topic._id}/${item._id}`)
+                                                                    setShowDelteModal(true);
+                                                                }} />
+
+                                                            </div>
+                                                            <span>starts at :{item.classtime}</span>
                                                         </div>
 
                                                     </div>
@@ -256,6 +258,7 @@ export default function ClassTopicsDetail() {
                                             <span className="ms-3">Quiz</span>
                                             {
                                                 topic.quiz.map((item, index) => {
+                                                    console.log(item);
                                                     return <div key={index + 1} className="main-content-1">
                                                         <div className="inner-content-left">
                                                             <FontAwesomeIcon icon={faBrain} />
@@ -267,7 +270,13 @@ export default function ClassTopicsDetail() {
                                                             <div>
                                                                 <span className="time">Available At :{item.quizref.quiztime}</span>
 
-                                                                <FontAwesomeIcon icon={faEdit} className="ms-3" />
+                                                                <FontAwesomeIcon icon={faEdit} className="ms-3" onClick={
+                                                                    () => {
+                                                                        setShowQuizUpdate(true);
+                                                                        setToUpdateTopicId(topic._id);
+                                                                        setToUpdateId(item.quizref._id);
+                                                                    }
+                                                                } />
                                                                 <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" onClick={() => {
                                                                     setDeleteApi(`/delete-quiz/${topic._id}/${item._id}`)
                                                                     setShowDelteModal(true);
@@ -329,7 +338,7 @@ export default function ClassTopicsDetail() {
             <Modal show={showDeleteModal}>
                 <ModalHeader>Confirm Delete</ModalHeader>
                 <ModalBody>
-                    
+
                     Are you Sure you want to delete this Item?
                 </ModalBody>
                 <ModalFooter>
@@ -379,22 +388,42 @@ export default function ClassTopicsDetail() {
                 students={students}
                 onHide={() => setShowquizModal(false)}
             />
+            <UpdateQuiz
+
+                show={showQuizupdate}
+                id={toUpdateId}
+                topicid={toUpdateTopicid}
+                onHide={() => {
+                    setShowQuizUpdate(false);
+                    setToUpdateId("");
+                    setToUpdateTopicId("");
+                }}
+
+            />
 
             <UpdateAssignment
                 show={showUpdateAssignment}
                 id={toUpdateId}
                 topicid={toUpdateTopicid}
-                onHide={() => setShowUpdateAssignment(false)}
+                onHide={() => {
+                    setShowUpdateAssignment(false);
+                    setToUpdateId("");
+                    setToUpdateTopicId("");
+                }}
 
             />
 
-            <UpdateOnlineClass 
-             show={showUpdateClass}
-             id={toUpdateId}
-             topicid={toUpdateTopicid}
-             onHide={() => setShowUpdateClass(false)}
+            <UpdateOnlineClass
+                show={showUpdateClass}
+                id={toUpdateId}
+                topicid={toUpdateTopicid}
+                onHide={() => {
+                    setShowUpdateClass(false)
+                    setToUpdateId("");
+                    setToUpdateTopicId("");
+                }}
 
-            
+
             />
 
 
