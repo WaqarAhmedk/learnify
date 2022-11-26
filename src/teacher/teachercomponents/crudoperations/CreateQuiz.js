@@ -144,6 +144,7 @@ export default function CreateQuiz() {
 
                 console.log(quiztime, allowedtime, selectedtopic);
                 console.log(title);
+                const convertedtime=quiztime.toLocaleString();
 
                 if (selectedtopic === "") {
                     console.log(selectedtopic);
@@ -155,7 +156,7 @@ export default function CreateQuiz() {
                     console.log(final);
 
                     axios
-                        .post("/create-quiz/" + selectedtopic, { finalquestions,title, allowedtime, quiztime, courseid }, {
+                        .post("/create-quiz/" + selectedtopic, { finalquestions,title, allowedtime, convertedtime, courseid }, {
                             headers: {
                                 'teacher-auth-token': cookies.user.AuthToken
 
