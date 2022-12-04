@@ -51,7 +51,7 @@ export default function Calendar() {
                 return {
 
                     title: item.title,
-                    date: item.submissiondate || item.classtime
+                    date: new Date(item.submissiondate) ||new Date( item.classtime)
                 }
             })}
         />
