@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 export default function QuizResult(props) {
     const details = props.details;
     const students = props.students;
+    const remainingstudents = props.remainingstudents;
 
 
 
@@ -51,7 +52,6 @@ export default function QuizResult(props) {
 
                                             {
                                                 students.map((student) => {
-                                                    console.log(student);
                                                     return <>
                                                         <tr>
                                                             <td>
@@ -88,7 +88,7 @@ export default function QuizResult(props) {
                     <Accordion.Body>
                         {
 
-                            students.length < 1 ?
+                            remainingstudents.length < 1 ?
 
                                 "" : <div className="c">
                                     <table className="table table-striped " >
@@ -97,22 +97,21 @@ export default function QuizResult(props) {
                                                 <th>PROFILE PIC</th>
                                                 <th>Student ID</th>
                                                 <th>Student EMAIL</th>
-                                                <th>Score</th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
 
                                             {
-                                                students.map((student) => {
+                                                remainingstudents.map((student) => {
                                                     return <>
                                                         <tr>
                                                             <td>
                                                                 <img src={require("../../../assets/images/avatar.jpg")} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
                                                             </td>
-                                                            <td>{student.student.firstname + " " + student.student.lastname}</td>
-                                                            <td>{student.student.email}</td>
-                                                            <td>{student.score}</td>
+                                                            <td>{`${student.firstname} ${student.lastname}`}</td>
+                                                            <td>{student.email}</td>
+                                                            <td>{ }</td>
 
 
                                                         </tr>

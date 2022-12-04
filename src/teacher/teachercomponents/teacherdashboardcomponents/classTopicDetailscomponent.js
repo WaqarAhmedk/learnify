@@ -15,6 +15,7 @@ import UpdateAssignment from '../crudoperations/UpdateAssignment';
 import { useAlert } from 'react-alert';
 import UpdateOnlineClass from '../crudoperations/UpdateOnlineclass';
 import UpdateQuiz from '../crudoperations/UpdateQuiz';
+import ViewAssignmentsrecord from './viewAssignmentsrecord';
 
 
 
@@ -30,7 +31,7 @@ export default function ClassTopicsDetail() {
 
     const [toUpdateTopicid, setToUpdateTopicId] = useState("");
     const [toUpdateId, setToUpdateId] = useState("");
-
+    const [AssignmentResultId, setAssignmentResultId] = useState("");
     const [todeleteItemId, setTodeleteItemid] = useState("");
     const [toDeleteItemTopicId, setTodeleteItemTopicId] = useState("");
 
@@ -40,12 +41,15 @@ export default function ClassTopicsDetail() {
     const [deleteApi, setDeleteApi] = useState("");
     const [showUpdateClass, setShowUpdateClass] = useState(false);
     const [showQuizupdate, setShowQuizUpdate] = useState(false);
+    const [showAssignmentRecord, setShowAssignmentRecord] = useState(false);
+
 
 
     const [quizResult, setQuizresult] = useState({
 
     });
     const [students, setStudents] = useState([]);
+    const [remainingstudents, setRemainingStuden] = useState([]);
 
     const [desc, setDesc] = useState("");
 
@@ -78,7 +82,6 @@ export default function ClassTopicsDetail() {
                     setTopics(res.data.topics);
                 }
                 else {
-                    console.log(res.data);
                 }
             })
             .catch(err => console.error(err));
@@ -163,7 +166,6 @@ export default function ClassTopicsDetail() {
                                                                                 const url = window.URL.createObjectURL(new Blob([res.data]));
                                                                                 const link = document.createElement('a');
                                                                                 link.href = url;
-                                                                                console.log(url);
                                                                                 link.setAttribute('download', "app.pdf");
                                                                                 document.body.appendChild(link);
                                                                                 link.click();
@@ -193,7 +195,12 @@ export default function ClassTopicsDetail() {
                                                                         setShowDelteModal(true);
 
                                                                     }} />
-                                                                    <button className='btn btn-sm btn-primary me-3'>View Records</button>
+                                                                    <button className='btn btn-sm btn-primary me-3' onClick={() => {
+                                                                        setAssignmentResultId(assignment._id);
+                                                                        setToUpdateTopicId(topic._id)
+                                                                        setShowAssignmentRecord(true);
+
+                                                                    }}>View Records</button>
 
 
                                                                 </div>
@@ -258,7 +265,6 @@ export default function ClassTopicsDetail() {
                                             <span className="ms-3">Quiz</span>
                                             {
                                                 topic.quiz.map((item, index) => {
-                                                    console.log(item);
                                                     return <div key={index + 1} className="main-content-1">
                                                         <div className="inner-content-left">
                                                             <FontAwesomeIcon icon={faBrain} />
@@ -284,9 +290,8 @@ export default function ClassTopicsDetail() {
                                                             </div>
                                                             <div>
                                                                 <button className='btn btn-primary' onClick={() => {
-                                                                    console.log(item.quizref._id);
                                                                     setShowquizModal(true)
-                                                                    axios.get("/get-all-students-quiz-result/" + item.quizref._id, {
+                                                                    axios.get(`/get-all-students-quiz-result/${courseid}/${item.quizref._id}`, {
 
                                                                         headers: {
                                                                             'student-auth-token': cookies.user.AuthToken
@@ -298,6 +303,7 @@ export default function ClassTopicsDetail() {
 
                                                                                 setQuizresult(res.data.details);
                                                                                 setStudents(res.data.details.students);
+                                                                                setRemainingStuden(res.data.notattended)
 
                                                                             } else {
 
@@ -382,10 +388,23 @@ export default function ClassTopicsDetail() {
                 </ModalFooter>
             </Modal>
 
+            <ViewAssignmentsrecord
+                show={showAssignmentRecord}
+                assignmentid={AssignmentResultId}
+                topicid={toUpdateTopicid}
+                onHide={()=>{
+                    setAssignmentResultId("");
+                    setToUpdateId("");
+                    setShowAssignmentRecord(false)
+                }}
+            />
+
             <QuizResult
+                courseid={courseid}
                 show={showquizresultmodal}
                 details={quizResult}
                 students={students}
+                remainingstudents={remainingstudents}
                 onHide={() => setShowquizModal(false)}
             />
             <UpdateQuiz

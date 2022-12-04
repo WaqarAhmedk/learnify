@@ -21,7 +21,6 @@ export default function AllParticipents() {
 
     const GetAllParticipants = () => {
 
-        console.log("hello from course id" + courseid);
         axios
             .get("/get-allparticipants/" + courseid, {
                 headers: {

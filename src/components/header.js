@@ -8,12 +8,16 @@ import { ReactComponent as Settingsvg } from '../assets/icons/Settings Blue.svg'
 import { ReactComponent as Signoutsvg } from '../assets/icons/Sign out blue.svg';
 import { ReactComponent as Notificationsvg } from '../assets/icons/notifications blue.svg';
 import { Link, useNavigate } from "react-router-dom";
-import { Dropdown } from "react-bootstrap";
+import { Badge, Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMessage, faBell } from '@fortawesome/free-solid-svg-icons'
+import { faMessage, faBell, faArrowDown, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { useCookies } from 'react-cookie';
-import { useContext } from "react";
-import { UserContext } from "../context/usercontext"
+import { useContext, useState, useEffect } from "react";
+import { UserContext } from "../context/usercontext";
+import Notifications from "./Notifications";
+import DropdownMenu from "react-bootstrap/esm/DropdownMenu";
+import axios from "axios"
+
 
 
 
@@ -23,26 +27,36 @@ function Header() {
 
     const [Cookies, setCookies, removeCookie] = useCookies('user');
     const [user, setUser] = useContext(UserContext);
+    const [showNotification, setShowNotification] = useState(false);
 
     const navigate = useNavigate();
+  
 
-
-
-
+ 
 
     return <nav className="navbar navbar-expand-lg navbar-light bg-light " id="navbar">
 
         <Link className="navbar-brand ps-5" id="brand" to="/">
-            <img src={require("../assets/icons/Learnify logo.png")} alt={"drop-down-sign"} />
+            <img src={require("../assets/icons/Learnify logo.png")} alt={"logo"} />
         </Link>
 
 
         <div id="profile">
 
-            <div >
-                <FontAwesomeIcon icon={faMessage} className="nav-icons" />
-                <FontAwesomeIcon icon={faBell} className="nav-icons" />
+            <div className="d-flex" >
+
+                <Dropdown  >
+
+                    <Dropdown.Toggle id="dropdown-basic" className="drop-down-main">
+                        <FontAwesomeIcon icon={faBell} className="nav-icons" />
+                    </Dropdown.Toggle>
+                    <DropdownMenu align="start" className="w-10" >
+                        <Notifications />
+                    </DropdownMenu>
+                </Dropdown>
+
             </div>
+            <FontAwesomeIcon icon={faMessage} className="nav-icons" />
 
 
 
@@ -54,6 +68,7 @@ function Header() {
 
             <Dropdown className="dropdown">
                 <Dropdown.Toggle id="dropdown-basic" className="drop-down-main">
+                    <FontAwesomeIcon icon={faSortDown} />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="dropdown-menu" >
@@ -66,12 +81,12 @@ function Header() {
                         </div>
 
 
-                        <div className="drop-down-menu-item"  onClick={()=>{
-                            if (Cookies.user.role==="teacher") {
+                        <div className="drop-down-menu-item" onClick={() => {
+                            if (Cookies.user.role === "teacher") {
                                 navigate("/teacher/dashboard")
-                                
+
                             }
-                            else{
+                            else {
                                 navigate("/dashboard")
 
                             }
