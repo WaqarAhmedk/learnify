@@ -4,9 +4,16 @@ import { useCookies } from 'react-cookie';
 import { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
+import download from "js-file-download";
+import { CourseContext } from '../../context/Coursecontext';
+import { useContext } from 'react';
+
 
 
 export default function ViewAssignmentsrecord(props) {
+
+    const context = useContext(CourseContext);
+    const [coursename] = context['course'];
 
     const assignmentid = props.assignmentid;
     const topicid = props.topicid;
@@ -15,6 +22,15 @@ export default function ViewAssignmentsrecord(props) {
 
 
 
+    const getAllAssignments = () => {
+        axios
+            .get(`/get-all-assignments/${topicid}/${assignmentid}`, { responseType: "blob" })
+            .then((res) => {
+
+                download(res.data, `${coursename} Assignments.zip`)
+            })
+            .catch(err => console.error(err));
+    }
 
     useEffect(() => {
         if (assignmentid != "" && topicid != "") {
@@ -39,9 +55,13 @@ export default function ViewAssignmentsrecord(props) {
             <Modal {...props} size="lg" >
                 <ModalHeader>Assignment Records</ModalHeader>
                 <ModalBody>
-                <div className='mb-2'>
-                    Total Submitted Assignments:<span className='ms-3'><b>{students.length}</b></span>
-                </div>
+                    <div className='mb-2 d-flex justify-content-between'>
+                        <div>
+                            Total Submitted Assignments:<span className='ms-3'><b>{students.length}</b></span>
+
+                        </div>
+                        <span className='btn btn-primary' onClick={getAllAssignments}>Download All Assignments</span>
+                    </div>
                     <Accordion>
                         <Accordion.Header>
                             Student Who Submitted Assignment                    </Accordion.Header>

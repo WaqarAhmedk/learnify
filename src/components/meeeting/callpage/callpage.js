@@ -8,7 +8,8 @@ import { useAlert } from 'react-alert';
 import { UserContext } from "../../../context/usercontext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone, faMicrophoneAltSlash, faPhone, faExpand, faAngleUp, faClosedCaptioning, faDesktop, faMicrophoneSlash, faVideo, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
-import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 
 
@@ -57,6 +58,8 @@ const Room = (props) => {
   const params = useParams();
   const roomID = params.id;
   const alert = useAlert();
+  const [cookies]=useCookies();
+  const navigate=useNavigate();
 
   const videoConstraints = {
     minAspectRatio: 1.333,
@@ -123,7 +126,6 @@ const Room = (props) => {
         });
 
         socketRef.current.on("user left", (id) => {
-          console.log(id);
           const peerObj = peersRef.current.find((p) => p.peerID === id);
           if (peerObj) {
             peerObj.peer.destroy();
@@ -131,7 +133,8 @@ const Room = (props) => {
           const peers = peersRef.current.filter((p) => p.peerID !== id);
           peersRef.current = peers;
           setPeers(peers);
-          alert.info("Some User Left")
+          alert.info("Some User Left");
+          
         });
 
         socketRef.current.on("receiving returned signal", (payload) => {
@@ -189,10 +192,10 @@ const Room = (props) => {
       <div className="d-flex">
         <div className="my-video-div d-flex">
 
-    <div>
-    <video className="video" muted ref={userVideo} autoPlay playsInline />
-          <span className="ms-3">{user.user.firstname}</span>
-    </div>
+          <div>
+            <video className="video" muted ref={userVideo} autoPlay playsInline />
+            <span className="ms-3">{user.user.firstname}</span>
+          </div>
 
           <div className="d-flex ">
 
@@ -273,7 +276,16 @@ const Room = (props) => {
 
           <div className='meeting-footer-icon-block' >
             <FontAwesomeIcon icon={faPhone} className="icon red" onClick={() => {
-              socketRef.current.emit("disconnect", socketRef.current.id)
+              socketRef.current.disconnect();
+              if(cookies.user.role==="teacher"){
+                navigate("/teacher/dashboard")
+    
+              }
+              else{
+                navigate("/dashboard")
+    
+              }
+
             }} />
           </div>
 

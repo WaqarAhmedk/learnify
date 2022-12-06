@@ -194,7 +194,16 @@ export default function UploadAssignment(props) {
                                     }
                                 })
                                 .then((res) => {
-                                    console.log(res);
+                                    if (res.data.success === true) {
+                                        setFile("");
+                                        alert.success(res.data.msg)
+                                        props.onHide()
+
+                                    }
+                                    else {
+                                        
+                                        alert.error(res.data.msg)
+                                    }
                                 })
                                 .catch(err => console.error(err));
 

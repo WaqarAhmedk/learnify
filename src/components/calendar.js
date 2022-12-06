@@ -1,6 +1,7 @@
 import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+
 import { useState } from 'react';
 import axios from "axios";
 import { useCookies } from 'react-cookie';
@@ -37,12 +38,9 @@ export default function Calendar() {
     return (
         <FullCalendar
             height={600}
-
+            
             plugins={[dayGridPlugin]}
             initialView="dayGridMonth"
-            eventClick={() => {
-
-            }}
 
 
             events={events.map((item) => {

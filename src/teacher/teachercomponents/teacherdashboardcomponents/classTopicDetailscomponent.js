@@ -153,27 +153,10 @@ export default function ClassTopicsDetail() {
 
 
                                                                 <div className="inner-content-left">
-                                                                    <a download onClick={() => {
-                                                                        axios
-                                                                            .post("/download-assignment", {
-                                                                                filename: assignment.filename,
 
 
-                                                                            })
-                                                                            .then((res) => {
 
-
-                                                                                const url = window.URL.createObjectURL(new Blob([res.data]));
-                                                                                const link = document.createElement('a');
-                                                                                link.href = url;
-                                                                                link.setAttribute('download', "app.pdf");
-                                                                                document.body.appendChild(link);
-                                                                                link.click();
-
-
-                                                                            })
-                                                                            .catch(err => console.error(err));
-                                                                    }}>{index + 1}.   {assignment.title}</a>
+                                                                    {index + 1}.   {assignment.title}
 
                                                                 </div>
                                                             </OverlayTrigger>
@@ -227,11 +210,8 @@ export default function ClassTopicsDetail() {
                                                             <span>{item.title}</span>
                                                         </div>
                                                         <div>
-                                                            <div className="inner-content-right">
-                                                                <span className='btn btn-primary' onClick={() => {
-                                                                    navigate(item.classlink)
 
-                                                                }}>Join Class</span>
+                                                            <div className="inner-content-right">
 
 
                                                                 <FontAwesomeIcon icon={faEdit} onClick={() => {
@@ -245,7 +225,18 @@ export default function ClassTopicsDetail() {
                                                                 }} />
 
                                                             </div>
-                                                            <span>starts at :{item.classtime}</span>
+                                                            <div>
+                                                                <span className='btn btn-primary btn-sm' onClick={() => {
+                                                                    navigate(item.classlink)
+
+                                                                }}>Start Class</span>
+                                                                <span className='btn btn-primary btn-sm ms-2' onClick={() => {
+
+
+                                                                }}>View Records</span>
+                                                            </div>
+
+                                                            <span className='d-block'>starts at :{item.classtime}</span>
                                                         </div>
 
                                                     </div>
@@ -392,7 +383,7 @@ export default function ClassTopicsDetail() {
                 show={showAssignmentRecord}
                 assignmentid={AssignmentResultId}
                 topicid={toUpdateTopicid}
-                onHide={()=>{
+                onHide={() => {
                     setAssignmentResultId("");
                     setToUpdateId("");
                     setShowAssignmentRecord(false)

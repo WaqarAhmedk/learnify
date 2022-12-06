@@ -60,7 +60,7 @@
     width: 45%;
     box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.07);
     border-radius: 24px;
-    margin-top: 40px;
+    margin-top: 20px;
     margin-left: 10%;
     margin-bottom: 40px;
     padding-left: 2%;
@@ -128,56 +128,10 @@
     padding-left: 10px;
 }
 
-.form-btn-group {
-    border: 1px dashed black;
-   padding-top: 3%;
-   padding-bottom: 5%;
-    margin-top: 30px;
-    margin-bottom: 30px ;
-    width: fit-content;
-    margin-left: 4%;
-}
-
-.in-file{
-    border: none;
-}
-
-.form-btn-group>input {
-
-    width: 100%;
-    margin-bottom: 15px;
-    
-}
 
 
 
-.g-logo-link {
-    text-decoration: none;
-    border: 3px solid #4C7DFE;
-    font-family: 'Roboto';
-    font-style: normal;
-    font-size: 18px;
-    padding: 8px;
-    text-align: center;
-    padding-left: 90px;
-    padding-right: 105px;
 
 
-}
-.g-logo-link-signup{
-    text-decoration: none;
-    border: 3px solid #4C7DFE;
-    font-family: 'Roboto';
-    font-style: normal;
-    font-size: 18px;
-    padding: 8px;
-    text-align: center;
-    padding-left: 90px;
-    padding-right: 75px;
 
 
-}
-
-.g-logo-link>img {
-    height: 25px;
-}

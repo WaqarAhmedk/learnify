@@ -206,13 +206,12 @@ function Signup() {
                                 <span className="col error"></span>
                             </div>
                         </div>
-                        <div className="signup-btn">
+                        <div className="signup-btn mb-4 mt-2 me-3 ms-3">
                             <div className="row">
 
-                                <div className="form-btn-group">
-                                    <input className="btn btn-primary " value="SIGN UP" type="submit" onClick={(e) => {
+                              
+                                    <button className="btn btn-primary "  onClick={() => {
 
-                                        e.preventDefault();
 
                                         if (fname === "" || lname === "" || email === "" || password === "") {
                                             setformerror("Form must be filled completly");
@@ -265,13 +264,9 @@ function Signup() {
 
                                         }
 
-                                    }} />
-                                    <a className="g-logo-link-signup" href="/">
-                                        <img src="https://img.icons8.com/color/16/000000/google-logo.png" />
-                                        SIGN UP USING GOOGLE
-                                    </a>
+                                    }} > Sign Up</button>
+                                  
 
-                                </div>
                             </div>
 
                         </div>

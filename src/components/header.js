@@ -7,8 +7,8 @@ import { ReactComponent as Messagesvg } from '../assets/icons/messages blue.svg'
 import { ReactComponent as Settingsvg } from '../assets/icons/Settings Blue.svg';
 import { ReactComponent as Signoutsvg } from '../assets/icons/Sign out blue.svg';
 import { ReactComponent as Notificationsvg } from '../assets/icons/notifications blue.svg';
-import { Link, useNavigate } from "react-router-dom";
-import { Badge, Dropdown } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMessage, faBell, faArrowDown, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { useCookies } from 'react-cookie';
@@ -16,7 +16,8 @@ import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/usercontext";
 import Notifications from "./Notifications";
 import DropdownMenu from "react-bootstrap/esm/DropdownMenu";
-import axios from "axios"
+import { useAlert } from 'react-alert';
+
 
 
 
@@ -28,17 +29,28 @@ function Header() {
     const [Cookies, setCookies, removeCookie] = useCookies('user');
     const [user, setUser] = useContext(UserContext);
     const [showNotification, setShowNotification] = useState(false);
+    const alert = useAlert();
 
     const navigate = useNavigate();
-  
 
- 
 
-    return <nav className="navbar navbar-expand-lg navbar-light bg-light " id="navbar">
 
-        <Link className="navbar-brand ps-5" id="brand" to="/">
+
+    return <nav className="navbar navbar-expand-lLink,g navbar-light bg-light " id="navbar">
+
+        <span className="navbar-brand ps-5 pe-auto" id="brand" onClick={() => {
+            if (Cookies.user.role === "teacher") {
+                navigate("/teacher/dashboard")
+            }
+            else if (Cookies.user.role === "student") {
+                navigate("/dashboard")
+            }
+            else {
+                navigate("/")
+            }
+        }} >
             <img src={require("../assets/icons/Learnify logo.png")} alt={"logo"} />
-        </Link>
+        </span>
 
 
         <div id="profile">
@@ -131,6 +143,8 @@ function Header() {
                             removeCookie('user', { path: "/" })
 
                             setUser({});
+                            alert.success("You Logged Out Successfully")
+
                             navigate("/signin")
 
 

@@ -160,7 +160,7 @@ export default function UpdateAssignment(props) {
                             }
 
 
-                          const a=  props.onHide();
+                          props.onHide();
                           
 
 
