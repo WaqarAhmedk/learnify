@@ -31,12 +31,7 @@ export default function CourseSettings() {
 
 
     let [St_show, setSt_show] = useState(false);
-    const openform = () => {
-        setShow(true)
-    }
-    const closeform = () => {
-        setShow(false)
-    }
+  
 
 
 
@@ -167,12 +162,21 @@ export default function CourseSettings() {
 
                         </form>
 
-                        {St_show ? <Studentcard title={getStudent.firstname}
+                        {St_show ? <Studentcard
+                            title={getStudent.firstname}
+
 
                             image={getStudent.avatar}
                             email={getStudent.email}
                             std_id={getStudent._id}
                             courseid={courseid}
+                            onHide={()=>{
+                                CloseenrollSt();
+                                setSt_show(false);
+                               
+                                getStudent({})
+                            }}
+
 
                         /> : ""}
 
@@ -183,7 +187,7 @@ export default function CourseSettings() {
 
 
 
-                    {show_footer ? <ModalFooter>
+                    <ModalFooter>
                         <button className="btn btn-primary" onClick={(e) => {
                             e.preventDefault();
                             if (StEmail === "") {
@@ -213,13 +217,16 @@ export default function CourseSettings() {
 
 
                                     }
+                                    else{
+                                        alert.error("no Student found Against this Email")
+                                    }
                                 }
                                 )
 
 
                             }
                         }}>Find Student</button>
-                    </ModalFooter> : ""}
+                    </ModalFooter>
 
                     {/* *****Course Removal Modal***** */}
                 </ModalBody>
@@ -270,7 +277,7 @@ export default function CourseSettings() {
                             <label for="examzpleInputEmail1">Course Name</label>
                             <input type="text" class="form-control" placeholder="Enter new course name" value={Updated_crs_name} onChange={(e) => {
                                 setUpdated_crs_name(e.target.value);
-                                
+
                             }} />
                         </div>
 

@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useTimer } from 'react-timer-hook';
 import { useCookies } from 'react-cookie';
 import { useAlert } from 'react-alert';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -18,6 +19,7 @@ export default function AttemptQuiz() {
     const data = useLocation();
     const allowedtime = data.state.allowedtime;
     const alert = useAlert();
+    const navigate = useNavigate();
 
 
     const [cookies, setCookies] = useCookies();
@@ -133,7 +135,7 @@ export default function AttemptQuiz() {
                                 <span>Correct Ans</span>
                                 <span>{correct}</span>
                             </div>
-                           
+
                             <div className='d-flex justify-content-between mt-2'>
                                 <span>Allowed Time</span>
                                 <span>{quizdata.allowedtime} minutes</span>
@@ -151,7 +153,7 @@ export default function AttemptQuiz() {
                                 <span>{score}</span>
                             </div>
                             <button className='btn btn-primary start-btn' onClick={() => {
-
+                                navigate('/dashboard')
                             }} >Finish</button>
 
                         </div>

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Cookies, useCookies } from "react-cookie";
 import { UserContext } from "../../context/usercontext";
 import { useAlert } from "react-alert";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
 
 
 function Login() {
@@ -20,7 +21,12 @@ function Login() {
     const [cookies, setCookies] = useCookies();
     const [teacher, setTeacher] = useState(false);
     const [autherror, setAuthError] = useState("");
+    const [images, setImages] = useState("");
+    const [imageerror, setImageError] = useState();
     const [checkerror, setCheckError] = useState(false);
+    const [checkimages, setCheckImages] = useState(false);
+    const [showimagemodal, setShowimageModal] = useState(false);
+    const [id, setid] = useState("");
 
 
 
@@ -40,7 +46,7 @@ function Login() {
                     {
                         teacher ? <span>Sign in As a <b>Teacher</b> and start Teaching Now </span>
                             :
-                            <span>Sign in As a <b>Student</b>and start learnig Now </span>
+                            <span>Sign in As a <b>Student</b>and start learning Now </span>
                     }
                 </div>
                 <div className="col-6 signup-form  login-div">
@@ -65,6 +71,7 @@ function Login() {
                             checkerror ? <div className="alert alert-danger mt-1">{autherror}</div>
                                 : ""
                         }
+
                         <div className="ms-2 mt-2">
                             <span>If you are a <b>{
                                 teacher ? "Student" : "Teacher"}</b> Login  </span>
@@ -75,6 +82,7 @@ function Login() {
                             }} >Here</span>
 
                         </div>
+
                         <div className="signup-btn">
                             <div className="row">
 
@@ -98,7 +106,11 @@ function Login() {
                                         password: userpassword
                                     })
                                         .then((res) => {
-                                            console.log(res.data);
+                                            if (res.data.images === false) {
+                                                setShowimageModal(true);
+                                                setid(res.data.userid)
+
+                                            }
                                             if (res.data.success == true) {
                                                 setCheckError(false);
                                                 const data = { "AuthToken": res.data.AuthToken, "role": res.data.user.role };
@@ -141,6 +153,61 @@ function Login() {
                             </div>
 
                         </div>
+                        <Modal show={showimagemodal}>
+                            <ModalHeader>Upload Images</ModalHeader>
+                            <ModalBody>
+                                <span>Please Upload your two pictures</span>
+                                <div className="row form ">
+
+                                    <div className="form-input-1">
+
+
+                                        <div className="input-group mb-3 ">
+                                            <input type="file" multiple accept="image/*" className="row email-div" onChange={(e) => {
+                                                setImages(e.target.files)
+
+                                            }} />
+                                            <span className="col error">{imageerror}</span>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </ModalBody>
+                            <ModalFooter >
+                                <button className="btn btn-primary" onClick={(e) => {
+                                    e.preventDefault();
+                                    if (images.length < 2) {
+                                        setImageError("Please Select Atleast 2 images")
+                                    }
+                                    else if (images.length > 2) {
+                                        setImageError("Please select Only 2 images")
+                                    }
+
+                                    if (!imageerror) {
+                                        let formdata = new FormData();
+
+                                        for (let i = 0; i < images.length; i++) {
+                                            formdata.append("images", images[i]);
+
+                                        }
+                                        axios
+                                            .post("upload/images/" + id,formdata)
+                                            .then((res) => {
+                                                setShowimageModal(false);
+                                                
+                                            })
+                                            .catch(err => console.error(err));
+
+                                    }
+
+
+
+                                }}>Upload Pictures</button>
+                            </ModalFooter>
+
+                        </Modal>
 
                     </form>
                 </div>

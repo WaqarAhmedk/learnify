@@ -55,7 +55,6 @@ export default function Notifications() {
 
             })
           }
-          <div class="text-center"> <a href="#" class="btn btn-success">Load more activity</a> </div>
         </div>
       </section>
     </div>

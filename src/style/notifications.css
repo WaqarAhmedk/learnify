@@ -1,16 +1,14 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap);
-body {
-  font-family: "Roboto", sans-serif;
-  background: #EFF1F3;
-  min-height: 100vh;
-  position: relative;
-}
+
 a {
   text-decoration: none;
 }
 
 .section-50 {
+  height: 500px;
   padding: 10px 0;
+  overflow: auto;
+  scroll-behavior: smooth;
 }
 
 .dark-link {

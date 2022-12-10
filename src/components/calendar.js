@@ -38,20 +38,30 @@ export default function Calendar() {
     return (
         <FullCalendar
             height={600}
-            
+
             plugins={[dayGridPlugin]}
             initialView="dayGridMonth"
 
 
-            events={events.map((item) => {
+            events={
+                events.map(
+                    (item) => {
+
+                        return {
+
+                            title: item.title,
+                            date: new Date(item.quiztime || item.submissiondate || item.classtime)
+                        }
 
 
-                return {
+                        console.log(item.title);
+                        console.log(item.submissiondate);
 
-                    title: item.title,
-                    date: new Date(item.submissiondate) ||new Date( item.classtime)
-                }
-            })}
+
+
+
+
+                    })}
         />
     )
 }

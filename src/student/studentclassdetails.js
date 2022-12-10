@@ -7,11 +7,13 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react';
 import axios from "axios";
 import { useCookies } from 'react-cookie';
-import { Modal, ModalBody, ModalHeader } from 'react-bootstrap';
+import { Modal, ModalBody, ModalHeader, Popover, OverlayTrigger } from 'react-bootstrap';
 import Discussionboard from "../components/discussionboard";
 import download from "js-file-download"
 import { useAlert } from "react-alert";
 import UploadAssignment from "./StudentComponents.js/UploadAssignment";
+import ViewAllParticipants from "./StudentComponents.js/ViewAllParticipant";
+
 
 
 
@@ -24,15 +26,25 @@ function ClassDetails() {
     const coursename = data.state.coursename;
     const [topics, setTopics] = useState([]);
     const [cookies, setCookies] = useCookies();
+    const [desc, setDesc] = useState("");
     const [quizresult, setQuizresult] = useState({ students: [{ score: 0, correct: 0, wrong: 0 }] });
+    const [shwoAllparticpant, setShowAllParticpant] = useState(false);
 
-
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Header as="h3">Description</Popover.Header>
+            <Popover.Body>
+                {desc}
+            </Popover.Body>
+        </Popover>
+    );
 
     //Upload Assignment 
 
     const [showuploadAssignment, setShowUploadAssignment] = useState(false);
     const [Assignmentdata, setAssignmentData] = useState({});
     const [currentTopic, setCurrentTopic] = useState("");
+    const [participants, setParticipants] = useState([]);
 
 
     const [discussion, setDiscussion] = useState(false);
@@ -91,21 +103,7 @@ function ClassDetails() {
     }
 
 
-    const getAllParticipents = () => {
-        console.log(courseid);
-        axios
-            .get("/get-all-participents/" + courseid, {
-                headers: {
-                    'student-auth-token': cookies.user.AuthToken
-
-                }
-            })
-            .then((res) => {
-                console.log(res.data);
-
-            })
-            .catch(err => console.error(err));
-    }
+   
 
     const getAllTopics = () => {
         axios.get("/get-topics/" + courseid, {
@@ -154,20 +152,20 @@ function ClassDetails() {
 
                 <h1 className="col-3 " >{coursename}</h1>
 
-                <div className="form-group has-search class-details-searchdiv">
-                    <span className="fa fa-search form-control-feedback"></span>
-                    <input type="text" className="form-control in-field" placeholder="Search" />
+                <div className="form-group has-search class-details-searchdiv me-5">
                 </div>
 
                 {
 
-                    <div className="inst-class-details-options">
+                    <div className="inst-class-details-options ms-5">
 
-                        <div onClick={opendiscussion}>
+                        <div onClick={opendiscussion} className="me-5">
                             <FontAwesomeIcon icon={faPeopleArrowsLeftRight} />
                             <span>Discussion Board</span>
                         </div>
-                        <div onClick={getAllParticipents}>
+                        <div onClick={() => {
+                            setShowAllParticpant(true);
+                        }} >
                             <FontAwesomeIcon icon={faUserGroup} />
                             <span>All Participents</span>
                         </div>
@@ -204,11 +202,16 @@ function ClassDetails() {
                                         <span className="ms-3">Helping Material</span>
                                         {
                                             topic.helpingmaterial.map((item, index) => {
-                                                return <div className="main-content-1">
-                                                    <div className="inner-content-left">
-                                                        <FontAwesomeIcon icon={faBookOpen} />
-                                                        <span>{item.title}</span>
-                                                    </div>
+                                                return <div className="main-content-1" onMouseEnter={() => {
+                                                    setDesc(item.description);
+                                                }}>
+                                                    <OverlayTrigger on placement="right" overlay={popover} >
+
+                                                        <div className="inner-content-left">
+                                                            <FontAwesomeIcon icon={faBookOpen} />
+                                                            <span>{item.title}</span>
+                                                        </div>
+                                                    </OverlayTrigger>
                                                     <div className="inner-content-right">
 
                                                         <FontAwesomeIcon icon={faCircleCheck} />
@@ -234,18 +237,23 @@ function ClassDetails() {
 
                                         {
                                             topic.assignments.map((assignment, index) => {
-                                                return <div key={index + 1} >
+                                                return <div key={index + 1} onMouseEnter={() => {
+                                                    setDesc(assignment.description);
+                                                }}>
                                                     <div className="main-content-1">
-                                                        <div className="inner-content-left">
-                                                            <FontAwesomeIcon icon={faClipboardList} />
-                                                            <span className="text-primary"
-                                                                onClick={() => {
-                                                                    downloadAssignment(assignment.filename);
-                                                                }}
+                                                        <OverlayTrigger on placement="right" overlay={popover} >
 
-                                                            >{index + 1}.  {assignment.title}</span>
+                                                            <div className="inner-content-left">
+                                                                <FontAwesomeIcon icon={faClipboardList} />
+                                                                <span className="text-primary"
+                                                                    onClick={() => {
+                                                                        downloadAssignment(assignment.filename);
+                                                                    }}
 
-                                                        </div>
+                                                                >{index + 1}.  {assignment.title}</span>
+
+                                                            </div>
+                                                        </OverlayTrigger>
                                                         <div className="inner-content-right">
                                                             <span className="time">Due Date :{assignment.submissiondate}</span>
                                                             <FontAwesomeIcon icon={faCircleCheck} />
@@ -269,33 +277,33 @@ function ClassDetails() {
 
                                     </div>
                                 }
-                               {
-                             topic.onlineclass.length>0   ? <div>
-                                <span className="ms-3">Online class</span>
                                 {
-                                    topic.onlineclass.map((item, index) => {
-                                        return <div key={index} className="main-content-1">
-                                            <div className="inner-content-left">
-                                                <FontAwesomeIcon icon={faBrain} />
-                                                <span>{item.title}</span>
-                                            </div>
-                                            <div className="inner-content-right">
-                                                <button className="btn btn-primary" onClick={() => {
-                                                    navigate(item.classlink)
-                                                }}>Join</button>
-                                            </div>
+                                    topic.onlineclass.length > 0 ? <div>
+                                        <span className="ms-3">Online class</span>
+                                        {
+                                            topic.onlineclass.map((item, index) => {
+                                                return <div key={index} className="main-content-1">
+                                                    <div className="inner-content-left">
+                                                        <FontAwesomeIcon icon={faBrain} />
+                                                        <span>{item.title}</span>
+                                                    </div>
+                                                    <div className="inner-content-right">
+                                                        <button className="btn btn-primary" onClick={() => {
+                                                            navigate("/face", { state: { classlink: item.classlink, topicid: topic._id, } })
+                                                        }}>Join</button>
+                                                    </div>
 
-                                        </div>
+                                                </div>
 
 
 
 
-                                    })
+                                            })
+                                        }
+                                        <hr className="hr" />
+
+                                    </div> : ""
                                 }
-                                <hr className="hr" />
-
-                            </div> :""
-                               }
                                 <div>
 
                                     {
@@ -396,6 +404,16 @@ function ClassDetails() {
             onHide={() => {
                 setShowUploadAssignment(false)
             }}
+        />
+
+        <ViewAllParticipants
+        show={shwoAllparticpant}
+        participant={participants}
+        courseid={courseid}
+        onHide={()=>{
+            setShowAllParticpant(false)
+        }}
+
         />
     </>
 }

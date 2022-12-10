@@ -1,9 +1,20 @@
 import React, { useRef, useEffect } from 'react'
-import * as faceapi from "face-api.js"
+import * as faceapi from "face-api.js";
+import { useCookies } from 'react-cookie';
+import { UserContext } from '../context/usercontext';
+import { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+
+
 export default function FaceRecognition() {
+
     const [modelsLoaded, setModelsLoaded] = React.useState(false);
     const [captureVideo, setCaptureVideo] = React.useState(false);
-
+    const [user, setUser] = useContext(UserContext);
+    const data = useLocation();
+    const classlink = data.state.classlink;
+    const topicid = data.state.FaceRecognitiontopicid;
+    console.log(user);
     const videoRef = useRef();
     const videoHeight = 480;
     const videoWidth = 640;
@@ -44,7 +55,7 @@ export default function FaceRecognition() {
     const recognizeFaces = async () => {
 
         const labeledDescriptors = await loadLabeledImages()
-        const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 7)
+        const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.5)
 
 
         if (canvasRef && canvasRef.current) {
@@ -72,7 +83,14 @@ export default function FaceRecognition() {
                     canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
 
                     const result = faceMatcher.findBestMatch(resizedDetections.descriptor);
+                    // const a=faceMatcher.matchDescriptor()
                     console.log(result);
+                    if (result.label===user.user._id.toString()) {
+                        console.log("face matched");
+                    }
+                    else{
+                        console.log("No face matched");
+                    }
                     const box = resizedDetections.detection.box
 
                     const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
@@ -102,15 +120,21 @@ export default function FaceRecognition() {
 
 
         function loadLabeledImages() {
-            //const labels = ['Black Widow', 'Captain America', 'Hawkeye' , 'Jim Rhodes', 'Tony Stark', 'Thor', 'Captain Marvel']
-            const labels = ['Prashant Kumar', 'Waqar Ahmed', 'unknown'] // for WebCam
+            const label = user.user._id.toString();
+            console.log(label);
+            const labels = [label, "unknown"] // for WebCam
+
+
             return Promise.all(
                 labels.map(async (label) => {
-                    const descriptions = []
+                    const descriptions = [];
                     for (let i = 1; i <= 2; i++) {
-                        const img = await faceapi.fetchImage(require('../labeled_images/' + label + "/" + i + ".jpg"));
+                        const img = await faceapi.fetchImage(require('../labeled_images/' + label + "/" + i + ".jpeg"));
+
+                        
+                        console.log(img);
                         const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-                         console.log(label + i + JSON.stringify(detections))
+                        console.log(label + i + JSON.stringify(detections))
                         descriptions.push(detections.descriptor)
                     }
                     document.body.append(label + ' Faces Loaded | ')

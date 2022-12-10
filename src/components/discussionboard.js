@@ -53,7 +53,7 @@ export default function Discussionboard(props) {
     socket.on("receive_message", (data) => {
 
       if (data.success === false) {
-        console.log("somrthing bad happend ");
+        console.log("something bad happend ");
         console.log(data);
 
       }

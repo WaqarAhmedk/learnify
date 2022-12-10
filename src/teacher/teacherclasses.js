@@ -20,6 +20,8 @@ function TeacherClasses(props) {
     const [cookies, setCookies] = useCookies();
     const [formcoursename, setformCoursename] = useState("");
     const [show, setShow] = useState(false);
+    const [query, setQuery] = useState("");
+    const [filteredresult, setFilteredResult] = useState([]);
 
     const openform = () => {
         setShow(true)
@@ -39,7 +41,8 @@ function TeacherClasses(props) {
             .then((res) => {
 
                 if (res.data.success === true) {
-                    setTclasses(res.data.courses)
+                    setTclasses(res.data.courses);
+                    setFilteredResult(res.data.courses)
 
                 }
                 else {
@@ -71,7 +74,22 @@ function TeacherClasses(props) {
 
                 <div className="form-group has-search searchdiv">
                     <span className="fa fa-search form-control-feedback"></span>
-                    <input type="text" className="form-control in-field" placeholder="Search" />
+                    <input type="text" className="form-control in-field" placeholder="Search" onChange={(e) => {
+                        setQuery(e.target.value);
+                        if (query.length > 2) {
+                            let result = tclasses.filter((sclass) => {
+                                return sclass.coursename.toLowerCase().includes(query.toLowerCase())
+
+                            });
+                            setFilteredResult(result)
+                            console.log(result);
+
+                        }
+                        else{
+                            setFilteredResult(tclasses)
+                        }
+                    }} />
+                   
                 </div>
 
 
@@ -89,13 +107,13 @@ function TeacherClasses(props) {
 
                 {
                     tclasses.length === 0 ? "No courses created create acourse first" :
-                        tclasses.map((sclass, index) => {
-                            return <div className="card" key={index+1} onClick={() => {
+                        filteredresult.map((sclass, index) => {
+                            return <div className="card" key={index + 1} onClick={() => {
 
 
 
                                 //to do here we will rediect to the page where the deatils of the enrolled classes will show
-                                navigate('/teacher/dashboard/classdetails/'+sclass._id)
+                                navigate('/teacher/dashboard/classdetails/' + sclass._id)
 
                             }}  >
 

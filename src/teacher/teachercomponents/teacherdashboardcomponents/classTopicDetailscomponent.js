@@ -146,7 +146,11 @@ export default function ClassTopicsDetail() {
 
                                                 {
                                                     topic.assignments.map((assignment, index) => {
-                                                        return <div key={index + 1} className="main-content-1">
+
+                                                        return <div key={index + 1} className="main-content-1" onMouseEnter={() => {
+                                                            setDesc(assignment.description);
+                                                            console.log(assignment.desc);
+                                                        }}>
 
 
                                                             <OverlayTrigger on placement="right" overlay={popover} >
@@ -204,11 +208,16 @@ export default function ClassTopicsDetail() {
                                             {
                                                 topic.onlineclass.map((item, index) => {
 
-                                                    return <div key={index + 1} className="main-content-1">
-                                                        <div className="inner-content-left">
-                                                            <FontAwesomeIcon icon={faBrain} />
-                                                            <span>{item.title}</span>
-                                                        </div>
+                                                    return <div key={index + 1} className="main-content-1" onMouseEnter={() => {
+                                                        setDesc("Online Class");
+                                                    }}>
+                                                        <OverlayTrigger on placement="right" overlay={popover} >
+
+                                                            <div className="inner-content-left">
+                                                                <FontAwesomeIcon icon={faBrain} />
+                                                                <span>{item.title}</span>
+                                                            </div>
+                                                        </OverlayTrigger>
                                                         <div>
 
                                                             <div className="inner-content-right">
@@ -265,22 +274,20 @@ export default function ClassTopicsDetail() {
                                                         <div className="inner-content-right d-block">
 
                                                             <div>
-                                                                <span className="time">Available At :{item.quizref.quiztime}</span>
+                                                                
 
-                                                                <FontAwesomeIcon icon={faEdit} className="ms-3" onClick={
+                                                                <FontAwesomeIcon icon={faEdit} className="ms-3 me-3" onClick={
                                                                     () => {
                                                                         setShowQuizUpdate(true);
                                                                         setToUpdateTopicId(topic._id);
                                                                         setToUpdateId(item.quizref._id);
                                                                     }
                                                                 } />
-                                                                <FontAwesomeIcon icon={faCircleXmark} className="cross-icon" onClick={() => {
+                                                                <FontAwesomeIcon icon={faCircleXmark} className="cross-icon me-4" onClick={() => {
                                                                     setDeleteApi(`/delete-quiz/${topic._id}/${item._id}`)
                                                                     setShowDelteModal(true);
                                                                 }} />
-                                                            </div>
-                                                            <div>
-                                                                <button className='btn btn-primary' onClick={() => {
+                                                                 <button className='btn btn-primary btn-sm' onClick={() => {
                                                                     setShowquizModal(true)
                                                                     axios.get(`/get-all-students-quiz-result/${courseid}/${item.quizref._id}`, {
 
@@ -306,6 +313,14 @@ export default function ClassTopicsDetail() {
 
 
                                                                 }}>View Records</button>
+                                                            </div>
+                                                            <div>
+                                                                    <span className="time d-block">Available At :{item.quizref.quiztime}</span>
+                                                                    <span className="time d-block">Expires At :{item.quizref.endingtime}</span>
+
+                                                                </div>
+                                                            <div>
+                                                               
                                                             </div>
                                                         </div>
 

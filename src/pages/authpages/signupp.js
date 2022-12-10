@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, CSSProperties } from "react";
 import "../../style/login.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbarmain from "../mainnavbar";
@@ -7,8 +7,8 @@ import axios from "axios";
 
 
 
-
 function Signup() {
+    const [loading, setLoading] = useState(true);
 
     let [fname, setfname] = useState("");
     let [fnameerror, setfnameerror] = useState("");
@@ -22,6 +22,9 @@ function Signup() {
 
     let [password, setpassword] = useState("");
     let [passworderror, setpassworderror] = useState("");
+
+    const [image, setImage] = useState();
+    const [imageerror, setImageError] = useState("");
 
     let [formerror, setformerror] = useState("");
     const [role, setRole] = useState("student");
@@ -57,7 +60,8 @@ function Signup() {
 
 
                 <div className="col-6 signup-form">
-                    <span className="col ms-3 error">{formerror}</span>
+
+                    <span className="error">{formerror}</span>
                     <form>
                         <div className="row form ">
                             <div className="form-label-1">
@@ -86,6 +90,7 @@ function Signup() {
                                                 setfnameerror(fnameerror);
                                             }
                                         }
+
                                     }} />
 
 
@@ -172,6 +177,20 @@ function Signup() {
                             <span className="col error">{passworderror}</span>
 
                         </div>
+
+                        <div className="row email-div">
+
+                            <label className="">Select Avatar</label>
+                            <input className="" type="file" onChange={(e) => {
+
+                                setImage(e.target.files[0])
+                                console.log(image);
+
+                            }} />
+
+                            <span className="col error">{imageerror}</span>
+
+                        </div>
                         <label className="mt-3">Signup as A </label>
 
                         <select className="form-select" aria-label="Default select example" onChange={(e) => {
@@ -187,85 +206,61 @@ function Signup() {
                         </select>
 
 
-                        <div className="row form ">
-                            <div className="form-label-1">
-                                <label className="col">Upload Pictures</label>
-                            </div>
-                            <div className="form-input-1">
 
-
-                                <div className="input-group mb-3">
-                                    <input type="file" className="form-control" onChange={(e) => {
-
-                                    }} />
-                                </div>
-                            </div>
-
-                            {/*  pic error */}
-                            <div className="row">
-                                <span className="col error"></span>
-                            </div>
-                        </div>
                         <div className="signup-btn mb-4 mt-2 me-3 ms-3">
                             <div className="row">
 
-                              
-                                    <button className="btn btn-primary "  onClick={() => {
+
+                                <button className="btn btn-primary " onClick={(e) => {
+                                    e.preventDefault();
+                                    setformerror("");
+                                    const formdata = new FormData();
+                                    formdata.append('firstname', fname);
+                                    formdata.append('lastname', lname);
+                                    formdata.append('email', email);
+                                    formdata.append('password', password);
+                                    formdata.append('image', image);
+
+                                    if (fname === "" || lname === "" || email === "" || password === "" || image === "") {
+                                        setformerror("Form must be filled completly");
+                                    }
 
 
-                                        if (fname === "" || lname === "" || email === "" || password === "") {
-                                            setformerror("Form must be filled completly");
-                                        }
-                                        else if (fnameerror != "" || lnameerror != "" || emailerror != "" || passworderror != "") {
-                                            setformerror("Remove all the errors from the form");
+                                    else {
+                                        setLoading(true)
 
-                                        }
-                                        else {
+                                        if (role === 'student') {
+                                            axios.post("/signup", formdata)
+                                                .then((res) => {
+                                                    if (res.data.success == true) {
 
-                                            if (role === 'student') {
-                                                axios.post("/signup", {
-                                                    firstname: fname,
-                                                    lastname: lname,
-                                                    email: email,
-                                                    password: password,
-
+                                                        navigate("/signin");
+                                                    }
+                                                    else {
+                                                        setemailerror(res.data.msg)
+                                                    }
                                                 })
-                                                    .then((res) => {
-                                                        if (res.data.success == true) {
+                                                .catch(err => console.log(err))
+                                        }
+                                        else if (role === 'teacher') {
+                                            axios.post("/teacher/signup", formdata)
+                                                .then((res) => {
+                                                    if (res.data.success == true) {
 
-                                                            navigate("/signin");
-                                                        }
-                                                        else {
-                                                            setemailerror(res.data.msg)
-                                                        }
-                                                    })
-                                                    .catch(err => console.log(err))
-                                            }
-                                            else if (role === 'teacher') {
-                                                axios.post("/teacher/signup", {
-                                                    firstname: fname,
-                                                    lastname: lname,
-                                                    email: email,
-                                                    password: password,
-
+                                                        navigate("/signin");
+                                                    }
+                                                    else {
+                                                        setemailerror(res.data.msg)
+                                                    }
                                                 })
-                                                    .then((res) => {
-                                                        if (res.data.success == true) {
-
-                                                            navigate("/signin");
-                                                        }
-                                                        else {
-                                                            setemailerror(res.data.msg)
-                                                        }
-                                                    })
-                                                    .catch(err => console.log(err))
-                                            }
-
-
+                                                .catch(err => console.log(err))
                                         }
 
-                                    }} > Sign Up</button>
-                                  
+
+                                    }
+
+                                }} > Sign Up</button>
+
 
                             </div>
 
@@ -281,6 +276,7 @@ function Signup() {
 
 
         </div>
+
     </>
 }
 

@@ -2,10 +2,11 @@ import React from 'react'
 import { useState } from 'react'
 import axios from "axios";
 import { useCookies } from 'react-cookie';
+import { useAlert } from 'react-alert';
 
 export default function Studentcard(props) {
   const[cookies]=useCookies();
-
+const alert=useAlert();
 
   return (
 
@@ -47,7 +48,14 @@ export default function Studentcard(props) {
                   }
                 })
                 .then((res) => {
-                  console.log(res.data);
+                  if(res.data.success===true){
+                    alert.success(res.data.msg);
+                    props.onHide();
+                  }
+                  else{
+                    alert.info(res.data.msg);
+                    props.onHide();
+                  }
                 })
                 .catch(err => console.error(err));
             }}>Enroll Now</button>

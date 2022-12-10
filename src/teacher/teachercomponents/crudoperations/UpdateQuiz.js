@@ -23,6 +23,7 @@ export default function UpdateQuiz(props) {
     const [title, setTitle] = useState("");
     const [allowedtime, setAllowedTime] = useState("")
     const [quiztime, setQuizTime] = useState(new Date());
+    const [endingtime, setEndingTime] = useState(new Date());
     const getAllTopics = () => {
 
 
@@ -64,6 +65,7 @@ export default function UpdateQuiz(props) {
                         setTitle(res.data.details.title);
                         setAllowedTime(res.data.details.allowedtime);
                         setQuizTime(new Date(res.data.details.quiztime));
+                        setEndingTime(new Date(res.data.details.endingtime))
 
                     } else {
 
@@ -114,6 +116,14 @@ export default function UpdateQuiz(props) {
 
                 </div>
 
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Available Till</label>
+                    <DateTimePicker value={endingtime} onChange={(value) => {
+                        setEndingTime(new Date(value))
+
+                    }} />
+
+                </div>
 
 
 
@@ -132,12 +142,14 @@ export default function UpdateQuiz(props) {
                 <button className="btn btn-primary" type="submit" onClick={(e) => {
                     e.preventDefault();
                     const d = quiztime.toLocaleString();
+                    const availabletill=endingtime.toLocaleString();
                     axios
-                        .post("/update-quiz/"+quizid,
+                        .post("/update-quiz/" + quizid,
                             {
                                 title: title,
-                                allowedtime:allowedtime,
-                                quiztime:d
+                                allowedtime: allowedtime,
+                                quiztime: d,
+                                endingtime:availabletill
 
                             },
                             {

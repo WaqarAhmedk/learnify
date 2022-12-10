@@ -32,7 +32,8 @@ export default function CreateQuiz() {
     const [datatosubmit, setData] = useState({});
     const [topics, setTopics] = useState([]);
     const [selectedtopic, setSelectedTopic] = useState("");
-    const [title, setTitle] = useState("Quiz")
+    const [title, setTitle] = useState("Quiz");
+    const [availabletill, setAvailabletill] = useState("");
 
     useEffect(() => {
         axios
@@ -83,6 +84,12 @@ export default function CreateQuiz() {
                                     setQuiztime(value)
                                 }} />
                             </div>
+                            <div>
+                                <span className='me-4'>Quiz Available Till</span>
+                                <DateTimePicker value={availabletill} onChange={(value) => {
+                                    setAvailabletill(value);
+                                }} />
+                            </div>
                             <div className='mt-3'>
                                 <span className='me-5'>Allowed Time to Take Quiz</span>
                                 <input type="number" value={allowedtime} onChange={(e) => {
@@ -118,16 +125,17 @@ export default function CreateQuiz() {
 
 
 
-          
+
         </div>
 
         <div className='mt-2 d-flex justify-content-between total'>
-                <span>Total Questions Created</span>
-                <span>{finalquestions.length}</span>
+            <span>Total Questions Created</span>
+            <span>{finalquestions.length}</span>
 
 
-            </div>
+        </div>
         <QuizComponent />
+
         <div className='quiz-add'>
             <button className='btn btn-primary' onClick={() => {
                 addComponent();
@@ -142,9 +150,9 @@ export default function CreateQuiz() {
             setShow(false)
             if (finalquestions.length > 0) {
 
-                console.log(quiztime, allowedtime, selectedtopic);
-                console.log(title);
-                const convertedtime=quiztime.toLocaleString();
+
+                const convertedtime = quiztime.toLocaleString();
+                const endingtime=availabletill.toLocaleString();
 
                 if (selectedtopic === "") {
                     console.log(selectedtopic);
@@ -152,11 +160,11 @@ export default function CreateQuiz() {
 
                 }
                 else {
-                    const final=quiztime.toString();
+                    const final = quiztime.toString();
                     console.log(final);
 
                     axios
-                        .post("/create-quiz/" + selectedtopic, { finalquestions,title, allowedtime, convertedtime, courseid }, {
+                        .post("/create-quiz/" + selectedtopic, { finalquestions, title, allowedtime, convertedtime, courseid ,endingtime }, {
                             headers: {
                                 'teacher-auth-token': cookies.user.AuthToken
 

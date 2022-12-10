@@ -23,11 +23,12 @@ export default function TeacherDashboardHeader() {
     const context = useContext(CourseContext);
     const [coursename, setCoursename] = context['course'];
     const [topics, setTopics] = context['topics'];
+    const [filteredresult, setFilteredResult] = useState();
     //cookies
     const [cookies, setCookies] = useCookies();
 
 
-
+    const [query, setQuery] = useState("");
 
     let navigate = useNavigate();
 
@@ -44,11 +45,11 @@ export default function TeacherDashboardHeader() {
     const closediscussion = () => {
         setDiscussion(false)
     }
-   
+
 
     const getAllTopics = () => {
 
-    
+
         axios
             .get("/get-topics/" + courseid, {
                 headers: {
@@ -86,10 +87,10 @@ export default function TeacherDashboardHeader() {
             <div className="d-flex class-details-hd" >
 
                 <h1 className="col-3 " >{coursename}</h1>
-
+                {/* removed search bar jsut kept empty div for styling */}
                 <div className="form-group has-search class-details-searchdiv">
-                    <span className="fa fa-search form-control-feedback"></span>
-                    <input type="text" className="form-control in-field" placeholder="Search" />
+
+
                 </div>
 
                 {

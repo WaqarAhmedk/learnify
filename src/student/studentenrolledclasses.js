@@ -12,6 +12,10 @@ function EnrolledClasses(props) {
     const [courses, setCourses] = useState([]);
     const navigate = useNavigate();
     const [cookies, setCookies] = useCookies();
+    const [query, setQuery] = useState("");
+    const [filteredresult, setFilteredResult] = useState([]);
+
+
 
     useEffect(() => {
         axios
@@ -23,7 +27,8 @@ function EnrolledClasses(props) {
             })
             .then((res) => {
                 console.log(res.data);
-                setCourses(res.data.allcourses)
+                setCourses(res.data.allcourses);
+                setFilteredResult(res.data.allcourses)
             })
             .catch(err => console.error(err));
     }, [])
@@ -40,7 +45,22 @@ function EnrolledClasses(props) {
 
                 <div className="form-group has-search searchdiv">
                     <span className="fa fa-search form-control-feedback"></span>
-                    <input type="text" className="form-control in-field" placeholder="Search" />
+                    <input type="text" className="form-control in-field"  placeholder="Search" onChange={(e)=>{
+                        setQuery(e.target.value);
+                        setQuery(e.target.value);
+                        if (query.length > 2) {
+                            let result = courses.filter((sclass) => {
+                                return sclass.course.coursename.toLowerCase().includes(query.toLowerCase())
+
+                            });
+                            setFilteredResult(result)
+                            console.log(result);
+
+                        }
+                        else{
+                            setFilteredResult(courses)
+                        }
+                    }} />
                 </div>
 
             </div>
@@ -51,12 +71,12 @@ function EnrolledClasses(props) {
 
                 {
 
-                    courses.length < 1 ? "Currently you have No Course Ask Your Instructor for Enrollment" :
-                        courses.map((course, index) => {
+                    filteredresult.length < 1 ? "Currently you have No Course Ask Your Instructor for Enrollment" :
+                        filteredresult.map((course, index) => {
 
                             return <div className="card" onClick={() => {
                                 //to do here we will rediect to the page where the deatils of the enrolled classes will show
-                                navigate('/dashboard/classdetails', { state: { courseid: course.course._id } })
+                                navigate('/dashboard/classdetails', { state: { courseid: course.course._id,coursename:course.course.coursename } })
 
                             }}  >
 

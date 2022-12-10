@@ -55,24 +55,30 @@ function Header() {
 
         <div id="profile">
 
-            <div className="d-flex" >
+            {
+                Cookies.user.role === 'student' ?
+                    <div className="d-flex" >
 
-                <Dropdown  >
+                        <Dropdown  >
 
-                    <Dropdown.Toggle id="dropdown-basic" className="drop-down-main">
-                        <FontAwesomeIcon icon={faBell} className="nav-icons" />
-                    </Dropdown.Toggle>
-                    <DropdownMenu align="start" className="w-10" >
-                        <Notifications />
-                    </DropdownMenu>
-                </Dropdown>
+                            <Dropdown.Toggle id="dropdown-basic" className="drop-down-main">
+                                <FontAwesomeIcon icon={faBell} className="nav-icons" />
+                            </Dropdown.Toggle>
+                            <DropdownMenu align="start" className="w-10" >
+                                <Notifications />
+                            </DropdownMenu>
+                        </Dropdown>
 
-            </div>
+                    </div>
+                    : ""
+
+            }
+
             <FontAwesomeIcon icon={faMessage} className="nav-icons" />
 
 
 
-            <img src={require("../assets/images/avatar.jpg")} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
+            <img src={require(`../assets/avatar/${user.user.avatar}`)} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
             <span className="d-block">{user.user.firstname}</span>
 
 
@@ -87,7 +93,7 @@ function Header() {
 
                     <ul className="drop-down-ul">
                         <div id="drop-down-profile">
-                            <img src={require("../assets/images/avatar.jpg")} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
+                            <img src={require(`../assets/avatar/${user.user.avatar}`)} className="navbar-brand rounded-circle " id="profile-img" alt="ds" />
                             <br />
                             <span>{user.user.firstname}</span>
                         </div>
