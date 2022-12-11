@@ -1,5 +1,6 @@
 
-import "../style/homepage.css"
+import "../style/homepage.css";
+import React from "react"
 import Header from "../components/header";
 
 import { Link } from "react-router-dom"

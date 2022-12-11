@@ -1,5 +1,5 @@
 
-import { useState, useEffect, CSSProperties } from "react";
+import React,{ useState, useEffect, CSSProperties } from "react";
 import "../../style/login.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbarmain from "../mainnavbar";
@@ -181,7 +181,7 @@ function Signup() {
                         <div className="row email-div">
 
                             <label className="">Select Avatar</label>
-                            <input className="" type="file" onChange={(e) => {
+                            <input className="" type="file" accept="image/" onChange={(e) => {
 
                                 setImage(e.target.files[0])
                                 console.log(image);

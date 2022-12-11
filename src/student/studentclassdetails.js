@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faPeopleArrowsLeftRight, faCirclePlus, faEdit, faCircleXmark, faBookOpen, faClipboardList, faBrain, faCirclePlay, faBullhorn, faCaretDown, faCircleCheck, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import "../style/coursedetails.css"
-import { useState } from 'react'
+import React ,{ useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react';
 import axios from "axios";
@@ -185,7 +185,6 @@ function ClassDetails() {
             topics.length < 1 ? <div className="ms-5 mt-2"> No Course Topic are Posted By the Teacher </div> :
 
                 topics.map.length < 1 ? "nothing toshow" : topics.map((topic, index) => {
-
                     return <div key={index + 1} className="row classdetails-content">
 
                         <div>
@@ -289,7 +288,7 @@ function ClassDetails() {
                                                     </div>
                                                     <div className="inner-content-right">
                                                         <button className="btn btn-primary" onClick={() => {
-                                                            navigate("/face", { state: { classlink: item.classlink, topicid: topic._id, } })
+                                                            navigate("/face", { state: { classlink: item.classlink, topicid: topic._id, courseid:courseid , classid:item._id} })
                                                         }}>Join</button>
                                                     </div>
 

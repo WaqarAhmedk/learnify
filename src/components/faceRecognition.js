@@ -1,9 +1,12 @@
 import React, { useRef, useEffect } from 'react'
-import * as faceapi from "face-api.js";
+import * as faceapi from '@vladmandic/face-api';
 import { useCookies } from 'react-cookie';
 import { UserContext } from '../context/usercontext';
 import { useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useState } from 'react';
+import { useAlert } from 'react-alert';
 
 
 export default function FaceRecognition() {
@@ -11,15 +14,39 @@ export default function FaceRecognition() {
     const [modelsLoaded, setModelsLoaded] = React.useState(false);
     const [captureVideo, setCaptureVideo] = React.useState(false);
     const [user, setUser] = useContext(UserContext);
+    const [cookies] = useCookies();
     const data = useLocation();
     const classlink = data.state.classlink;
-    const topicid = data.state.FaceRecognitiontopicid;
+    const topicid = data.state.topicid;
+    const courseid = data.state.courseid;
+    const classid = data.state.classid;
+    const navigate = useNavigate();
+    const alert = useAlert();
+    console.log(topicid, classid, topicid);
     console.log(user);
     const videoRef = useRef();
     const videoHeight = 480;
     const videoWidth = 640;
     const canvasRef = useRef();
+    let interval;
 
+
+
+    const markAttendence = () => {
+        axios.post(`/markattendence/${courseid}/${topicid}/${classid}`, {}, {
+            headers: {
+                'student-auth-token': cookies.user.AuthToken
+
+            }
+        }).then((res) => {
+            if (res.data.success === true) {
+                closeWebcam()
+                alert.success(res.data.msg)
+                navigate(classlink)
+
+            }
+        })
+    }
 
     useEffect(() => {
         Promise.all([
@@ -48,8 +75,9 @@ export default function FaceRecognition() {
             });
     }
 
-
-
+    const StopScan = () => {
+        clearInterval(interval)
+    }
 
 
     const recognizeFaces = async () => {
@@ -58,7 +86,7 @@ export default function FaceRecognition() {
         const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.5)
 
 
-        if (canvasRef && canvasRef.current) {
+        if (canvasRef && canvasRef.current && captureVideo) {
             canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(videoRef.current);
             const displaySize = {
                 width: videoWidth,
@@ -70,7 +98,7 @@ export default function FaceRecognition() {
             faceapi.matchDimensions(canvasRef.current, displaySize)
 
 
-            setInterval(async () => {
+            interval = setInterval(async () => {
                 // const detections = await faceapi.detectAllFaces(videoRef.current).withFaceLandmarks().withFaceDescriptors()
                 const detections = await faceapi.detectSingleFace(videoRef.current).withFaceLandmarks().withFaceDescriptor();
 
@@ -85,38 +113,42 @@ export default function FaceRecognition() {
                     const result = faceMatcher.findBestMatch(resizedDetections.descriptor);
                     // const a=faceMatcher.matchDescriptor()
                     console.log(result);
-                    if (result.label===user.user._id.toString()) {
-                        console.log("face matched");
+                    if (result.label === user.user._id.toString()) {
+
+
+                        markAttendence();
+
+
                     }
-                    else{
+                    else {
                         console.log("No face matched");
                     }
                     const box = resizedDetections.detection.box
 
+                   if (captureVideo ==="true") {
                     const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
                     drawBox.draw(canvasRef.current)
-                    // const results = resizedDetections.map((d) => {
-                    //     console.log(d.descriptor);
-                    //     return faceMatcher.findBestMatch(d.descriptor);
-                    // })
+                   }
 
-                    // results.forEach((result, i) => {
-                    //     const box = resizedDetections[i].detection.box
-                    //     const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
-                    //     drawBox.draw(canvasRef.current)
-                    // })
+                }
+                else {
+                    console.log("no face detected");
                 }
 
 
 
 
 
-            }, 100)
+            }, 100);
+
+
+
 
 
 
 
         }
+
 
 
         function loadLabeledImages() {
@@ -131,13 +163,12 @@ export default function FaceRecognition() {
                     for (let i = 1; i <= 2; i++) {
                         const img = await faceapi.fetchImage(require('../labeled_images/' + label + "/" + i + ".jpeg"));
 
-                        
+
                         console.log(img);
                         const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
                         console.log(label + i + JSON.stringify(detections))
                         descriptions.push(detections.descriptor)
                     }
-                    document.body.append(label + ' Faces Loaded | ')
                     return new faceapi.LabeledFaceDescriptors(label, descriptions)
                 })
             )
@@ -146,10 +177,24 @@ export default function FaceRecognition() {
 
     }
 
-    const closeWebcam = () => {
-        videoRef.current.pause();
-        videoRef.current.srcObject.getTracks()[0].stop();
+    const closeWebcam = async () => {
+        if (captureVideo) {
+            console.log("Cld");
+
+            await videoRef.current.srcObject.getTracks().forEach((track) => {
+                track.stop();
+            })
+
+        }
         setCaptureVideo(false);
+
+
+        StopScan();
+
+       
+
+
+        // window.location.reload()
     }
 
     return (

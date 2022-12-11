@@ -10,7 +10,7 @@ import Signup from './pages/authpages/signupp';
 import Landingpage from './pages/home';
 import Navbarmain from './pages/mainnavbar';
 import OurMoto from './pages/moto';
-import { useContext } from 'react';
+import React,{ useContext } from 'react';
 import CustomPopup from './components/meeeting/scanface/joinmeeting-popup1';
 import CustomPopupShowFace from './components/meeeting/scanface/facescanprogress';
 import ParticipationReport from './pages/participationreport';
@@ -91,6 +91,8 @@ function App() {
           <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
           <Route exact path='/startquiz/:quizid' element={<StartQuiz />} />
           <Route exact path='/attemptquiz/:quizid' element={<AttemptQuiz />} />
+          <Route exact path="/events" element={<Calendar />} />
+
 
 
 
@@ -99,13 +101,13 @@ function App() {
 
 
 
+        
+
+          <Route element={<TeacherProtectedRoutes />}>
           <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
           <Route exact path='teacher/dashboard/classdetails/:courseid' element={<TeacherClassDetails />} />
-          <Route exact path="/events" element={<Calendar />} />
           <Route exact path="/createquiz/course/:courseid" element={<QuizParent />} />
-
-          {/* <Route element={<TeacherProtectedRoutes />}>
-          </Route> */}
+          </Route>
 
 
         </Routes>

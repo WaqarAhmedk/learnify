@@ -55,7 +55,7 @@ export default function QuizResult(props) {
                                                     return <>
                                                         <tr>
                                                             <td>
-                                                                <img src={require("../../../assets/images/avatar.jpg")} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
+                                                                <img src={require(`../../../assets/avatar/${student.student.avatar}`)} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
                                                             </td>
                                                             <td>{student.student.firstname + " " + student.student.lastname}</td>
                                                             <td>{student.student.email}</td>
@@ -107,7 +107,7 @@ export default function QuizResult(props) {
                                                     return <>
                                                         <tr>
                                                             <td>
-                                                                <img src={require("../../../assets/images/avatar.jpg")} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
+                                                                <img src={require(`../../../assets/avatar/${student.avatar}`)} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
                                                             </td>
                                                             <td>{`${student.firstname} ${student.lastname}`}</td>
                                                             <td>{student.email}</td>

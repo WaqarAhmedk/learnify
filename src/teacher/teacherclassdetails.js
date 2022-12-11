@@ -4,7 +4,7 @@ import { CourseDetailsProvider } from "./context/Coursecontext";
 import ClassTopicsDetail from "./teachercomponents/teacherdashboardcomponents/classTopicDetailscomponent";
 import TeacherDashboardHeader from "./teachercomponents/teacherdashboardcomponents/teacherdashboardheader";
 import { CourseContext } from "./context/Coursecontext";
-import { useContext } from 'react';
+import React,{ useContext } from 'react';
 
 function TeacherClassDetails() {
     const params = useParams();

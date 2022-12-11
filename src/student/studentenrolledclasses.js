@@ -2,7 +2,7 @@ import "../style/enrolledclasses.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import React,{ useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 

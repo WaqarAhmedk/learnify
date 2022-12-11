@@ -82,10 +82,11 @@ export default function ViewAssignmentsrecord(props) {
 
                                             {
                                                 students.map((student) => {
+                                                    console.log(student);
                                                     return <>
                                                         <tr>
                                                             <td>
-                                                                <img src={require("../../../assets/images/avatar.jpg")} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
+                                                            <img src={require(`../../../assets/avatar/${student.studentid.avatar}`)} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
                                                             </td>
                                                             <td>{student.studentid.firstname + " " + student.studentid.lastname}</td>
                                                             <td>{student.studentid.email}</td>

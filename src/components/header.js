@@ -12,7 +12,7 @@ import { Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMessage, faBell, faArrowDown, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { useCookies } from 'react-cookie';
-import { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/usercontext";
 import Notifications from "./Notifications";
 import DropdownMenu from "react-bootstrap/esm/DropdownMenu";

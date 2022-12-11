@@ -276,6 +276,9 @@ const Room = (props) => {
 
           <div className='meeting-footer-icon-block' >
             <FontAwesomeIcon icon={faPhone} className="icon red" onClick={() => {
+              userVideo.current.srcObject.getTracks().forEach((track)=>{
+                track.stop();
+              })
               socketRef.current.disconnect();
               if(cookies.user.role==="teacher"){
                 navigate("/teacher/dashboard")
