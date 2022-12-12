@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import download from "js-file-download";
 import { CourseContext } from '../../context/Coursecontext';
 import { useContext } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -19,6 +21,11 @@ export default function ViewAssignmentsrecord(props) {
     const topicid = props.topicid;
     const [cookies, setCookies] = useCookies();
     const [students, setStudents] = useState([]);
+    const [show, setshow] = useState(false);
+    const [marks, setMarks] = useState(0);
+    const [studentemail, setStudentEmail] = useState("");
+    const [assignmenttomark, setAssignmenttoMark] = useState("");
+
 
 
 
@@ -31,8 +38,7 @@ export default function ViewAssignmentsrecord(props) {
             })
             .catch(err => console.error(err));
     }
-
-    useEffect(() => {
+    const getAssignment = () => {
         if (assignmentid != "" && topicid != "") {
             axios
                 .get(`/get-assignment-records/${topicid}/${assignmentid}`, {
@@ -49,6 +55,9 @@ export default function ViewAssignmentsrecord(props) {
                 .catch(err => console.error(err));
 
         }
+    }
+    useEffect(() => {
+        getAssignment()
     }, [assignmentid])
     return (
         <>
@@ -75,6 +84,9 @@ export default function ViewAssignmentsrecord(props) {
                                                 <th>PROFILE PIC</th>
                                                 <th>Student ID</th>
                                                 <th>Student EMAIL</th>
+                                                <th>Marks</th>
+                                                <th>Evaluate</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -86,11 +98,20 @@ export default function ViewAssignmentsrecord(props) {
                                                     return <>
                                                         <tr>
                                                             <td>
-                                                            <img src={require(`../../../assets/avatar/${student.studentid.avatar}`)} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
+                                                                <img src={require(`../../../assets/avatar/${student.studentid.avatar}`)} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
                                                             </td>
                                                             <td>{student.studentid.firstname + " " + student.studentid.lastname}</td>
                                                             <td>{student.studentid.email}</td>
-                                                            <td>{ }</td>
+                                                            <td>{student.grade}</td>
+
+                                                            <td>
+                                                                <FontAwesomeIcon icon={faEdit} onClick={() => {
+                                                                    setshow(true);
+                                                                    setStudentEmail(student.studentid.email);
+                                                                    setAssignmenttoMark(student._id)
+                                                                }} />
+
+                                                            </td>
 
 
                                                         </tr>
@@ -116,6 +137,39 @@ export default function ViewAssignmentsrecord(props) {
                 <ModalFooter>
 
                     <button className='btn btn-primary' onClick={props.onHide}>Close</button>
+
+                </ModalFooter>
+            </Modal>
+
+            <Modal show={show}>
+                <ModalHeader>Mark Assignment of Student: {studentemail}</ModalHeader>
+                <ModalBody>
+                    <div className="row email-div">
+                        <label className="">Marks</label>
+                        <input className="" type="number" onChange={(e) => {
+                            setMarks(e.target.value)
+                        }} />
+
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <button className='btn btn-primary' onClick={() => {
+                        axios.post("/mark-uploaded-assignment/" + assignmenttomark, { marks: marks }, {
+                            headers: {
+                                'teacher-auth-token': cookies.user.AuthToken
+
+                            }
+                        }).then((res) => {
+                            console.log(res);
+                            if (res.data.success === true) {
+                                getAssignment();
+                                setshow(false);
+                            }
+                        })
+                    }}>Mark Assignment</button>
+                    <button className='btn btn-secondary' value={marks} onClick={(e) => {
+                        setshow(false);
+                    }}>Cancel</button>
 
                 </ModalFooter>
             </Modal>

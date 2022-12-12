@@ -3,7 +3,7 @@ import { InputGroup, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import axios from "axios";
 import { useParams, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTimer } from 'react-timer-hook';
 import { useCookies } from 'react-cookie';
 import { useAlert } from 'react-alert';
@@ -20,7 +20,18 @@ export default function AttemptQuiz() {
     const allowedtime = data.state.allowedtime;
     const alert = useAlert();
     const navigate = useNavigate();
+    const [num, setNum] = useState(0);
+    let intervalRef = useRef();
 
+    const increaseNum = () => setNum((prev) => prev + 1);
+
+
+    const Startime = () => {
+        intervalRef.current = setInterval(increaseNum, 1000);
+
+        return () => clearInterval(intervalRef.current);
+
+    }
 
     const [cookies, setCookies] = useCookies();
 
@@ -41,21 +52,19 @@ export default function AttemptQuiz() {
     const [quizdata, setQuizdata] = useState({});
 
     const [attemptedquestions, setAttemptedQuestions] = useState(0);
-    const [timespent, setTimespent] = useState(0);
+    const [timespent, setTimespent] = useState(0.0);
 
 
 
 
 
-    const {
-        seconds,
-        minutes,
-        hours,
-        restart,
-    } = useTimer({
+    const { seconds, minutes, hours, restart, } = useTimer({
         allowedtime, onExpire: () => {
             setFinish(true);
+
+            setTimespent(num / 60)
             SendQuizResults();
+
 
         }
     });
@@ -65,10 +74,11 @@ export default function AttemptQuiz() {
 
     const SendQuizResults = () => {
 
+        console.log(timespent);
 
         axios
             .post("/submit-quiz/" + quizid, {
-                score, correct, attemptedquestions
+                score, correct, attemptedquestions, timespent
             }, {
                 headers: {
                     'student-auth-token': cookies.user.AuthToken
@@ -104,6 +114,7 @@ export default function AttemptQuiz() {
                     setQuizdata(res.data.details);
                     setQuestionData(res.data.details.questions);
                     restart(allowedtime);
+                    Startime();
                 }
             })
             .catch(err => console.error(err));
@@ -176,7 +187,10 @@ export default function AttemptQuiz() {
                             </div>
 
                             {
-                                finish ? <button onClick={SendQuizResults} className='btn btn-primary start-btn'>
+                                finish ? <button onClick={()=>{
+                                    SendQuizResults();
+                                    setTimespent(num/60)
+                                } } className='btn btn-primary start-btn'>
                                     SUBMIT QUIZ
                                 </button>
 

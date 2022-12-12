@@ -42,7 +42,7 @@ export default function FaceRecognition() {
             if (res.data.success === true) {
                 closeWebcam()
                 alert.success(res.data.msg)
-                navigate(classlink)
+                navigate(classlink, { state: { courseid, topicid, classid } })
 
             }
         })
@@ -99,7 +99,6 @@ export default function FaceRecognition() {
 
 
             interval = setInterval(async () => {
-                // const detections = await faceapi.detectAllFaces(videoRef.current).withFaceLandmarks().withFaceDescriptors()
                 const detections = await faceapi.detectSingleFace(videoRef.current).withFaceLandmarks().withFaceDescriptor();
 
 
@@ -125,10 +124,10 @@ export default function FaceRecognition() {
                     }
                     const box = resizedDetections.detection.box
 
-                   if (captureVideo ==="true") {
-                    const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
-                    drawBox.draw(canvasRef.current)
-                   }
+                    if (captureVideo === "true") {
+                        const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
+                        drawBox.draw(canvasRef.current)
+                    }
 
                 }
                 else {
@@ -178,6 +177,8 @@ export default function FaceRecognition() {
     }
 
     const closeWebcam = async () => {
+        console.log(captureVideo);
+    try {
         if (captureVideo) {
             console.log("Cld");
 
@@ -185,13 +186,19 @@ export default function FaceRecognition() {
                 track.stop();
             })
 
+            setCaptureVideo(false);
+            StopScan();
+
+
         }
-        setCaptureVideo(false);
+        
+    } catch (error) {
+        console.log("error"+error);
+    }
 
 
-        StopScan();
 
-       
+
 
 
         // window.location.reload()

@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faPeopleArrowsLeftRight, faCirclePlus, faEdit, faCircleXmark, faBookOpen, faClipboardList, faBrain, faCirclePlay, faBullhorn, faCaretDown, faCircleCheck, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import "../style/coursedetails.css"
-import React ,{ useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react';
 import axios from "axios";
@@ -103,7 +103,7 @@ function ClassDetails() {
     }
 
 
-   
+
 
     const getAllTopics = () => {
         axios.get("/get-topics/" + courseid, {
@@ -286,10 +286,32 @@ function ClassDetails() {
                                                         <FontAwesomeIcon icon={faBrain} />
                                                         <span>{item.title}</span>
                                                     </div>
-                                                    <div className="inner-content-right">
-                                                        <button className="btn btn-primary" onClick={() => {
-                                                            navigate("/face", { state: { classlink: item.classlink, topicid: topic._id, courseid:courseid , classid:item._id} })
-                                                        }}>Join</button>
+                                                    <div className="d-flex">
+                                                        <div className="d-inline me-3">
+                                                            <span className="d-block">Class Time: {item.classtime}</span>
+                                                            <span>Expiry Time: {item.expirytime}</span>
+
+
+                                                        </div>
+                                                        <div className="inner-content-right d-inline ms-3">
+                                                            <button className="btn btn-primary " onClick={() => {
+                                                                axios.get(`/start-onlineclass-student/${topic._id}/${item._id}`, {
+                                                                    headers: {
+                                                                        'student-auth-token': cookies.user.AuthToken
+
+                                                                    }
+                                                                }).then((res) => {
+                                                                    console.log(res.data);
+                                                                    if (res.data.success === true) {
+                                                                        navigate("/face", { state: { classlink: item.classlink, topicid: topic._id, courseid: courseid, classid: item._id } })
+
+                                                                    }
+                                                                    else {
+                                                                        alert.error(res.data.message);
+                                                                    }
+                                                                })
+                                                            }}>Join</button>
+                                                        </div>
                                                     </div>
 
                                                 </div>
@@ -406,12 +428,12 @@ function ClassDetails() {
         />
 
         <ViewAllParticipants
-        show={shwoAllparticpant}
-        participant={participants}
-        courseid={courseid}
-        onHide={()=>{
-            setShowAllParticpant(false)
-        }}
+            show={shwoAllparticpant}
+            participant={participants}
+            courseid={courseid}
+            onHide={() => {
+                setShowAllParticpant(false)
+            }}
 
         />
     </>

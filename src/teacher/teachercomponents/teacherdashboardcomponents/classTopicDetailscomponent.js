@@ -209,7 +209,7 @@ export default function ClassTopicsDetail() {
                                                 topic.onlineclass.map((item, index) => {
 
                                                     return <div key={index + 1} className="main-content-1" onMouseEnter={() => {
-                                                        setDesc("Online Class");
+                                                        setDesc(item.description);
                                                     }}>
                                                         <OverlayTrigger on placement="right" overlay={popover} >
 
@@ -236,7 +236,22 @@ export default function ClassTopicsDetail() {
                                                             </div>
                                                             <div>
                                                                 <span className='btn btn-primary btn-sm' onClick={() => {
-                                                                    navigate(item.classlink)
+
+                                                                    axios.get(`/start-onlineclass/${topic._id}/${item._id}`, {
+                                                                        headers: {
+                                                                            'teacher-auth-token': cookies.user.AuthToken
+
+                                                                        }
+                                                                    }).then((res) => {
+                                                                        console.log(res.data);
+                                                                        if (res.data.success === true) {
+                                                                            navigate(item.classlink)
+
+                                                                        }
+                                                                        else {
+                                                                            alert.error(res.data.message);
+                                                                        }
+                                                                    })
 
                                                                 }}>Start Class</span>
                                                                 <span className='btn btn-primary btn-sm ms-2' onClick={() => {
@@ -246,6 +261,8 @@ export default function ClassTopicsDetail() {
                                                             </div>
 
                                                             <span className='d-block'>starts at :{item.classtime}</span>
+                                                            <span className='d-block'>Expires at :{item.expirytime}</span>
+
                                                         </div>
 
                                                     </div>
@@ -274,7 +291,7 @@ export default function ClassTopicsDetail() {
                                                         <div className="inner-content-right d-block">
 
                                                             <div>
-                                                                
+
 
                                                                 <FontAwesomeIcon icon={faEdit} className="ms-3 me-3" onClick={
                                                                     () => {
@@ -287,15 +304,9 @@ export default function ClassTopicsDetail() {
                                                                     setDeleteApi(`/delete-quiz/${topic._id}/${item._id}`)
                                                                     setShowDelteModal(true);
                                                                 }} />
-                                                                 <button className='btn btn-primary btn-sm' onClick={() => {
+                                                                <button className='btn btn-primary btn-sm' onClick={() => {
                                                                     setShowquizModal(true)
-                                                                    axios.get(`/get-all-students-quiz-result/${courseid}/${item.quizref._id}`, {
-
-                                                                        headers: {
-                                                                            'student-auth-token': cookies.user.AuthToken
-
-                                                                        }
-                                                                    })
+                                                                    axios.get(`/get-all-students-quiz-result/${courseid}/${item.quizref._id}`)
                                                                         .then((res) => {
                                                                             if (res.data.success === true) {
 
@@ -315,12 +326,12 @@ export default function ClassTopicsDetail() {
                                                                 }}>View Records</button>
                                                             </div>
                                                             <div>
-                                                                    <span className="time d-block">Available At :{item.quizref.quiztime}</span>
-                                                                    <span className="time d-block">Expires At :{item.quizref.endingtime}</span>
+                                                                <span className="time d-block">Available At :{item.quizref.quiztime}</span>
+                                                                <span className="time d-block">Expires At :{item.quizref.endingtime}</span>
 
-                                                                </div>
+                                                            </div>
                                                             <div>
-                                                               
+
                                                             </div>
                                                         </div>
 

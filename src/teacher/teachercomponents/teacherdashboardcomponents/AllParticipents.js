@@ -65,7 +65,7 @@ export default function AllParticipents() {
                     participants.map((participant, index) => {
                         return <tr key={index}>
                             <td>
-                                <img src={require("../../../assets/images/avatar.jpg")} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
+                                <img src={require("../../../assets/avatar/"+participant.avatar)} className="rounded-circle" style={{ width: "50px", height: "50px" }} />
                             </td>
                             <td>{participant.firstname +" "+ participant.lastname}</td>
                             <td>{participant.email}</td>

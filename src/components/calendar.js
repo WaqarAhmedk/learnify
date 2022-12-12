@@ -54,8 +54,7 @@ export default function Calendar() {
                         }
 
 
-                        console.log(item.title);
-                        console.log(item.submissiondate);
+                        
 
 
 

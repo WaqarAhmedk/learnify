@@ -4,7 +4,7 @@ import { useState } from 'react';
 import DateTimePicker from 'react-datetime-picker';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { useEffect ,useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { CourseContext } from '../../context/Coursecontext';
 import { useAlert } from 'react-alert';
 
@@ -15,18 +15,19 @@ export default function UpdateOnlineClass(props) {
 
     const classid = props.id;
     const topicid = props.topicid;
-    const alert=useAlert();
+    const alert = useAlert();
     const context = useContext(CourseContext);
     const [topics, setTopics] = context['topics'];
     const [courseid, setCourseid] = context['courseid'];
     const [cookies, setCookies] = useCookies();
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
-
     const [classtime, setClassTime] = useState(new Date());
+    const [expirytime,setExpiryTime]=useState(new Date())
+
     const getAllTopics = () => {
 
-    
+
         axios
             .get("/get-topics/" + courseid, {
                 headers: {
@@ -64,7 +65,9 @@ export default function UpdateOnlineClass(props) {
                     if (res.data.success === true) {
                         setTitle(res.data.data.title);
                         setDesc(res.data.data.description);
-                         setClassTime(new Date(res.data.data.classtime));
+                        setClassTime(new Date(res.data.data.classtime));
+                        setExpiryTime(new Date(res.data.data.expirytime))
+
 
                     } else {
 
@@ -108,7 +111,7 @@ export default function UpdateOnlineClass(props) {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Submission date</label>
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Class Time</label>
                     <DateTimePicker value={classtime} onChange={(value) => {
                         console.log(value);
                         setClassTime(new Date(value))
@@ -117,7 +120,15 @@ export default function UpdateOnlineClass(props) {
 
                 </div>
 
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Expiry Time : </label>
+                    <DateTimePicker value={expirytime} onChange={(value) => {
+                        console.log(value);
+                        setExpiryTime(new Date(value))
 
+                    }} />
+
+                </div>
 
 
 
@@ -135,31 +146,34 @@ export default function UpdateOnlineClass(props) {
                 <button className="btn btn-primary" type="submit" onClick={(e) => {
                     e.preventDefault();
                     const d = classtime.toLocaleString();
+                    const exp=expirytime.toLocaleString();
+                    console.log(exp);
                     axios
                         .post(`/update-online-class/${topicid}/${classid}`,
                             {
                                 title: title,
                                 description: desc,
-                                starttime: d
+                                starttime: d,
+                                expirytime:exp,
                             },
                             {
                                 headers: {
                                     'teacher-auth-token': cookies.user.AuthToken,
-                                   
+
                                 }
                             }
                         ).then((res) => {
-                            if (res.data.success===true) {
+                            if (res.data.success === true) {
                                 getAllTopics();
                                 alert.success(res.data.msg)
 
-                            }else{
+                            } else {
                                 alert.error(res.data.msg)
                             }
 
 
-                          const a=  props.onHide();
-                          
+                            const a = props.onHide();
+
 
 
 

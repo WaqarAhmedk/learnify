@@ -22,9 +22,10 @@ export default function UpdateAssignment(props) {
     const [cookies, setCookies] = useCookies();
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [submissiondate, setSubmissiondate] = useState(new Date());
+
     
 
-    const [submissiondate, setSubmissiondate] = useState(new Date());
     const getAllTopics = () => {
 
     
@@ -108,7 +109,7 @@ export default function UpdateAssignment(props) {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Submission date</label>
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Submission date : </label>
                     <DateTimePicker value={submissiondate} onChange={(value) => {
                         console.log(value);
                         setSubmissiondate(new Date(value))
@@ -117,7 +118,7 @@ export default function UpdateAssignment(props) {
 
                 </div>
 
-
+             
 
 
 

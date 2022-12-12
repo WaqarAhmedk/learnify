@@ -1,20 +1,13 @@
 
 import "../style/homepage.css";
 import React from "react"
-import Header from "../components/header";
 
 import { Link } from "react-router-dom"
-import Navbarmain from "./mainnavbar";
 
 function Landingpage() {
 
 
 
-    function linkClicked() {
-        activeclass = "d"
-    }
-
-    const activeclass = "active";
     return <>
       
         <div id="topdiv">

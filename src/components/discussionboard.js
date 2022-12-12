@@ -84,15 +84,21 @@ export default function Discussionboard(props) {
 
                         <div className="chat-body clearfix">
                           <div className="header">
-                            <small className='me-3'>{message.createdAt}</small>
 
-                            {
+                            <div className='d-inline'>
+                              <div className='d-inline'>
+                                <small className='me-3'>{message.createdAt}</small>
 
-                              message.sender_type === "teacher" ?
-                                <strong className="primary-font text-success">{message.sender.firstname}</strong>
-                                : <strong className="primary-font">{message.sender.firstname}</strong>
-                            }
+                                {
 
+                                  message.sender_type === "teacher" ?
+                                    <strong className="primary-font text-success">{message.sender.firstname}</strong>
+                                    : <strong className="primary-font">{message.sender.firstname}</strong>
+                                }
+                              </div>
+                              <img src={require("../assets/avatar/"+message.sender.avatar)} className="rounded-circle" style={{ width: "30px", height: "30px" }} />
+
+                            </div>
                           </div>
                           <p>
                             {
@@ -105,15 +111,17 @@ export default function Discussionboard(props) {
                       </div> : <div className="chat-body clearfix">
 
                         <div className="header">
+                        <img src={require("../assets/avatar/"+message.sender.avatar)} className="rounded-circle" style={{ width: "30px", height: "30px" }} />
+
                           {
 
                             message.sender_type === "teacher" ?
-                              <strong className="primary-font text-success">{message.sender.firstname}</strong>
-                              : <strong className="primary-font">{message.sender.firstname}</strong>
+                              <strong className="primary-font text-success ms-1">{message.sender.firstname}</strong>
+                              : <strong className="primary-font ms-1">{message.sender.firstname}</strong>
                           }
                           <small className='ms-3'>{message.createdAt}</small>
                         </div>
-                        <p>
+                        <p className='ms-4'>
                           {
                             message.message
                           }

@@ -3,12 +3,12 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import { useParams } from 'react-router-dom';
 import "./callpage.css"
-import "../meetingfooter/meetingfooter.css"
+import "./meetingfooter.css"
 import { useAlert } from 'react-alert';
 import { UserContext } from "../../../context/usercontext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone, faMicrophoneAltSlash, faPhone, faExpand, faAngleUp, faClosedCaptioning, faDesktop, faMicrophoneSlash, faVideo, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 
@@ -46,6 +46,7 @@ const Video = (props) => {
 
 
 const Room = (props) => {
+
   const [user] = useContext(UserContext);
   const [peers, setPeers] = useState([]);
   const [users, setUsers] = useState({});
@@ -58,8 +59,20 @@ const Room = (props) => {
   const params = useParams();
   const roomID = params.id;
   const alert = useAlert();
-  const [cookies]=useCookies();
-  const navigate=useNavigate();
+  const [cookies] = useCookies();
+  const navigate = useNavigate();
+  const data = useLocation();
+  const [courseid, setCourseid] = useState("");
+  const [topicid, setTopicid] = useState("");
+  const [classid, setClassid] = useState("");
+
+  // if (user.user.role === "student") {
+  //   setCourseid(data.state.courseid)
+  //   setTopicid(data.state.topicid)
+  //   setClassid(data.state.classid)
+
+  // }
+
 
   const videoConstraints = {
     minAspectRatio: 1.333,
@@ -109,6 +122,7 @@ const Room = (props) => {
           });
           setPeers(peers);
         });
+        
         socketRef.current.on("user joined", (payload) => {
           alert.info(payload.username + " Joined the Class")
           const peer = addPeer(payload.signal, payload.callerID, stream, payload.username);
@@ -134,7 +148,7 @@ const Room = (props) => {
           peersRef.current = peers;
           setPeers(peers);
           alert.info("Some User Left");
-          
+
         });
 
         socketRef.current.on("receiving returned signal", (payload) => {
@@ -276,17 +290,23 @@ const Room = (props) => {
 
           <div className='meeting-footer-icon-block' >
             <FontAwesomeIcon icon={faPhone} className="icon red" onClick={() => {
-              userVideo.current.srcObject.getTracks().forEach((track)=>{
+              userVideo.current.srcObject.getTracks().forEach((track) => {
                 track.stop();
               })
-              socketRef.current.disconnect();
-              if(cookies.user.role==="teacher"){
-                navigate("/teacher/dashboard")
-    
+              if (cookies.user.role === "student") {
+                socketRef.current.emit("time-spent", { time: "5", courseid, topicid, classid })
+
+
               }
-              else{
+              socketRef.current.disconnect();
+
+              if (cookies.user.role === "teacher") {
+                navigate("/teacher/dashboard")
+
+              }
+              else {
                 navigate("/dashboard")
-    
+
               }
 
             }} />

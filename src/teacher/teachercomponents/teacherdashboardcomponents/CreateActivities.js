@@ -93,7 +93,7 @@ export default function CreateActivities(props) {
     const [class_title, setClass_title] = useState("");
     const [class_Desc, setClass_Desc] = useState("");
     const [class_time, setClass_time] = useState(new Date());
-
+    const [class_expirytime, setClass_expirytime] = useState(new Date());
 
 
 
@@ -224,7 +224,7 @@ export default function CreateActivities(props) {
                     <span className="course-mang-list" onClick={Opencrt_assginment}>Assignment</span>
 
                     <span className="course-mang-list" onClick={() => {
-                        navigate("/createquiz/course/"+ courseid)
+                        navigate("/createquiz/course/" + courseid)
                     }}>Quiz</span>
 
                     <span className="course-mang-list" onClick={OpenVid_session}>Online Class</span>
@@ -449,6 +449,13 @@ export default function CreateActivities(props) {
                         }} />
 
                     </div>
+                    <div className="mb-3">
+                        <label className="form-label">Online Class Expiry Time</label>
+                        <DateTimePicker value={class_expirytime} className="form-control" onChange={(value) => {
+                            setClass_expirytime(value);
+                        }} />
+
+                    </div>
                     {/*********/}
                 </ModalBody>
                 <ModalFooter>
@@ -456,13 +463,15 @@ export default function CreateActivities(props) {
 
                         e.preventDefault();
 
-                        const convertedtime=class_time.toLocaleString();
+                        const convertedtime = class_time.toLocaleString();
+                        const expirytime=class_expirytime.toLocaleString();
                         axios
                             .post("/create-online-class/" + optionvalue,
                                 {
                                     title: class_title,
-                                    desscription: class_Desc,
-                                    classtime: convertedtime
+                                    description: class_Desc,
+                                    classtime: convertedtime,
+                                    expirytime:expirytime,
 
                                 },
                                 {
@@ -472,9 +481,10 @@ export default function CreateActivities(props) {
                                     }
                                 }
                             ).then((res) => {
-                                if (res.data.success===true) {
+                                if (res.data.success === true) {
                                     getAllTopics();
-                                    alert.success(res.data.message)
+                                    alert.success(res.data.message);
+                                    CloseVid_session()
                                 }
                             })
                             .catch(err => console.error(err));
@@ -513,7 +523,7 @@ export default function CreateActivities(props) {
                         }} ></textarea>
                     </div>
 
-                     {/* ***Choose Topics*** */}
+                    {/* ***Choose Topics*** */}
 
                     <select className="form-select" aria-label="Default select example" onChange={(e) => { handleTopicsselectchange(e) }}>
                         <option value="">Choose Topic</option>
