@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useAlert } from 'react-alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Modal, ModalBody, ModalHeader } from 'react-bootstrap';
+import { Modal, ModalBody, ModalHeader ,ModalFooter} from 'react-bootstrap';
 
 
 export default function AllTeachers(props) {
@@ -14,7 +14,9 @@ export default function AllTeachers(props) {
     const alert = useAlert();
     const [cookies] = useCookies();
     const [teachers, setTeachers] = useState([]);
-
+    const [showdelete, setShowDelete] = useState(false);
+    const [idtodelete, setIdtoDelte] = useState();
+    const [teacheremail, setTeacherEmail] = useState("");
 
     const getAllTeachers = () => {
         axios
@@ -74,8 +76,11 @@ export default function AllTeachers(props) {
                                     <td>{teacher.createdat}</td>
 
                                     <td>{teacher.email}</td>
-                                    <td><FontAwesomeIcon icon={faTrash}/></td>
-
+                                    <td onClick={() => {
+                                        setTeacherEmail(teacher.email);
+                                        setIdtoDelte(teacher._id);
+                                        setShowDelete(true)
+                                    }}><FontAwesomeIcon icon={faTrash} /></td>
 
 
                                 </tr>
@@ -88,6 +93,50 @@ export default function AllTeachers(props) {
 
             </tbody>
         </table>
+
+        <Modal show={showdelete}>
+            <ModalHeader>Remove Teacher {teacheremail} </ModalHeader>
+            <ModalBody>
+                <span className='d-block'>Are You sure You want to delte this course ? </span>
+                <span className='btn-warning '>This action cannot be undone</span>
+            </ModalBody>
+            <ModalFooter>
+                <button className='btn btn-primary ' onClick={(e) => {
+
+                    e.preventDefault();
+                    axios
+                        .delete("/delete-teacher-byadmin/" + idtodelete, {
+                            headers: {
+                                'admin-auth-token': cookies.user.AuthToken
+
+                            }
+                        })
+                        .then((res) => {
+                            console.log(res.data);
+
+                            if (res.data.success) {
+                                alert.success(res.data.message);
+                                setShowDelete(false)
+                            }
+                            else {
+                                alert.info(res.data.message)
+
+                            }
+
+                        })
+                        .catch(err => console.error(err));
+
+
+                }}>Remove Teacher</button>
+                <button className='btn btn-secondry ' onClick={() => {
+                    setTeacherEmail("");
+                    setIdtoDelte("");
+                    setShowDelete(false);
+
+                }}>cancel</button>
+
+            </ModalFooter>
+        </Modal>
 
     </>)
 }

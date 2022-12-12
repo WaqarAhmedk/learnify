@@ -1,5 +1,5 @@
 
-import React,{ useState, useEffect, CSSProperties } from "react";
+import React, { useState, useEffect, CSSProperties } from "react";
 import "../../style/login.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbarmain from "../mainnavbar";
@@ -243,6 +243,7 @@ function Signup() {
                                                 .catch(err => console.log(err))
                                         }
                                         else if (role === 'teacher') {
+                                            console.log("dsa");
                                             axios.post("/teacher/signup", formdata)
                                                 .then((res) => {
                                                     if (res.data.success == true) {
