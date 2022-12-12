@@ -15,7 +15,7 @@ export default function UpdateProfile() {
     const [user, setUser] = useContext(UserContext);
     const [cookies] = useCookies();
     const alert = useAlert();
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     let [fname, setfname] = useState("");
     let [fnameerror, setfnameerror] = useState("");
@@ -47,21 +47,39 @@ export default function UpdateProfile() {
     const [role, setRole] = useState("student");
     useEffect(() => {
 
+      if(cookies.user.role==="student"){
         axios
-            .get("/getstudent", {
-                headers: {
-                    "student-auth-token": cookies.user.AuthToken
-                }
-            })
-            .then((res) => {
-                setfname(res.data.firstname);
-                setlname(res.data.lastname);
-                setemail(res.data.email);
-                setNewemail(res.data.email);
-                setpassword("**************");
+        .get("/getstudent", {
+            headers: {
+                "student-auth-token": cookies.user.AuthToken
+            }
+        })
+        .then((res) => {
+            setfname(res.data.firstname);
+            setlname(res.data.lastname);
+            setemail(res.data.email);
+            setNewemail(res.data.email);
+            setpassword("**************");
 
-            })
-            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+      }else{
+        axios
+        .get("/getteacher", {
+            headers: {
+                "teacher-auth-token": cookies.user.AuthToken
+            }
+        })
+        .then((res) => {
+            setfname(res.data.firstname);
+            setlname(res.data.lastname);
+            setemail(res.data.email);
+            setNewemail(res.data.email);
+            setpassword("**************");
+
+        })
+        .catch(err => console.error(err));
+      }
     }, [])
 
     return <div className="">{
@@ -223,6 +241,40 @@ export default function UpdateProfile() {
                                                                     })
                                                                     alert.success(res.data.msg);
                                                                     navigate("/dashboard")
+                                                                    setfnameerror("");
+                                                                    setlnameerror("");
+                                                                    setNewemailError("");
+                                                                    setpassworderror("");
+                                                                    setNewpassworderror("")
+
+                                                                }
+                                                                else {
+                                                                    alert.error(res.data.msg)
+                                                                }
+                                                            })
+                                                            .catch(err => console.error(err));
+                                                    } else if (cookies.user.role === "teacher") {
+                                                        axios
+                                                            .post("/update-teacher-profile", {
+                                                                firstname: fname,
+                                                                lastname: lname,
+                                                                newemail: newemail,
+                                                                currentemail: email,
+                                                                currentpassword: password,
+                                                                newpassword: newpassword
+                                                            }, {
+                                                                headers: {
+                                                                    "teacher-auth-token": cookies.user.AuthToken
+                                                                }
+                                                            })
+                                                            .then((res) => {
+                                                                if (res.data.success === true) {
+                                                                    setUser({
+                                                                        logedin: true,
+                                                                        user: res.data.user
+                                                                    })
+                                                                    alert.success(res.data.msg);
+                                                                    navigate("/teacher/dashboard")
                                                                     setfnameerror("");
                                                                     setlnameerror("");
                                                                     setNewemailError("");

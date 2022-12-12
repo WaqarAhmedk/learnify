@@ -74,7 +74,6 @@ function Header() {
 
             }
 
-            <FontAwesomeIcon icon={faMessage} className="nav-icons" />
 
 
 
@@ -114,33 +113,38 @@ function Header() {
                         </div>
 
                         <div className="drop-down-menu-item" onClick={() => {
-                            navigate("/events")
+                            if (Cookies.user.role === "teacher") {
+                                navigate("/teacher-events")
+                            }
+                            else if (Cookies.user.role === "student") {
+                                navigate("/events")
+                            }
                         }}>
                             <Calendersvg className="icon-img" />
                             <span>Calender</span>
                         </div>
 
-                        <div className="drop-down-menu-item">
+                        <div className="drop-down-menu-item" onClick={() => {
+                             if (Cookies.user.role === "student") {
+                                navigate("/tasks")
+                            }
+                        }}>
                             <Mytasksvg className="icon-img" />
                             <span>My Tasks</span>
                         </div>
 
-                        <div className="drop-down-menu-item">
-                            <Progressdvg className="icon-img" />
-                            <span>Progress</span>
-                        </div>
 
-                        <div className="drop-down-menu-item">
-                            <Messagesvg className="icon-img" />
-                            <span>Messages</span>
-                        </div>
 
-                        <div className="drop-down-menu-item">
+                        <div className="drop-down-menu-item" onClick={() => {
+                             if (Cookies.user.role === "student") {
+                                navigate('/notifications')
+                            }
+                        }}>
                             <Notificationsvg className="icon-img" />
                             <span>Notifications</span>
                         </div>
 
-                        <div className="drop-down-menu-item" onClick={()=>{
+                        <div className="drop-down-menu-item" onClick={() => {
                             navigate("/updateprofile")
                         }}>
                             <Settingsvg className="icon-img" />

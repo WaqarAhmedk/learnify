@@ -114,6 +114,11 @@ export default function UploadAssignment(props) {
                             <h5>{uploadeddata.uploadtime}</h5>
 
                         </div>
+                        <div className="mb-3 d-flex justify-content-between ms-4 me-4">
+                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Marks </label>
+                            <h5>{uploadeddata.grade}</h5>
+
+                        </div>
 
 
 

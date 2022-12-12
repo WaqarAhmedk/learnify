@@ -344,12 +344,21 @@ function ClassDetails() {
                                                         <div className="inner-content-right d-block">
 
 
-                                                            <span className="time">Available at :{item.quizref.quiztime}</span>
-                                                            <button className='btn btn-primary' onClick={() => { getQuizResult(item.quizref._id); }}>View Result</button>
+                                                            <div className="d-flex">
+                                                                <div>
+                                                                    <span className="time d-block">Available at :{item.quizref.quiztime}</span>
+                                                                    <span className="time">Expires at :{item.quizref.endingtime}</span>
+                                                                </div>
+                                                                <div>
 
-                                                            <button className='btn btn-primary ms-3' onClick={() => {
-                                                                checkQuizAvailbility(item.quizref._id);
-                                                            }}>Attempt Quiz</button>
+                                                                    <button className='btn btn-primary' onClick={() => { getQuizResult(item.quizref._id); }}>View Result</button>
+
+                                                                    <button className='btn btn-primary ms-3' onClick={() => {
+                                                                        checkQuizAvailbility(item.quizref._id);
+                                                                    }}>Attempt Quiz</button>
+                                                                </div>
+                                                            </div>
+
 
                                                         </div>
 

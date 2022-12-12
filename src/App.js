@@ -28,6 +28,9 @@ import UpdateProfile from './pages/updateprofile';
 import AdminLogin from './admin/adminlogin';
 import Adminhomepage from './admin/adminhomepage';
 import AdminSignUp from './admin/adminsignup';
+import Tasks from './components/Tasks';
+import Notifications from './components/Notifications';
+import TeacherEvents from './teacher/teachercomponents/teacherevents';
 
 function App() {
 
@@ -91,6 +94,8 @@ function App() {
           <Route exact path='/startquiz/:quizid' element={<StartQuiz />} />
           <Route exact path='/attemptquiz/:quizid' element={<AttemptQuiz />} />
           <Route exact path="/events" element={<Calendar />} />
+          <Route exac path='/tasks' element={<Tasks />} />
+          <Route exac path='/notifications' element={<Notifications />}/>
 
 
 
@@ -101,11 +106,13 @@ function App() {
 
 
 
+
+          <Route element={<TeacherProtectedRoutes />}>
+
           <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
           <Route exact path='teacher/dashboard/classdetails/:courseid' element={<TeacherClassDetails />} />
           <Route exact path="/createquiz/course/:courseid" element={<QuizParent />} />
-
-          <Route element={<TeacherProtectedRoutes />}>
+          <Route exact path="/teacher-events" element={<TeacherEvents />} />
 
 
           </Route>
