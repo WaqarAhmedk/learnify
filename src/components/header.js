@@ -140,7 +140,9 @@ function Header() {
                             <span>Notifications</span>
                         </div>
 
-                        <div className="drop-down-menu-item">
+                        <div className="drop-down-menu-item" onClick={()=>{
+                            navigate("/updateprofile")
+                        }}>
                             <Settingsvg className="icon-img" />
                             <span>Settings</span>
                         </div>

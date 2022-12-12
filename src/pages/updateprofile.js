@@ -4,6 +4,9 @@ import { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import { useAlert } from 'react-alert';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -11,6 +14,8 @@ export default function UpdateProfile() {
 
     const [user, setUser] = useContext(UserContext);
     const [cookies] = useCookies();
+    const alert = useAlert();
+    const navigate=useNavigate();
 
     let [fname, setfname] = useState("");
     let [fnameerror, setfnameerror] = useState("");
@@ -21,7 +26,10 @@ export default function UpdateProfile() {
 
     let [email, setemail] = useState("");
     let [emailerror, setemailerror] = useState("");
+
     let [newemail, setNewemail] = useState("");
+    let [newemailerror, setNewemailError] = useState("");
+
 
     let [password, setpassword] = useState("");
     let [passworderror, setpassworderror] = useState("");
@@ -107,6 +115,7 @@ export default function UpdateProfile() {
                                                             setfname(e.target.value);
                                                         }} />
                                                     </div>
+                                                    <span className="col error">{fnameerror}</span>
                                                 </div>
                                                 <div className="col">
                                                     <div className="form-group">
@@ -115,6 +124,8 @@ export default function UpdateProfile() {
                                                             setlname(e.target.value);
                                                         }} />
                                                     </div>
+                                                    <span className="col error">{lnameerror}</span>
+
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -125,6 +136,8 @@ export default function UpdateProfile() {
                                                             setNewemail(e.target.value);
                                                         }} />
                                                     </div>
+                                                    <span className="col error">{newemailerror}</span>
+
                                                 </div>
                                             </div>
 
@@ -141,6 +154,8 @@ export default function UpdateProfile() {
                                                             setpassword(e.target.value);
                                                         }} />
                                                     </div>
+                                                    <span className="col error">{passworderror}</span>
+
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -163,32 +178,74 @@ export default function UpdateProfile() {
                                                 </div>
                                             </div>
                                         </div>
+                                        <span className="col error">{newpassworderror}</span>
+
 
                                     </div>
                                     <div className="row">
                                         <div className="col d-flex justify-content-end">
                                             <button className="btn btn-primary" onClick={(e) => {
                                                 e.preventDefault();
-                                                
 
 
-                                                axios
-                                                    .post("/update-profile", {
-                                                        firstname: fname,
-                                                        lastname: lname,
-                                                        newemail: newemail,
-                                                        currentemail: email,
-                                                        currentpassword: password,
-                                                        newpassword: newpassword
-                                                    }, {
-                                                        headers: {
-                                                            "student-auth-token": cookies.user.AuthToken
-                                                        }
-                                                    })
-                                                    .then((res) => {
-                                                        console.log(res.data);
-                                                    })
-                                                    .catch(err => console.error(err));
+                                                if (fname === "") {
+                                                    setfnameerror("Please provide First name")
+
+                                                } else if (lname === "") {
+                                                    setlnameerror("Please Provide Last name")
+                                                } else if (newemail === "") {
+                                                    setNewemailError("Please Provide a email")
+                                                } else if (password === "") {
+                                                    setpassworderror("Please provide your Current Password")
+                                                } else if (newpassword !== confirmpassword) {
+                                                    setNewpassworderror("New Password and Confirm Password are not same ")
+                                                }
+                                                else {
+                                                    if (cookies.user.role === "student") {
+                                                        axios
+                                                            .post("/update-profile", {
+                                                                firstname: fname,
+                                                                lastname: lname,
+                                                                newemail: newemail,
+                                                                currentemail: email,
+                                                                currentpassword: password,
+                                                                newpassword: newpassword
+                                                            }, {
+                                                                headers: {
+                                                                    "student-auth-token": cookies.user.AuthToken
+                                                                }
+                                                            })
+                                                            .then((res) => {
+                                                                if (res.data.success === true) {
+                                                                    setUser({
+                                                                        logedin: true,
+                                                                        user: res.data.user
+                                                                    })
+                                                                    alert.success(res.data.msg);
+                                                                    navigate("/dashboard")
+                                                                    setfnameerror("");
+                                                                    setlnameerror("");
+                                                                    setNewemailError("");
+                                                                    setpassworderror("");
+                                                                    setNewpassworderror("")
+
+                                                                }
+                                                                else {
+                                                                    alert.error(res.data.msg)
+                                                                }
+                                                            })
+                                                            .catch(err => console.error(err));
+                                                    }
+
+
+                                                }
+
+
+
+
+
+
+
 
                                             }}>Save Changes</button>
                                         </div>

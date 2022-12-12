@@ -1,0 +1,109 @@
+
+.sidebar-close {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+  .sidebaropen{
+    margin-top: 70px;
+    width: 220px;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    
+  
+    
+  }
+  .header{
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+     border-bottom: 1px solid white;
+  }
+  .header>div{
+    color: white;
+  }
+  .header >img{
+    height: 50px;
+    width: 50px;
+    border: 1px solid gray;
+    border-radius: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  .sidebar-options{
+    margin-top: 30px;
+  }
+  .sidebar-li{
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    border-bottom: 1px solid gray;
+  }
+  
+  .sidebar-li:hover {
+    color: #f1f1f1;
+  }
+  .sidebar-open-content-div{
+    margin-left: 230px;
+    transition: 0.5s;
+    width: 100%;
+
+  }
+  .sidebar-close-content-div{
+    margin-left: 5px;
+    transition: 0.5s;
+    width: 100%;
+
+  }
+
+  .top-btn-div{
+    border-bottom: 1px solid gray;
+  }
+
+
+
+
+  .open-btn{
+    font-size: 50px;
+    margin-left: 20px;
+    margin-top: 10px;
+    color: blue;
+  }
+  .close-div{
+    border-bottom: 1px solid white;
+    height: fit-content;
+  }
+  .closebtn {
+    position: absolute;
+    top: 0;
+    right: 5%;
+    cursor: pointer;
+    font-size: 36px;
+    color: white;
+    
+  }
+
+
+
+
+  /* main content */
+
+
+
+

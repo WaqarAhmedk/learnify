@@ -8,7 +8,7 @@ import Signup from './pages/authpages/signupp';
 import Landingpage from './pages/home';
 import Navbarmain from './pages/mainnavbar';
 import OurMoto from './pages/moto';
-import React,{ useContext } from 'react';
+import React, { useContext } from 'react';
 import ParticipationReport from './pages/participationreport';
 import TeacherClassDetails from './teacher/teacherclassdetails';
 import Dashboard from './student/studentdashboard';
@@ -25,6 +25,9 @@ import AttemptQuiz from './student/Quiz/AttemptQuiz';
 import Room from './components/meeeting/callpage/callpage';
 import FaceRecognition from './components/faceRecognition';
 import UpdateProfile from './pages/updateprofile';
+import AdminLogin from './admin/adminlogin';
+import Adminhomepage from './admin/adminhomepage';
+import AdminSignUp from './admin/adminsignup';
 
 function App() {
 
@@ -49,7 +52,7 @@ function App() {
 
         {
 
-          user.logedin ? <Header /> : <Navbarmain />
+          user.logedin ? user.user.role === "admin" ? "" : <Header /> : <Navbarmain />
 
         }
 
@@ -67,6 +70,10 @@ function App() {
 
           <Route exact path='/participationReport' element={<ParticipationReport />} />
 
+
+          <Route exact path='/admin' element={<Adminhomepage />} />
+          <Route exac path='/admin/login' element={<AdminLogin />} />
+          <Route exac path='/admin/signup' element={<AdminSignUp />} />
 
 
           <Route exact path='/' element={<Landingpage />} />
@@ -93,14 +100,14 @@ function App() {
 
 
 
-        
+
           <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
           <Route exact path='teacher/dashboard/classdetails/:courseid' element={<TeacherClassDetails />} />
           <Route exact path="/createquiz/course/:courseid" element={<QuizParent />} />
 
           <Route element={<TeacherProtectedRoutes />}>
 
-        
+
           </Route>
 
 

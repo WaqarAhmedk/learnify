@@ -15,8 +15,8 @@ export const UserProvider = (props) => {
 
 
     const [user, setUser] = useState({
-        logedin:false,
-        user:{}
+        logedin: false,
+        user: {}
     });
 
     const [cookies, setCookies] = useCookies();
@@ -33,7 +33,7 @@ export const UserProvider = (props) => {
                     }
                 })
                 .then((res) => {
-                    setUser({logedin:true ,user:res.data});
+                    setUser({ logedin: true, user: res.data });
                 })
                 .catch(err => console.error(err));
         }
@@ -45,7 +45,19 @@ export const UserProvider = (props) => {
                     }
                 })
                 .then((res) => {
-                    setUser({logedin:true ,user:res.data});
+                    setUser({ logedin: true, user: res.data });
+                })
+                .catch(err => console.error(err));
+        }
+        else if (cookies.user.role === "admin") {
+            axios
+                .get("/getadmin", {
+                    headers: {
+                        "admin-auth-token": cookies.user.AuthToken
+                    }
+                })
+                .then((res) => {
+                    setUser({ logedin: true, user: res.data });
                 })
                 .catch(err => console.error(err));
         }
@@ -63,7 +75,7 @@ export const UserProvider = (props) => {
         }
     }, []);
 
-   
+
 
 
     return (
