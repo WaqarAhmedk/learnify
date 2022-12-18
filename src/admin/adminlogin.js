@@ -78,24 +78,30 @@ function AdminLogin() {
 
 
                                     }
-                                    axios
-                                        .post("/admin/login", { email: useremail, password: userpassword })
-                                        .then((res) => {
-                                            console.log(res.data);
-                                            if (res.data.success) {
-                                                const data = { "AuthToken": res.data.AuthToken, "role": res.data.user.role };
-                                                setCookies("user", JSON.stringify(data), { path: "/" });
+                                    else {
+                                        axios
+                                            .post("/admin/login", { email: useremail, password: userpassword })
+                                            .then((res) => {
+                                                console.log(res.data);
+                                                if (res.data.success) {
+                                                    const data = { "AuthToken": res.data.AuthToken, "role": res.data.user.role };
+                                                    setCookies("user", JSON.stringify(data), { path: "/" });
 
-                                                setUser({
-                                                    logedin: true,
-                                                    user: res.data.user
-                                                });
-                                                navigate("/admin")
+                                                    setUser({
+                                                        logedin: true,
+                                                        user: res.data.user
+                                                    });
+                                                    navigate("/admin")
 
 
-                                            }
-                                        })
-                                        .catch(err => console.error(err));
+                                                } else {
+                                                    setCheckError(true)
+                                                    setAuthError(res.data.msg)
+                                                }
+                                            })
+                                            .catch(err => console.error(err));
+                                    }
+
                                 }}>Log In</button>
                             </div>
 

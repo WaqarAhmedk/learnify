@@ -1,12 +1,13 @@
 
 import "../../style/login.css"
 import { useNavigate } from 'react-router-dom';
-import React,{ useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { Cookies, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 import { UserContext } from "../../context/usercontext";
 import { useAlert } from "react-alert";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 
 
 function Login() {
@@ -15,9 +16,13 @@ function Login() {
     const [user, setUser] = useContext(UserContext);
 
 
-    let [error, seterror] = useState("");
-    let [useremail, setuseremail] = useState("");
-    let [userpassword, setuserpassword] = useState("");
+    const [error, seterror] = useState("");
+    const [useremail, setuseremail] = useState("");
+    const [userpassword, setuserpassword] = useState("");
+    const [emailerror, setEmailErro] = useState("");
+    const [passworderror, setPasswordError] = useState("")
+
+
     const [cookies, setCookies] = useCookies();
     const [teacher, setTeacher] = useState(false);
     const [autherror, setAuthError] = useState("");
@@ -27,6 +32,7 @@ function Login() {
     const [checkimages, setCheckImages] = useState(false);
     const [showimagemodal, setShowimageModal] = useState(false);
     const [id, setid] = useState("");
+    const [loading,setLoading]=useState(false)
 
 
 
@@ -58,6 +64,7 @@ function Login() {
                             <input className="" type="email" onChange={(e) => {
                                 setuseremail(e.target.value);
                             }} />
+                            <span className="col ms-3 error">{emailerror}</span>
 
                         </div>
                         <div className="row email-div ">
@@ -65,7 +72,7 @@ function Login() {
                             <input className="" type="password" placeholder="********" onChange={(e) => {
                                 setuserpassword(e.target.value);
                             }} />
-                            <span className="error">{error}</span>
+                            <span className="col ms-3 error">{passworderror}</span>
                         </div>
                         {
                             checkerror ? <div className="alert alert-danger mt-1">{autherror}</div>
@@ -87,67 +94,101 @@ function Login() {
                             <div className="row">
 
 
-                                <input className="btn btn-primary mb-4 mt-2 me-4 ms-2" type="submit" value="SIGN IN" onClick={(e) => {
+                                <button className="btn btn-primary mb-4 mt-2 me-4 ms-2" type="submit" value="SIGN IN" onClick={(e) => {
+                                    setLoading(true);
+
                                     e.preventDefault();
-                                    const teacherapi = "/teacher/login";
-                                    const studentapi = "/login";
-                                    let api;
-                                    if (teacher) {
-                                        api = teacherapi;
+
+                                    if (useremail === "") {
+                                        setEmailErro("Please Provide Email")
+
+                                    }
+                                    if (userpassword === "") {
+                                        setPasswordError("Please Provide password")
 
                                     }
                                     else {
-                                        api = studentapi;
+                                        setEmailErro("");
+                                        setPasswordError("");
+                                        const teacherapi = "/teacher/login";
+                                        const studentapi = "/login";
+
+
+                                        let api;
+                                        if (teacher) {
+                                            api = teacherapi;
+
+                                        }
+                                        else {
+                                            api = studentapi;
+                                        }
+
+
+                                        axios.post(api, {
+                                            email: useremail,
+                                            password: userpassword
+                                        })
+                                            .then((res) => {
+                                                setLoading(false)
+                                                if (res.data.images === false) {
+                                                    setShowimageModal(true);
+                                                    setid(res.data.userid)
+
+                                                }
+                                                if (res.data.success == true) {
+                                                    setCheckError(false);
+                                                    const data = { "AuthToken": res.data.AuthToken, "role": res.data.user.role };
+                                                    setCookies("user", JSON.stringify(data), { path: "/" });
+
+                                                    if (res.data.user.role == "teacher") {
+
+                                                        setUser({ logedin: true, user: res.data.user });
+                                                        alert.success("welcome " + res.data.user.firstname);
+                                                        navigate("/teacher/dashboard");
+
+
+                                                    } else if (res.data.user.role == "student") {
+                                                        setUser({ logedin: true, user: res.data.user });
+                                                        alert.success("welcome " + res.data.user.firstname);
+
+
+
+                                                        navigate("/dashboard")
+                                                    }
+
+                                                }
+                                                if (res.data.success === false) {
+                                                    console.log(res.data);
+                                                    setCheckError(true);
+                                                    setAuthError(res.data.msg);
+                                                }
+
+
+                                            })
+                                            .catch(err => console.log(err));
+
                                     }
 
 
-                                    axios.post(api, {
-                                        email: useremail,
-                                        password: userpassword
-                                    })
-                                        .then((res) => {
-                                            if (res.data.images === false) {
-                                                setShowimageModal(true);
-                                                setid(res.data.userid)
-
-                                            }
-                                            if (res.data.success == true) {
-                                                setCheckError(false);
-                                                const data = { "AuthToken": res.data.AuthToken, "role": res.data.user.role };
-                                                setCookies("user", JSON.stringify(data), { path: "/" });
-
-                                                if (res.data.user.role == "teacher") {
-
-                                                    setUser({ logedin: true, user: res.data.user });
-                                                    alert.show("welcome " + res.data.user.firstname);
-                                                    navigate("/teacher/dashboard");
-
-
-                                                } else if (res.data.user.role == "student") {
-                                                    setUser({ logedin: true, user: res.data.user });
-                                                    alert.show("welcome " + res.data.user.firstname);
-
-
-
-                                                    navigate("/dashboard")
-                                                }
-
-                                            }
-                                            if (res.data.success === false) {
-                                                console.log(res.data);
-                                                setCheckError(true);
-                                                setAuthError(res.data.msg);
-                                            }
-
-
-                                        })
-                                        .catch(err => console.log(err));
 
 
 
 
 
-                                }} />
+                                }} >
+                                    Login
+                                    {
+                                        loading ?<Spinner
+                                        className="ms-3"
+                                            as="span"
+                                            animation="border"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                        />:""
+                                    }
+                                    
+                                </button>
 
 
                             </div>
@@ -193,10 +234,16 @@ function Login() {
 
                                         }
                                         axios
-                                            .post("upload/images/" + id,formdata)
+                                            .post("upload/images/" + id, formdata)
                                             .then((res) => {
-                                                setShowimageModal(false);
-                                                
+                                                if (res.data.success === true) {
+                                                    setImageError("")
+                                                    setShowimageModal(false);
+
+
+
+
+                                                }
                                             })
                                             .catch(err => console.error(err));
 

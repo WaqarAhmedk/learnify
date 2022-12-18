@@ -402,25 +402,37 @@ function ClassDetails() {
 
         <Modal show={showquizresult}>
             <ModalHeader closeButton onClick={closeQuizresult} >Quiz Result</ModalHeader>
+            {
+                console.log(quizresult)
+            }
             <ModalBody>
 
                 <div>
+                <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
+                        <span>Quiz Title </span>
+                        <span>{quizresult.title}</span>
+
+                    </div>
+                    <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
+                        <span>Total Marks</span>
+                        <span>{quizresult.totalmarks}</span>
+
+                    </div>
                     <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
                         <span>Your Score</span>
                         <span>{quizresult.students[0].score}</span>
 
                     </div>
+                   
                     <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
                         <span>Correct Answers</span>
                         <span>{quizresult.students[0].correct}</span>
 
                     </div>
 
-                    <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
-                        <span>Time Spent </span>
-                        <span>43 Minutes</span>
+                   
 
-                    </div>
+                  
                 </div>
             </ModalBody>
         </Modal>

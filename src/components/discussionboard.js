@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import socketClient from "socket.io-client";
 import { UserContext } from '../context/usercontext';
+import { useAlert } from 'react-alert';
 
 
 
@@ -14,6 +15,7 @@ export default function Discussionboard(props) {
   const role = user.user.role;
   const courseid = props.courseid;
   var socket = socketClient("http://localhost:4001", { query: { courseid } });
+  const alert=useAlert();
 
 
 
@@ -77,7 +79,6 @@ export default function Discussionboard(props) {
               messages.map((message) => {
                 return <div key={message._id} className="">
 
-
                   {
                     message.sender._id === user.user._id ?
                       <div className="text-end">
@@ -87,13 +88,13 @@ export default function Discussionboard(props) {
 
                             <div className='d-inline'>
                               <div className='d-inline'>
-                                <small className='me-3'>{message.createdAt}</small>
+                                <small className='me-3 text-primary'>{message.createdAt}</small>
 
                                 {
 
                                   message.sender_type === "teacher" ?
                                     <strong className="primary-font text-success">{message.sender.firstname}</strong>
-                                    : <strong className="primary-font">{message.sender.firstname}</strong>
+                                    : <strong className="primary-font text-primary">{message.sender.firstname}</strong>
                                 }
                               </div>
                               <img src={require("../assets/avatar/"+message.sender.avatar)} className="rounded-circle" style={{ width: "30px", height: "30px" }} />
@@ -152,7 +153,7 @@ export default function Discussionboard(props) {
               <button className="btn btn-warning btn-md" id="btn-chat" onClick={(e) => {
                 e.preventDefault();
                 if (message === "") {
-                  console.log("type a  message plese");
+                  alert.error("Please type a Message First")
                 }
                 else {
                   socket.emit("send_message", {

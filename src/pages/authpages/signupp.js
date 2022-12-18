@@ -2,13 +2,13 @@
 import React, { useState, useEffect, CSSProperties } from "react";
 import "../../style/login.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import Navbarmain from "../mainnavbar";
 import axios from "axios";
+import { Spinner } from "react-bootstrap";
+import { useAlert } from 'react-alert';
 
 
 
 function Signup() {
-    const [loading, setLoading] = useState(true);
 
     let [fname, setfname] = useState("");
     let [fnameerror, setfnameerror] = useState("");
@@ -29,6 +29,7 @@ function Signup() {
     let [formerror, setformerror] = useState("");
     const [role, setRole] = useState("student");
 
+    const [signingup, setSigningup] = useState(false);
 
 
 
@@ -38,6 +39,7 @@ function Signup() {
 
 
     var navigate = useNavigate();
+    const alert = useAlert();
 
 
 
@@ -171,7 +173,7 @@ function Signup() {
                                     }
                                     else {
 
-                                        setpassworderror("* Password must be greater then 8 words");
+                                        setpassworderror("* Password must be greater then 8 Characters");
                                     }
                                 }} />
                             <span className="col error">{passworderror}</span>
@@ -181,7 +183,7 @@ function Signup() {
                         <div className="row email-div">
 
                             <label className="">Select Avatar</label>
-                            <input className="" type="file" accept="image/" onChange={(e) => {
+                            <input className="" type="file" accept="image/*,.jpg,.jpeg" onChange={(e) => {
 
                                 setImage(e.target.files[0])
                                 console.log(image);
@@ -209,9 +211,9 @@ function Signup() {
 
                         <div className="signup-btn mb-4 mt-2 me-3 ms-3">
                             <div className="row">
+                                <button className="btn btn-primary" type="submit" onClick={(e) => {
 
 
-                                <button className="btn btn-primary " onClick={(e) => {
                                     e.preventDefault();
                                     setformerror("");
                                     const formdata = new FormData();
@@ -220,37 +222,62 @@ function Signup() {
                                     formdata.append('email', email);
                                     formdata.append('password', password);
                                     formdata.append('image', image);
+                                    console.log(image);
+
+
 
                                     if (fname === "" || lname === "" || email === "" || password === "" || image === "") {
-                                        setformerror("Form must be filled completly");
+                                        setformerror(" * Form must be filled completly");
+                                    }
+                                    if (fname === "") {
+                                        setfnameerror("* Please Provide your first name")
+                                    }
+                                    if (lname === "") {
+                                        setlnameerror(" * Please Provide your last name")
+                                    }
+                                    if (email === "") {
+                                        setemailerror(" * Please Provide your email")
+                                    }
+
+                                    if (password === "") {
+                                        setpassword(" * Please Provide your password")
+                                    } if (image === "" || image === undefined) {
+                                        setImageError(" * Please Provide your image")
                                     }
 
 
+
                                     else {
-                                        setLoading(true)
+                                        setSigningup(true);
+                                        setImageError("")
 
                                         if (role === 'student') {
                                             axios.post("/signup", formdata)
                                                 .then((res) => {
-                                                    if (res.data.success == true) {
-
+                                                    console.log(res.data);
+                                                    if (res.data.success === true) {
+                                                        alert.success(res.data.msg)
                                                         navigate("/signin");
                                                     }
                                                     else {
+                                                        setSigningup(false);
                                                         setemailerror(res.data.msg)
                                                     }
                                                 })
                                                 .catch(err => console.log(err))
                                         }
                                         else if (role === 'teacher') {
-                                            console.log("dsa");
+
                                             axios.post("/teacher/signup", formdata)
                                                 .then((res) => {
-                                                    if (res.data.success == true) {
+                                                    console.log(res.data);
+                                                    if (res.data.success === true) {
+                                                        alert.success(res.data.msg)
 
                                                         navigate("/signin");
                                                     }
                                                     else {
+                                                        setSigningup(false)
                                                         setemailerror(res.data.msg)
                                                     }
                                                 })
@@ -260,7 +287,21 @@ function Signup() {
 
                                     }
 
-                                }} > Sign Up</button>
+                                }} >
+                                    <span>Signup</span>
+
+                                    {
+                                        signingup ? <Spinner
+                                            as="span"
+                                            animation="border"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                        /> : ""
+                                    }
+
+                                </button>
+
 
 
                             </div>

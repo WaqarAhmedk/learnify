@@ -316,6 +316,9 @@ export default function CourseSettings() {
                                 })
 
                         }
+                        else{
+                            alert.error("PLease write the updated name")
+                        }
 
 
                     }}> Save Changes</button>

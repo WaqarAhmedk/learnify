@@ -75,7 +75,7 @@ export default function AllTeachers(props) {
                                     <td>{teacher.email}</td>
                                     <td>{teacher.createdat}</td>
 
-                                    <td>{teacher.email}</td>
+                                    <td>{teacher.updatedAt}</td>
                                     <td onClick={() => {
                                         setTeacherEmail(teacher.email);
                                         setIdtoDelte(teacher._id);
@@ -114,7 +114,8 @@ export default function AllTeachers(props) {
                         .then((res) => {
                             console.log(res.data);
 
-                            if (res.data.success) {
+                            if (res.data.success===true) {
+                                getAllTeachers();
                                 alert.success(res.data.message);
                                 setShowDelete(false)
                             }

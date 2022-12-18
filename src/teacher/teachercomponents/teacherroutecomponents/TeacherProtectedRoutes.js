@@ -12,7 +12,7 @@ export default function TeacherProtectedRoutes(props) {
 
 
     return (
-        user.logedin ? <> {user.user.role === "teacher" ? <Outlet /> : "jjdkj"} </> : <Navigate to="/" />
+        user.logedin ? <> {user.user.role === "teacher" ? <Outlet /> : ""} </> : <Navigate to="/" />
 
     )
 

@@ -14,7 +14,7 @@ export default function AllStudents(props) {
   const alert = useAlert();
   const [cookies] = useCookies();
   const [admins, setAdmins] = useState([]);
-  const [showdelete, setShowDelete] = useState(false);
+  const [showapprove, setShowApprove] = useState(false);
   const [idtoapprove, setIdtoApprove] = useState();
   const [adminemail, setAdminEmail] = useState("");
 
@@ -71,7 +71,11 @@ export default function AllStudents(props) {
 
                   <td>{admin.email}</td>
 
-                  <td><button className='btn btn-primary btn-sm'>Approve</button></td>
+                  <td><button className='btn btn-primary btn-sm' onClick={()=>{
+                    setAdminEmail(admin.email);
+                    setIdtoApprove(admin._id);
+                    setShowApprove(true);
+                  }}>Approve</button></td>
 
 
 
@@ -85,8 +89,8 @@ export default function AllStudents(props) {
 
       </tbody>
     </table>
-    <Modal show={showdelete}>
-      <ModalHeader>Remove Teacher {adminemail} </ModalHeader>
+    <Modal show={showapprove}>
+      <ModalHeader>Approve Admin {adminemail} </ModalHeader>
       <ModalBody>
         <span className='d-block'>Are You sure You want to Approve this Admin ? </span>
         <span className='btn-warning '>This action cannot be undone</span>
@@ -95,22 +99,23 @@ export default function AllStudents(props) {
         <button className='btn btn-primary ' onClick={(e) => {
 
           e.preventDefault();
+          
           axios
-            .post("/approve-admin/adminid" + idtoapprove, {}, {
+            .post("/approve-admin/" + idtoapprove, {}, {
               headers: {
                 'admin-auth-token': cookies.user.AuthToken
 
               }
             })
             .then((res) => {
-              console.log(res.data);
 
-              if (res.data.success) {
+              if (res.data.success===true) {
                 alert.success(res.data.message);
-                setShowDelete(false)
+                setShowApprove(false);
+                getAllAdmins()
               }
               else {
-                alert.info(res.data.message)
+                alert.error(res.data.message)
 
               }
 
@@ -118,11 +123,11 @@ export default function AllStudents(props) {
             .catch(err => console.error(err));
 
 
-        }}>Remove Teacher</button>
+        }}>Approve Admin</button>
         <button className='btn btn-secondry ' onClick={() => {
           setAdminEmail("");
           setIdtoApprove("");
-          setShowDelete(false);
+          setShowApprove(false);
 
         }}>cancel</button>
 

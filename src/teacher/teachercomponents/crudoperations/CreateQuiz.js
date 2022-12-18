@@ -28,12 +28,14 @@ export default function CreateQuiz() {
     const [addComponent, context] = useContext(QuizContext);
     const [finalquestions] = context['finalquestions'];
     const [quiztime, setQuiztime] = useState(new Date());
-    const [allowedtime, setAllowedtime] = useState("15");
+    const [allowedtime, setAllowedtime] = useState("5");
     const [datatosubmit, setData] = useState({});
     const [topics, setTopics] = useState([]);
     const [selectedtopic, setSelectedTopic] = useState("");
-    const [title, setTitle] = useState("Quiz");
+    const [title, setTitle] = useState("");
     const [availabletill, setAvailabletill] = useState("");
+    const [selectedtopicerror, setSelectedTopicError] = useState("");
+    const [formerror, setFormError] = useState("")
 
     useEffect(() => {
         axios
@@ -70,7 +72,7 @@ export default function CreateQuiz() {
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>Quiz Details</Accordion.Header>
                     <Accordion.Body>
-                        <h6 className='bg-danger'>PLease Fill this info first</h6>
+                    <span className="col ms-3 error">{formerror}</span>
                         <div>
                             <div className='mt-3 mb-3'>
                                 <span className='me-5'>Quiz Title</span>
@@ -113,6 +115,7 @@ export default function CreateQuiz() {
                                     }
 
                                 </select>
+                                <span className="col ms-3 error">{selectedtopicerror}</span>
 
                             </div>
 
@@ -152,38 +155,51 @@ export default function CreateQuiz() {
 
 
                 const convertedtime = quiztime.toLocaleString();
-                const endingtime=availabletill.toLocaleString();
+                const endingtime = availabletill.toLocaleString();
 
                 if (selectedtopic === "") {
                     console.log(selectedtopic);
+                    setSelectedTopicError("Please Select a topic to Create Quiz ")
                     alert.error("PLase Select a topic to create Quiz")
 
                 }
                 else {
                     const final = quiztime.toString();
-                    console.log(final);
+                    setSelectedTopicError("")
 
-                    axios
-                        .post("/create-quiz/" + selectedtopic, { finalquestions, title, allowedtime, convertedtime, courseid ,endingtime }, {
-                            headers: {
-                                'teacher-auth-token': cookies.user.AuthToken
 
-                            }
-                        })
-                        .then((res) => {
-                            if (res.data.success === true) {
-                                alert.success(res.data.message);
-                                navigate('/teacher/dashboard/classdetails/' + courseid)
+                    if (title === "" || quiztime === "" || availabletill === "") {
+                        setFormError("Please fill all the details below")
 
-                            }
-                            else {
-                                alert.error(res.data)
-                            }
-                        })
-                        .catch(err => console.error(err));
+                    }
+                    else {
+                        axios
+                            .post("/create-quiz/" + selectedtopic, { finalquestions, title, allowedtime, convertedtime, courseid, endingtime }, {
+                                headers: {
+                                    'teacher-auth-token': cookies.user.AuthToken
+
+                                }
+                            })
+                            .then((res) => {
+                                if (res.data.success === true) {
+                                    alert.success(res.data.message);
+                                    navigate('/teacher/dashboard/classdetails/' + courseid)
+
+                                }
+                                else {
+                                    alert.error(res.data)
+                                }
+                            })
+                            .catch(err => console.error(err));
+                    }
+
+
                 }
 
 
+            }
+            else {
+                alert.info("Please add 1 Question Atleast")
             }
         }}>Finish and Creat Quiz</button>
 

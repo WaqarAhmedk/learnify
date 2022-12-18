@@ -6,10 +6,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "react-bootstrap";
+import { useAlert } from 'react-alert';
 
 
-import { CourseContext } from "./context/Coursecontext";
 
 function TeacherClasses(props) {
 
@@ -22,6 +22,11 @@ function TeacherClasses(props) {
     const [show, setShow] = useState(false);
     const [query, setQuery] = useState("");
     const [filteredresult, setFilteredResult] = useState([]);
+    const [nameError, setNameError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+
+    const alert = useAlert();
 
     const openform = () => {
         setShow(true)
@@ -85,11 +90,11 @@ function TeacherClasses(props) {
                             console.log(result);
 
                         }
-                        else{
+                        else {
                             setFilteredResult(tclasses)
                         }
                     }} />
-                   
+
                 </div>
 
 
@@ -136,21 +141,31 @@ function TeacherClasses(props) {
             <ModalHeader closeButton onClick={closeform}>Create a Course</ModalHeader>
             <ModalBody>
                 <form>
-                    <div class="form-group">
+                    <div className="form-group">
                         <label for="examzpleInputEmail1">COURSE NAME</label>
-                        <input type="text" class="form-control" placeholder="Enter Course name" value={formcoursename} onChange={(e) => {
+                        <input type="text" className="form-control" placeholder="Enter Course name" value={formcoursename} onChange={(e) => {
                             setformCoursename(e.target.value);
                         }} />
                     </div>
+                    <span className="col ms-3 error">{nameError}</span>
+
 
 
 
                 </form>
             </ModalBody>
             <ModalFooter>
-                <button type="submit" class="btn btn-primary" onClick={(e) => {
+                <button type="submit" className="btn btn-primary" onClick={(e) => {
+                    if (formcoursename === "") {
+                        setNameError("Please Provide Course Name")
+
+                    }
                     e.preventDefault();
                     if (formcoursename !== "") {
+                        setLoading(true);
+
+                        setNameError("")
+
                         axios
                             .post("/create-course", {
                                 coursename: formcoursename,
@@ -162,12 +177,14 @@ function TeacherClasses(props) {
                             })
                             .then((res) => {
                                 if (res.data.success === true) {
-
+                                    setLoading(false);
+                                    alert.success(res.data.msg);
+                                    setformCoursename("")
                                     getAllcourses();
 
                                 }
                                 else {
-                                    console.log(res.data);
+                                    alert.error(res.data.msg)
 
                                 }
                                 closeform();
@@ -175,7 +192,16 @@ function TeacherClasses(props) {
                             .catch(err => console.error(err));
 
                     }
-                }}>Create</button>
+                    else {
+
+                    }
+                }}>Create {loading ? <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                /> : ""}</button>
             </ModalFooter>
         </Modal>
     </>

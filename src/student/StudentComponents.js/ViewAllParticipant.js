@@ -1,21 +1,21 @@
 import React, { useContext } from 'react';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useAlert } from 'react-alert';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Modal, ModalBody, ModalHeader } from 'react-bootstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
 
 
 export default function ViewAllParticipants(props) {
 
     const alert = useAlert();
     const courseid = props.courseid;
-    const [cookies]=useCookies();
+    const [cookies] = useCookies();
     const [participants, setParticipants] = useState([]);
 
+
+   
 
     const getAllParticipants = () => {
         console.log(courseid);
@@ -53,7 +53,7 @@ export default function ViewAllParticipants(props) {
                                 <th>PROFILE PIC</th>
                                 <th>Student ID</th>
                                 <th>Student EMAIL</th>
-                                
+
 
                             </tr>
                         </thead>
@@ -67,7 +67,7 @@ export default function ViewAllParticipants(props) {
                                         </td>
                                         <td>{participant.firstname + " " + participant.lastname}</td>
                                         <td>{participant.email}</td>
-                                       
+
                                     </tr>
                                 })
                             }
@@ -78,5 +78,8 @@ export default function ViewAllParticipants(props) {
                 }
             </ModalBody>
         </Modal>
+
+
+     
     </>)
 }

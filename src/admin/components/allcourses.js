@@ -120,7 +120,8 @@ export default function AllStudents(props) {
                         .then((res) => {
                             console.log(res.data);
 
-                            if (res.data.success) {
+                            if (res.data.success===true) {
+                                getAllCourses()
                                 alert.success(res.data.message);
                                 setShowDelete(false)
                             }

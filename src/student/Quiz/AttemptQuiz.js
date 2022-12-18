@@ -52,7 +52,7 @@ export default function AttemptQuiz() {
     const [quizdata, setQuizdata] = useState({});
 
     const [attemptedquestions, setAttemptedQuestions] = useState(0);
-    const [timespent, setTimespent] = useState(0.0);
+    const [timespent, setTimespent] = useState(0);
 
 
 
@@ -60,9 +60,10 @@ export default function AttemptQuiz() {
 
     const { seconds, minutes, hours, restart, } = useTimer({
         allowedtime, onExpire: () => {
+            setTimespent(num / 60)
+
             setFinish(true);
 
-            setTimespent(num / 60)
             SendQuizResults();
 
 
@@ -74,7 +75,6 @@ export default function AttemptQuiz() {
 
     const SendQuizResults = () => {
 
-        console.log(timespent);
 
         axios
             .post("/submit-quiz/" + quizid, {

@@ -2,10 +2,9 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { Cookies, useCookies } from "react-cookie";
 import { useAlert } from "react-alert";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
 import { UserContext } from "../context/usercontext";
+
 import "../style/login.css"
 
 
@@ -20,8 +19,6 @@ function AdminSignUp() {
 
     let [useremail, setuseremail] = useState("");
     let [userpassword, setuserpassword] = useState("");
-    const [autherror, setAuthError] = useState("");
-    const [checkerror, setCheckError] = useState(false);
 
 
 
@@ -43,6 +40,7 @@ function AdminSignUp() {
 
                 </div>
                 <div className="col-6 signup-form  login-div">
+                    <span className="error">{error}</span>
 
                     <form className="login-form">
                         <div className="row email-div">
@@ -65,12 +63,8 @@ function AdminSignUp() {
                             <input className="" type="password" placeholder="********" value={userpassword} onChange={(e) => {
                                 setuserpassword(e.target.value);
                             }} />
-                            <span className="error">{error}</span>
                         </div>
-                        {
-                            checkerror ? <div className="alert alert-danger mt-1">{autherror}</div>
-                                : ""
-                        }
+
 
 
 
@@ -82,27 +76,36 @@ function AdminSignUp() {
                                 <button className='btn btn-primary' onClick={(e) => {
                                     e.preventDefault();
                                     if (useremail === "" || userpassword === "" || name === "") {
-                                        seterror("PLease Provide useremail and Password")
+                                        seterror("PLease fill the form completly")
 
 
                                     }
+                                    else {
+                                        seterror("")
+                                        axios
+                                            .post("/admin/signup",
+                                                {
+                                                    email: useremail,
+                                                    password: userpassword,
+                                                    name: name
+                                                })
+                                            .then((res) => {
 
-                                    axios
-                                        .post("/admin/signup",
-                                            {
-                                                email: useremail,
-                                                password: userpassword,
-                                                name: name
+                                                if (res.data.success === true) {
+                                                    navigate("/admin/login");
+                                                    alert.success(res.data.msg)
+
+
+                                                } else {
+                                                    seterror(res.data.msg);
+                                                    alert.error(res.data.msg)
+                                                }
                                             })
-                                        .then((res) => {
+                                            .catch(err => console.error(err));
+                                        console.log(useremail, userpassword);
+                                    }
 
-                                            if (res.data.succes===true) {
-                                                navigate("/admin/login")
-                                                
-                                            }
-                                                                                })
-                                        .catch(err => console.error(err));
-                                    console.log(useremail, userpassword);
+
                                 }}>Sign Up</button>
                             </div>
 

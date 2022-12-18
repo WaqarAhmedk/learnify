@@ -20,6 +20,10 @@ export default function CreateActivities(props) {
     const context = useContext(CourseContext);
     const [coursename, setCoursename] = context['course'];
     const [topics, setTopics] = context['topics'];
+    const [topicnamerror, setTopicNameError] = useState("");
+    const [assignmenterror, setAssignmentError] = useState("");
+    const [optionerror, setOptionError] = useState("");
+    const [classerror, setClassError] = useState("");
 
 
 
@@ -229,7 +233,7 @@ export default function CreateActivities(props) {
 
                     <span className="course-mang-list" onClick={OpenVid_session}>Online Class</span>
 
-                    <span className="course-mang-list" onClick={OpenHlp_matr}>Helping Material</span>
+                    {/* <span className="course-mang-list" onClick={OpenHlp_matr}>Helping Material</span> */}
 
                 </div>
 
@@ -252,12 +256,15 @@ export default function CreateActivities(props) {
                                 setTopicname(e.target.value);
                             }} />
                         </div>
+                        <span className="col ms-3 error">{topicnamerror}</span>
+
                     </form>
                 </ModalBody>
                 <ModalFooter>
                     <button type="submit" class="btn btn-primary" onClick={(e) => {
                         e.preventDefault();
                         if (topicname !== "") {
+                            setTopicNameError("");
                             axios
                                 .post("/create-topic/" + courseid, {
                                     title: topicname,
@@ -283,6 +290,10 @@ export default function CreateActivities(props) {
                                 .catch(err => console.error(err));
 
                         }
+                        else {
+                            setTopicNameError("Please Provide Topic name ")
+
+                        }
                     }}>Create</button>
                 </ModalFooter>
 
@@ -297,6 +308,7 @@ export default function CreateActivities(props) {
 
 
 
+                    <span className="col ms-3 error">{assignmenterror}</span>
 
                     <div className="mb-3">
 
@@ -342,6 +354,9 @@ export default function CreateActivities(props) {
                         }
 
                     </select>
+                    <span className="col ms-3 error">{optionerror}</span>
+
+
 
                     <br />
 
@@ -359,38 +374,60 @@ export default function CreateActivities(props) {
                 </ModalBody>
                 <ModalFooter>
                     <button className="btn btn-primary" type="submit" onClick={(e) => {
-                        e.preventDefault();
-                        console.log(Asgmdate);
-                        const formdata = new FormData();
-                        formdata.append("title", Asgm_title);
-                        formdata.append("courseid", courseid);
-                        formdata.append("description", Asgm_Desc);
-                        formdata.append("submissiondate", Asgmdate);
-                        formdata.append("file", Asgmfile);
-                        axios
-                            .post("/create-assignment/" + optionvalue, formdata,
-                                {
-                                    headers: {
-                                        'teacher-auth-token': cookies.user.AuthToken,
-                                        headers:
-                                        {
-                                            'content-type': 'multipart/form-data',
+                        if (Asgm_title === "" || Asgm_Desc === "" || Asgmdate === "" || Asgmfile === undefined) {
+                            setAssignmentError("Please fill all the fields")
+                        }
+                        if (optionvalue === "") {
+                            setOptionError("A topic must be selected")
+
+                        }
+                        else {
+
+                            e.preventDefault();
+                            setOptionError("");
+                            console.log(Asgmdate);
+                            const formdata = new FormData();
+                            formdata.append("title", Asgm_title);
+                            formdata.append("courseid", courseid);
+                            formdata.append("description", Asgm_Desc);
+                            formdata.append("submissiondate", Asgmdate);
+                            formdata.append("file", Asgmfile);
+                            axios
+                                .post("/create-assignment/" + optionvalue, formdata,
+                                    {
+                                        headers: {
+                                            'teacher-auth-token': cookies.user.AuthToken,
+                                            headers:
+                                            {
+                                                'content-type': 'multipart/form-data',
+                                            }
                                         }
                                     }
-                                }
-                            ).then((res) => {
-                                getAllTopics();
-                                alert.success(res.data.message)
+                                ).then((res) => {
 
-                                setAsgm_title("");
-                                setAsgm_Desc("");
-                                setAsgmdate("");
-                                setAsgmfile("");
-                                setcrt_assginment(false)
+                                    if (res.data.success === false) {
+                                        alert.error(res.data.message);
+                                        setAssignmentError(res.data.message)
+
+                                    } else {
+                                        getAllTopics();
+                                        alert.success(res.data.message)
+
+                                        setAsgm_title("");
+                                        setAsgm_Desc("");
+                                        setAsgmdate("");
+                                        setAsgmfile("");
+                                        setcrt_assginment(false);
+                                        setAssignmentError("");
+                                        setOptionvalue("");
+                                    }
 
 
-                            })
-                            .catch(err => console.error(err));
+
+                                })
+                                .catch(err => console.error(err));
+                        }
+
                     }}> Save Changes</button>
                     <button type="button" className="btn btn-secondary" onClick={Closecrt_assginment}>Cancel</button>
                 </ModalFooter>
@@ -408,6 +445,8 @@ export default function CreateActivities(props) {
             <Modal show={Vid_session}>
                 <ModalHeader closeButton onClick={CloseVid_session}>CREATE ONLINE CLASS</ModalHeader>
                 <ModalBody>
+                <span className="col ms-3 error">{classerror}</span>
+
 
                     <div className="mb-3">
 
@@ -440,6 +479,8 @@ export default function CreateActivities(props) {
                         }
 
                     </select>
+                    <span className="col ms-3 error">{optionerror}</span>
+
 
                     <div className="mb-3">
                         <label className="form-label">Online Class Time</label>
@@ -461,33 +502,48 @@ export default function CreateActivities(props) {
                 <ModalFooter>
                     <button type="submit" className="btn btn-primary" onClick={(e) => {
 
-                        e.preventDefault();
 
-                        const convertedtime = class_time.toLocaleString();
-                        const expirytime=class_expirytime.toLocaleString();
-                        axios
-                            .post("/create-online-class/" + optionvalue,
-                                {
-                                    title: class_title,
-                                    description: class_Desc,
-                                    classtime: convertedtime,
-                                    expirytime:expirytime,
+                        if (optionvalue === "") {
+                            setOptionError("Please Select a topic")
 
-                                },
-                                {
-                                    headers: {
-                                        'teacher-auth-token': cookies.user.AuthToken,
+                        }
+                        if (class_Desc === "" || class_time === "" || class_time === "" || class_expirytime === "") {
+                            setClassError("PLease fill all the information")
+                        }
 
+                        else {
+                            setOptionError("");
+                            setClassError("");
+                            e.preventDefault();
+
+                            const convertedtime = class_time.toLocaleString();
+                            const expirytime = class_expirytime.toLocaleString();
+                            axios
+                                .post("/create-online-class/" + optionvalue,
+                                    {
+                                        title: class_title,
+                                        description: class_Desc,
+                                        classtime: convertedtime,
+                                        expirytime: expirytime,
+
+                                    },
+                                    {
+                                        headers: {
+                                            'teacher-auth-token': cookies.user.AuthToken,
+
+                                        }
                                     }
-                                }
-                            ).then((res) => {
-                                if (res.data.success === true) {
-                                    getAllTopics();
-                                    alert.success(res.data.message);
-                                    CloseVid_session()
-                                }
-                            })
-                            .catch(err => console.error(err));
+                                ).then((res) => {
+                                    if (res.data.success === true) {
+                                        getAllTopics();
+                                        setClass_Desc("");
+                                        setClass_title("");
+                                        alert.success(res.data.message);
+                                        CloseVid_session()
+                                    }
+                                })
+                                .catch(err => console.error(err));
+                        }
                     }}> Create Class</button>
                     <button type="button" className="btn btn-secondary" onClick={CloseVid_session}>Cancel</button>
                 </ModalFooter>
