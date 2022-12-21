@@ -195,7 +195,9 @@ function Login() {
 
                         </div>
                         <Modal show={showimagemodal}>
-                            <ModalHeader>Upload Images</ModalHeader>
+                            <ModalHeader closeButton onClick={()=>{
+                                setShowimageModal(false);
+                            }}> Upload Images</ModalHeader>
                             <ModalBody>
                                 <span>Please Upload your two pictures</span>
                                 <div className="row form ">
@@ -204,7 +206,7 @@ function Login() {
 
 
                                         <div className="input-group mb-3 ">
-                                            <input type="file" multiple accept="image/*" className="row email-div" onChange={(e) => {
+                                            <input type="file" multiple accept="image/*"  required className="row email-div" onChange={(e) => {
                                                 setImages(e.target.files)
 
                                             }} />
@@ -225,8 +227,11 @@ function Login() {
                                     else if (images.length > 2) {
                                         setImageError("Please select Only 2 images")
                                     }
+                                    else{
+                                        setImageError("");
+                                    }
 
-                                    if (!imageerror) {
+                                    if (imageerror==="") {
                                         let formdata = new FormData();
 
                                         for (let i = 0; i < images.length; i++) {
