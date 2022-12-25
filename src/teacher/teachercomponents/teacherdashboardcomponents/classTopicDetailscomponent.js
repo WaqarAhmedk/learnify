@@ -16,6 +16,7 @@ import { useAlert } from 'react-alert';
 import UpdateOnlineClass from '../crudoperations/UpdateOnlineclass';
 import UpdateQuiz from '../crudoperations/UpdateQuiz';
 import ViewAssignmentsrecord from './viewAssignmentsrecord';
+import OnlineClassRecord from './onlineclassrecord';
 
 
 
@@ -42,6 +43,8 @@ export default function ClassTopicsDetail() {
     const [showUpdateClass, setShowUpdateClass] = useState(false);
     const [showQuizupdate, setShowQuizUpdate] = useState(false);
     const [showAssignmentRecord, setShowAssignmentRecord] = useState(false);
+    const [showOnlineClassRecord, setShowOnlineClassRecord] = useState(false);
+    const [onlineSessionid, setOnlineSessionid] = useState("");
 
 
 
@@ -255,7 +258,8 @@ export default function ClassTopicsDetail() {
 
                                                                 }}>Start Class</span>
                                                                 <span className='btn btn-primary btn-sm ms-2' onClick={() => {
-
+                                                                    setShowOnlineClassRecord(true);
+                                                                    setOnlineSessionid(item._id)
 
                                                                 }}>View Records</span>
                                                             </div>
@@ -459,6 +463,17 @@ export default function ClassTopicsDetail() {
                     setToUpdateTopicId("");
                 }}
 
+
+            />
+
+            <OnlineClassRecord
+                show={showOnlineClassRecord}
+                courseid={courseid}
+                id={onlineSessionid}
+                onHide={() => {
+                    setShowOnlineClassRecord(false);
+                    setOnlineSessionid("")
+                }}
 
             />
 

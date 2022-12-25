@@ -6,6 +6,8 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useAlert } from 'react-alert';
 import { useNavigate } from 'react-router-dom';
+import UpdateAvatar from '../components/updateavatar';
+
 
 
 
@@ -16,6 +18,7 @@ export default function UpdateProfile() {
     const [cookies] = useCookies();
     const alert = useAlert();
     const navigate = useNavigate();
+    const [showUpdateAvatar, setShowUpdateAvatar] = useState(false);
 
     let [fname, setfname] = useState("");
     let [fnameerror, setfnameerror] = useState("");
@@ -47,39 +50,39 @@ export default function UpdateProfile() {
     const [role, setRole] = useState("student");
     useEffect(() => {
 
-      if(cookies.user.role==="student"){
-        axios
-        .get("/getstudent", {
-            headers: {
-                "student-auth-token": cookies.user.AuthToken
-            }
-        })
-        .then((res) => {
-            setfname(res.data.firstname);
-            setlname(res.data.lastname);
-            setemail(res.data.email);
-            setNewemail(res.data.email);
-            setpassword("**************");
+        if (cookies.user.role === "student") {
+            axios
+                .get("/getstudent", {
+                    headers: {
+                        "student-auth-token": cookies.user.AuthToken
+                    }
+                })
+                .then((res) => {
+                    setfname(res.data.firstname);
+                    setlname(res.data.lastname);
+                    setemail(res.data.email);
+                    setNewemail(res.data.email);
+                    setpassword("**************");
 
-        })
-        .catch(err => console.error(err));
-      }else{
-        axios
-        .get("/getteacher", {
-            headers: {
-                "teacher-auth-token": cookies.user.AuthToken
-            }
-        })
-        .then((res) => {
-            setfname(res.data.firstname);
-            setlname(res.data.lastname);
-            setemail(res.data.email);
-            setNewemail(res.data.email);
-            setpassword("**************");
+                })
+                .catch(err => console.error(err));
+        } else {
+            axios
+                .get("/getteacher", {
+                    headers: {
+                        "teacher-auth-token": cookies.user.AuthToken
+                    }
+                })
+                .then((res) => {
+                    setfname(res.data.firstname);
+                    setlname(res.data.lastname);
+                    setemail(res.data.email);
+                    setNewemail(res.data.email);
+                    setpassword("**************");
 
-        })
-        .catch(err => console.error(err));
-      }
+                })
+                .catch(err => console.error(err));
+        }
     }, [])
 
     return <div className="">{
@@ -109,7 +112,9 @@ export default function UpdateProfile() {
                                     <div className="mt-2">
                                         <button className="btn btn-primary" type="button">
                                             <i className="fa fa-fw fa-camera"></i>
-                                            <span>Change Photo</span>
+                                            <span onClick={ ()=>{
+                                                setShowUpdateAvatar(true)
+                                            }} >Change Photo</span>
                                         </button>
                                     </div>
                                 </div>
@@ -310,6 +315,11 @@ export default function UpdateProfile() {
                 </div>
             </div>
         </center>
+
+        <UpdateAvatar
+            show={showUpdateAvatar}
+            onHide={() => setShowUpdateAvatar(false)}
+        />
     </div >
 
 }

@@ -32,6 +32,7 @@ import Tasks from './components/Tasks';
 import Notifications from './components/Notifications';
 import TeacherEvents from './teacher/teachercomponents/teacherevents';
 import AdminProtectedRoutes from './admin/AdminProtectedRoute';
+import StudentProtectedRoutes from './student/StudentComponents.js/StudentProtectedroutes';
 
 function App() {
 
@@ -71,6 +72,8 @@ function App() {
 
 
           {/* Admin */}
+
+       
           <Route exact path='/admin' element={<Adminhomepage />} />
           <Route exac path='/admin/login' element={<AdminLogin />} />
           <Route exac path='/admin/signup' element={<AdminSignUp />} />
@@ -78,17 +81,23 @@ function App() {
 
           {/* Student */}
 
-          <Route exact path="/dashboard" element={<Dashboard />} />
-          <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
-          <Route exact path='/startquiz/:quizid' element={<StartQuiz />} />
-          <Route exact path='/attemptquiz/:quizid' element={<AttemptQuiz />} />
-          <Route exact path="/events" element={<Calendar />} />
-          <Route exac path='/tasks' element={<Tasks />} />
-          <Route exac path='/notifications' element={<Notifications />} />
-          <Route exact path='/face' element={<FaceRecognition />} />
-          <Route exact path='/meeting/:id' element={<Room />} />
-          <Route exact path='/updateprofile' element={<UpdateProfile />} />
-          {/* <Route exact path='/participationReport' element={<ParticipationReport />} /> */}
+          <Route element={<StudentProtectedRoutes />}>
+
+            <Route exact path="/dashboard" element={<Dashboard />} />
+            <Route exact path='/dashboard/classdetails' element={<ClassDetails />} />
+            <Route exact path='/startquiz/:quizid' element={<StartQuiz />} />
+            <Route exact path='/attemptquiz/:quizid' element={<AttemptQuiz />} />
+            <Route exact path="/events" element={<Calendar />} />
+            <Route exac path='/tasks' element={<Tasks />} />
+            <Route exac path='/notifications' element={<Notifications />} />
+            <Route exact path='/face' element={<FaceRecognition />} />
+            <Route exact path='/meeting/:id' element={<Room />} />
+            <Route exact path='/updateprofile' element={<UpdateProfile />} />
+            {/* <Route exact path='/participationReport' element={<ParticipationReport />} /> */}
+
+          </Route>
+
+
 
 
           {/* teacher */}

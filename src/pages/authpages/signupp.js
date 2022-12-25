@@ -71,7 +71,7 @@ function Signup() {
                                 <label className="col">Last Name</label>
                             </div>
                             <div className="form-input-1">
-                                <input className="col" type="text" value={fname} placeholder="First Name" onChange={(e) => {
+                                <input className="col" type="text" required value={fname} placeholder="First Name" onChange={(e) => {
                                     fname = e.target.value;
                                     setfname(fname);
                                 }}
@@ -96,7 +96,7 @@ function Signup() {
                                     }} />
 
 
-                                <input className="col" type="text" placeholder="Last Name" value={lname} onChange={(e) => {
+                                <input className="col" type="text" required placeholder="Last Name" value={lname} onChange={(e) => {
 
                                     lname = e.target.value;
                                     setlname(lname);
@@ -129,7 +129,7 @@ function Signup() {
                         <div className="row email-div">
 
                             <label className="">Email</label>
-                            <input className="" type="email" value={email} onChange={(e) => {
+                            <input className="" type="email" required value={email} onChange={(e) => {
                                 email = e.target.value;
                                 setemail(email);
 
@@ -156,7 +156,7 @@ function Signup() {
                         <div className="row email-div">
 
                             <label className="">Password</label>
-                            <input type="password" placeholder="*****" onChange={(e) => {
+                            <input type="password" required placeholder="*****" onChange={(e) => {
 
                                 password = e.target.value;
                                 setpassword(password);
@@ -183,7 +183,7 @@ function Signup() {
                         <div className="row email-div">
 
                             <label className="">Select Avatar</label>
-                            <input className="" type="file" accept="image/*,.jpg,.jpeg" onChange={(e) => {
+                            <input className="" required type="file" accept="image/*,.jpg,.jpeg" onChange={(e) => {
 
                                 setImage(e.target.files[0])
                                 console.log(image);
@@ -193,25 +193,29 @@ function Signup() {
                             <span className="col error">{imageerror}</span>
 
                         </div>
-                        <label className="mt-3">Signup as A </label>
+                        <div className="row email-div">
+                            <label className="mt-3 mb-1">Signup as </label>
 
-                        <select className="form-select" aria-label="Default select example" onChange={(e) => {
-                            setRole(e.target.value)
-                        }}>
-                            <option value="student">Student</option>
+                            <select className="form-select" aria-label="Default select example" onChange={(e) => {
+                                setRole(e.target.value)
+                            }}>
+                                <option value="student">Student</option>
 
-                            <option value="teacher">Teacher</option>
-
-
+                                <option value="teacher">Teacher</option>
 
 
-                        </select>
+
+
+                            </select>
+
+                        </div>
 
 
 
                         <div className="signup-btn mb-4 mt-2 me-3 ms-3">
                             <div className="row">
-                                <button className="btn btn-primary" type="submit" onClick={(e) => {
+                                
+                                <button className="btn btn-primary"  onClick={(e) => {
 
 
                                     e.preventDefault();
@@ -279,6 +283,7 @@ function Signup() {
                                                     else {
                                                         setSigningup(false)
                                                         setemailerror(res.data.msg)
+                                                        e.preventDefault()
                                                     }
                                                 })
                                                 .catch(err => console.log(err))

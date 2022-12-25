@@ -27,7 +27,9 @@ function ClassDetails() {
     const [topics, setTopics] = useState([]);
     const [cookies, setCookies] = useCookies();
     const [desc, setDesc] = useState("");
-    const [quizresult, setQuizresult] = useState({ students: [{ score: 0, correct: 0, wrong: 0 }] });
+    const [quizresult, setQuizresult] = useState({  });
+    const [marks, setMarks] = useState({ score: 0, correct: 0 });
+
     const [shwoAllparticpant, setShowAllParticpant] = useState(false);
 
     const popover = (
@@ -93,9 +95,13 @@ function ClassDetails() {
                 }
             })
             .then((res) => {
+                console.log(res.data);
                 if (res.data.success === true) {
-                    setQuizresult(res.data.details)
+                    setQuizresult(res.data.details);
+                    setMarks(res.data.marks)
                     openQuizresult();
+                }else{
+                    alert.info(res.data.message)
                 }
 
             })
@@ -113,7 +119,6 @@ function ClassDetails() {
             }
         })
             .then((res) => {
-                console.log(res.data);
                 if (res.data.success === true) {
                     console.log(res.data);
                     setTopics(res.data.topics)
@@ -402,9 +407,7 @@ function ClassDetails() {
 
         <Modal show={showquizresult}>
             <ModalHeader closeButton onClick={closeQuizresult} >Quiz Result</ModalHeader>
-            {
-                console.log(quizresult)
-            }
+           
             <ModalBody>
 
                 <div>
@@ -420,13 +423,13 @@ function ClassDetails() {
                     </div>
                     <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
                         <span>Your Score</span>
-                        <span>{quizresult.students[0].score}</span>
+                        <span>{marks.score}</span>
 
                     </div>
                    
                     <div className="d-flex justify-content-between ps-3 pe-3 mb-3">
                         <span>Correct Answers</span>
-                        <span>{quizresult.students[0].correct}</span>
+                        <span>{marks.correct}</span>
 
                     </div>
 

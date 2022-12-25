@@ -60,6 +60,19 @@
     width: 45%;
     box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.07);
     border-radius: 24px;
+    margin-top: 10px;
+    margin-left: 10%;
+    margin-bottom: 40px;
+    padding-left: 2%;
+    padding-right: 4%;
+    height: fit-content;
+}
+.l-form {
+  
+    background-color: #FFFFFF;
+    width: 45%;
+    box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.07);
+    border-radius: 24px;
     margin-top: 20px;
     margin-left: 10%;
     margin-bottom: 40px;

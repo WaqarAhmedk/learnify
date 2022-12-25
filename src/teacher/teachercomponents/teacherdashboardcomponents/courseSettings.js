@@ -163,9 +163,8 @@ export default function CourseSettings() {
                         </form>
 
                         {St_show ? <Studentcard
-                            title={getStudent.firstname}
-
-
+                            fname={getStudent.firstname}
+                            lname={getStudent.lastname}
                             image={getStudent.avatar}
                             email={getStudent.email}
                             std_id={getStudent._id}

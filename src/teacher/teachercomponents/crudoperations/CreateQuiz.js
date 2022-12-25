@@ -137,6 +137,7 @@ export default function CreateQuiz() {
 
 
         </div>
+        {/* quiz creation form */}
         <QuizComponent />
 
         <div className='quiz-add'>
@@ -201,7 +202,7 @@ export default function CreateQuiz() {
             else {
                 alert.info("Please add 1 Question Atleast")
             }
-        }}>Finish and Creat Quiz</button>
+        }}>Finish and Create Quiz</button>
 
     </>)
 }

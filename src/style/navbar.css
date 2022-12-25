@@ -113,8 +113,9 @@ text-align: center;
 
 }
 .drop-down-menu-item:hover{
-  background-color: #4C7DFE;
-  color: white;
+  background-color: #edeff3;
+  color: blue;
+  cursor: pointer;
 }
 
 

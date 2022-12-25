@@ -19,7 +19,7 @@ export default function Adminhomepage() {
     const navigate = useNavigate();
     const alert = useAlert();
     console.log(user);
-    const [Cookies, setCookies, removeCookie] = useCookies('user');
+    const [Cookies, removeCookie] = useCookies('user');
 
     const [sidebar, setSidebar] = useState("sidebaropen");
     const [sidebaropen, setSidebaropen] = useState("sidebar-open-content-div");
@@ -42,7 +42,7 @@ export default function Adminhomepage() {
 
     }
 
-
+    
 
 
 
@@ -51,63 +51,66 @@ export default function Adminhomepage() {
         {/* Sidebar  */}
 
 
-        <div className='d-flex'>
-            <div id="mySidenav" className={sidebar}>
-                <div className='header'>
-                    <img src={require("../assets/images/images.png")} />
-                    <div>
-                        <span>{user.user.name}</span>
-                        <p>{user.user.email}</p>
+           
+
+                    <div className='d-flex'>
+                        <div id="mySidenav" className={sidebar}>
+                            <div className='header'>
+                                <img src={require("../assets/images/images.png")} />
+                                <div>
+                                    <span>{user.user.name}</span>
+                                    <p>{user.user.email}</p>
+                                </div>
+                                <span onClick={() => {
+
+                                    if (Cookies.user.role === "admin") {
+                                        removeCookie('user', { path: "/" })
+
+                                        setUser({});
+                                        alert.success("You Logged Out Successfully")
+
+                                        navigate("/admin/login")
+                                    }
+                                }}>Logout</span>
+                            </div>
+
+
+                            <div className='sidebar-options'>
+
+                                <li className='sidebar-li' onClick={() => {
+                                    setLoadpage(<AllStudents />);
+                                }}>All Students</li>
+                                <li className='sidebar-li' onClick={() => {
+                                    setLoadpage(<AllTeachers />)
+                                }}>All Teachers</li>
+                                <li className='sidebar-li' onClick={() => {
+                                    setLoadpage(<AllCourses />)
+                                }}>All Courses</li>
+
+                                <li className='sidebar-li' onClick={() => {
+                                    setLoadpage(<PendingAdmins />)
+                                }}>Pending Admins</li>
+
+
+
+
+                            </div>
+                        </div>
+
+                        <div className={sidebaropen}>
+
+                            <div className='top-btn-div'>
+                                <FontAwesomeIcon icon={faGrimace} className='open-btn' onClick={HandleSidebar} />
+                            </div>
+                            <div>
+                                {
+                                    loadpage
+                                }
+                            </div>
+
+                        </div>
                     </div>
-                    <span onClick={() => {
-
-                        if (Cookies.user.role === "admin") {
-                            removeCookie('user', { path: "/" })
-
-                            setUser({});
-                            alert.success("You Logged Out Successfully")
-
-                            navigate("/admin/login")
-                        }
-                    }}>Logout</span>
-                </div>
-
-
-                <div className='sidebar-options'>
-
-                    <li className='sidebar-li' onClick={() => {
-                        setLoadpage(<AllStudents />);
-                    }}>All Students</li>
-                    <li className='sidebar-li' onClick={() => {
-                        setLoadpage(<AllTeachers />)
-                    }}>All Teachers</li>
-                    <li className='sidebar-li' onClick={() => {
-                        setLoadpage(<AllCourses />)
-                    }}>All Courses</li>
-                    
-                    <li className='sidebar-li' onClick={() => {
-                        setLoadpage(<PendingAdmins />)
-                    }}>Pending Admins</li>
-
-
-
-
-                </div>
-            </div>
-
-            <div className={sidebaropen}>
-
-                <div className='top-btn-div'>
-                    <FontAwesomeIcon icon={faGrimace} className='open-btn' onClick={HandleSidebar} />
-                </div>
-                <div>
-                    {
-                        loadpage
-                    }
-                </div>
-
-            </div>
-        </div>
+        
 
     </>
     )

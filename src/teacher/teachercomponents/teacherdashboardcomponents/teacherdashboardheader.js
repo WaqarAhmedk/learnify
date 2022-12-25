@@ -98,7 +98,7 @@ export default function TeacherDashboardHeader() {
                     <div className="inst-class-details-options">
 
                         <div onClick={opendiscussion}>
-                            <FontAwesomeIcon icon={faPeopleArrowsLeftRight} />
+                            {/* <FontAwesomeIcon icon={faPeopleArrowsLeftRight} /> */}
                             <span>Discussion Board</span>
                         </div>
 
@@ -122,7 +122,7 @@ export default function TeacherDashboardHeader() {
             {/* Discuusion board */}
             <Modal show={discussion}>
                 <ModalHeader closeButton onClick={closediscussion}>Discussion Board for {coursename}</ModalHeader>
-                <ModalBody>•••••
+                <ModalBody>
                     <Discussionboard role="teacher" courseid={courseid} />
                 </ModalBody>
             </Modal>

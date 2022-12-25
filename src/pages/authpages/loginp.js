@@ -32,7 +32,7 @@ function Login() {
     const [checkimages, setCheckImages] = useState(false);
     const [showimagemodal, setShowimageModal] = useState(false);
     const [id, setid] = useState("");
-    const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
 
 
 
@@ -55,7 +55,7 @@ function Login() {
                             <span>Sign in As a <b>Student</b>and start learning Now </span>
                     }
                 </div>
-                <div className="col-6 signup-form  login-div">
+                <div className="col-6 l-form  login-div">
 
                     <form className="login-form">
 
@@ -79,14 +79,19 @@ function Login() {
                                 : ""
                         }
 
-                        <div className="ms-2 mt-2">
-                            <span>If you are a <b>{
-                                teacher ? "Student" : "Teacher"}</b> Login  </span>
-                            <span className="text-primary" onClick={() => {
+                        <div className="ms-2 mt-3 mb-3">
 
-                                teacher ? setTeacher(false) : setTeacher(true);
+                            <label className="mb-2">Select your role</label>
 
-                            }} >Here</span>
+                            <select className="form-select" aria-label="Default select example" onChange={(e) => {
+                                e.target.value === "student" ? setTeacher(false) : setTeacher(true);
+
+                            }}>
+
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+
+                            </select>
 
                         </div>
 
@@ -132,7 +137,8 @@ function Login() {
                                                 setLoading(false)
                                                 if (res.data.images === false) {
                                                     setShowimageModal(true);
-                                                    setid(res.data.userid)
+                                                    setid(res.data.userid);
+                                                    setAuthError("");
 
                                                 }
                                                 if (res.data.success == true) {
@@ -161,6 +167,7 @@ function Login() {
                                                     console.log(res.data);
                                                     setCheckError(true);
                                                     setAuthError(res.data.msg);
+                                                    
                                                 }
 
 
@@ -178,16 +185,16 @@ function Login() {
                                 }} >
                                     Login
                                     {
-                                        loading ?<Spinner
-                                        className="ms-3"
+                                        loading ? <Spinner
+                                            className="ms-3"
                                             as="span"
                                             animation="border"
                                             size="sm"
                                             role="status"
                                             aria-hidden="true"
-                                        />:""
+                                        /> : ""
                                     }
-                                    
+
                                 </button>
 
 
@@ -195,7 +202,7 @@ function Login() {
 
                         </div>
                         <Modal show={showimagemodal}>
-                            <ModalHeader closeButton onClick={()=>{
+                            <ModalHeader closeButton onClick={() => {
                                 setShowimageModal(false);
                             }}> Upload Images</ModalHeader>
                             <ModalBody>
@@ -206,7 +213,7 @@ function Login() {
 
 
                                         <div className="input-group mb-3 ">
-                                            <input type="file" multiple accept="image/*"  required className="row email-div" onChange={(e) => {
+                                            <input type="file" multiple accept="image/*" required className="row email-div" onChange={(e) => {
                                                 setImages(e.target.files)
 
                                             }} />
@@ -227,11 +234,11 @@ function Login() {
                                     else if (images.length > 2) {
                                         setImageError("Please select Only 2 images")
                                     }
-                                    else{
+                                    else {
                                         setImageError("");
                                     }
 
-                                    if (imageerror==="") {
+                                    if (imageerror === "") {
                                         let formdata = new FormData();
 
                                         for (let i = 0; i < images.length; i++) {

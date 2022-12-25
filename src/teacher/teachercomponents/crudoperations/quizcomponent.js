@@ -34,11 +34,11 @@ export default function QuizComponent(props) {
                     }}
                 />
             </div>
-            <label className="form-label">Write the Options for MUltiple choice</label>
+            <label className="form-label">Write the options for Multiple choices</label>
             <div className='d-flex'>
                 <div className='option-div'>
-                    <label className='option-label'> option 1</label>
-                    <input type="text" className="option-input" placeholder="Type Your Question here"
+                    <label className='option-label'> Ans 1</label>
+                    <input type="text" className="option-input" placeholder="Type Your Answer here"
                         value={quizdata.opt1val}
                         onBlur={() => {
                             setChoosecorrect([...choosecorrect, quizdata.opt1val]);
@@ -50,8 +50,8 @@ export default function QuizComponent(props) {
 
                 </div>
                 <div>
-                    <label className='option-label'> option 2</label>
-                    <input type="text" className="option-input" placeholder="Type Your Question here"
+                    <label className='option-label'> Ans 2</label>
+                    <input type="text" className="option-input" placeholder="Type Your Answer here"
                         value={quizdata.opt2val}
                         onBlur={() => {
                             setChoosecorrect([...choosecorrect, quizdata.opt2val]);
@@ -68,8 +68,8 @@ export default function QuizComponent(props) {
             </div>
             <div className='d-flex'>
                 <div className='option-div'>
-                    <label className='option-label'> option 3</label>
-                    <input type="text" className="option-input" placeholder="Type Your Question here" value={quizdata.opt3val}
+                    <label className='option-label'> Ans 3</label>
+                    <input type="text" className="option-input" placeholder="Type Your Answer here" value={quizdata.opt3val}
                         onBlur={() => {
                             setChoosecorrect([...choosecorrect, quizdata.opt3val]);
                         }}
@@ -83,8 +83,8 @@ export default function QuizComponent(props) {
 
                 </div>
                 <div>
-                    <label className='option-label'> option 4</label>
-                    <input type="text" className="option-input" placeholder="Type Your Question here"
+                    <label className='option-label'> Ans 4</label>
+                    <input type="text" className="option-input" placeholder="Type Your Answer here"
                         value={quizdata.opt4val}
                         onBlur={() => {
                             setChoosecorrect([...choosecorrect, quizdata.opt4val]);

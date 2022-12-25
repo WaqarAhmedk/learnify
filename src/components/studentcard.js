@@ -19,9 +19,9 @@ const alert=useAlert();
 
       <div className='text-center'>
         <div className="cardstyle">
-          <img src={props.image} className="card-img-top" alt="..." />
+          <img src={require("../assets/avatar/"+props.image)} className="card-img-top w-25" alt="..." />
           <div className="card-body">
-            <h5 className="card-title">{props.title}</h5>
+            <h5 className="card-title">{props.fname+" "+props.lname}</h5>
 
             <table className="table table-success table-striped">
 
@@ -32,7 +32,7 @@ const alert=useAlert();
 
               <tr>
 
-                <td>{props.title}</td> <td>Dummy</td> <td>{props.email}</td>
+                <td>{props.fname}</td> <td>{props.lname}</td> <td>{props.email}</td>
               </tr>
 
 

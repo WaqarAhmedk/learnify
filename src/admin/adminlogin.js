@@ -2,9 +2,8 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { Cookies, useCookies } from "react-cookie";
+import {  useCookies } from "react-cookie";
 import { useAlert } from "react-alert";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
 import { UserContext } from "../context/usercontext";
 import "../style/login.css"
 
